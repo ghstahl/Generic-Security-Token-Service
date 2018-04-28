@@ -1,4 +1,4 @@
-# IdentityServer4-Extension-Grants
+# IdentityServer4 Extension Grants
 Some useful generic extension grants
 
 ## References 
