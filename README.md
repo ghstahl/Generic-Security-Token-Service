@@ -4,37 +4,39 @@ Some useful generic extension grants
 ## References 
 [IdentityServer4](http://docs.identityserver.io) 
 
-## Extension Grant: arbitrary_resource_owner
-## Access Token Request
+## Extension Grant: arbitrary_resource_owner  
+## Access Token Request  
 
    The client makes a request to the token endpoint by adding the
    following parameters using the "application/x-www-form-urlencoded"
    format per Appendix B with a character encoding of UTF-8 in the HTTP
    request entity-body:
 
-   **grant_type**
-         REQUIRED.  Value MUST be set to "arbitrary_resource_owner".
+<dl>
+  <dt>grant_type</dt>
+  <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".</dd>
 
-   **subject**
-         REQUIRED.  The passed through subject
+  <dt>subject</dt>
+  <dd><b>REQUIRED</b>.  The passed through subject</dd>
+  
+  <dt>client_id</dt>
+  <dd><b>REQUIRED</b>.  The client identifier issued to the client during
+         the registration process described by Section 2.2.</dd>
+  
+  <dt>client_secret</dt>
+  <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
+         parameter if the client secret is an empty string.</dd>
+  
+  <dt>scope</dt>
+  <dd><b>OPTIONAL</b>.  The scope of the access request as described by
+         Section 3.3.</dd>
+	 
+  <dt>arbitrary_claims</dt>
+  <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
+	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
+</dl>
 
-   **client_id**
-         REQUIRED.  The client identifier issued to the client during
-         the registration process described by Section 2.2.
-
-   **client_secret**
-         REQUIRED.  The client secret.  The client MAY omit the
-         parameter if the client secret is an empty string.
-
-   **scope**
-         OPTIONAL.  The scope of the access request as described by
-         Section 3.3.
-
-   **arbitrary_claims**
-         REQUIRED.  This is a json string object of key/value pairs.  
-		 i.e. arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
-
- ## Example
+## Example  
  ```
 POST http://localhost:21354/connect/token
 
