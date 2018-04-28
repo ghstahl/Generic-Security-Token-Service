@@ -41,8 +41,7 @@ namespace IdentityServer4.HostApp
                 {
                     ClientId = "arbitrary-resource-owner-client",
                     AllowedGrantTypes = new[]
-                    {
-                        GrantType.ResourceOwnerPassword,
+                    { 
                         ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner
                     },
                     AllowOfflineAccess = true,
