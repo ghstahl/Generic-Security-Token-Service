@@ -12,7 +12,7 @@ using IdentityServer4.ResponseHandling;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
-using IdentityServer4Extras;ResourceOwner
+using IdentityServer4Extras;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 
