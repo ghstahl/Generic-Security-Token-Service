@@ -41,6 +41,8 @@ Some useful generic extension grants
 </dl>
 
 ## Example  
+I am using [Postman](https://www.getpostman.com/)  
+
  ```
 POST http://localhost:21354/connect/token
 
