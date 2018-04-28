@@ -14,19 +14,8 @@ namespace IdentityServer4.HostApp
         {
             return new List<ApiResource>
             {
-                new ApiResource("nitro", "nitro")
-                {
-                    ApiSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    }
-                },
-                new ApiResource("metal", "metal"){
-                    ApiSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    }
-                },
+                new ApiResource("nitro", "nitro"),
+                new ApiResource("metal", "metal")
             };
         }
 
