@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ArbitraryOpenIdConnectTokenExtensionGrants;
 using ArbitraryResourceOwnerExtensionGrant;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
@@ -36,9 +37,11 @@ namespace IdentityServer4.HostApp
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClientsExtra(Config.GetClients())
                 .AddIdentityServer4Extras()
-                .AddArbitraryOwnerResourceGrantExtension();
+                .AddArbitraryOwnerResourceExtensionGrant()
+                .AddArbitraryOpenIdConnectTokenExtensionGrant();
 
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
+            services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
 
             services.AddMvc();

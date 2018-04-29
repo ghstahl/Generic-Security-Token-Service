@@ -4,7 +4,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
 {
     public static class GrantExtensions
     {
-        public static IIdentityServerBuilder AddArbitraryOwnerResourceGrantExtension(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddArbitraryOwnerResourceExtensionGrant(this IIdentityServerBuilder builder)
         {
             builder
                 .AddExtensionGrantValidator<ArbitraryResourceOwnerExtensionGrantValidator>()
