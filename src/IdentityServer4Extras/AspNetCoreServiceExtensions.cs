@@ -9,6 +9,7 @@ namespace IdentityServer4Extras
         {
             services.AddTransient<IRawClientSecretValidator, RawClientSecretValidator>();
             services.AddTransient<IClientStoreExtra, InMemoryClientStoreExtra>();
+            services.AddTransient<PrincipalAugmenter>();  
         }
     }
 }

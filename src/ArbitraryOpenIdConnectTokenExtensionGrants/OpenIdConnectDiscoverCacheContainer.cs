@@ -25,8 +25,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             {
                 if (_discoveryCache == null)
                 {
-                    var discoveryClient = new DiscoveryClient(_authority);
-                    discoveryClient.Policy.ValidateEndpoints = false;
+                    var discoveryClient = new DiscoveryClient(_authority) {Policy = {ValidateEndpoints = false}};
                     foreach (var additionalEndpointBaseAddress in _additionalEndpointBaseAddresses)
                     {
                         discoveryClient.Policy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
