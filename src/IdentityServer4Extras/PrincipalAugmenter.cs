@@ -11,8 +11,8 @@ namespace IdentityServer4Extras
     public class PrincipalAugmenter
     {
         private ISystemClock _clock;
-        ILogger _logger;
-        public PrincipalAugmenter(ISystemClock clock, ILogger logger)
+        ILogger<PrincipalAugmenter> _logger;
+        public PrincipalAugmenter(ISystemClock clock, ILogger<PrincipalAugmenter> logger)
         {
             _clock = clock;
             _logger = logger;
