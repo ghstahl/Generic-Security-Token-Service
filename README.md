@@ -1,4 +1,4 @@
-# IdentityServer4-Extension-Grants
+# IdentityServer4 Extension Grants
 Some useful generic extension grants
 
 ## References 
@@ -41,6 +41,8 @@ Some useful generic extension grants
 </dl>
 
 ## Example  
+I use [Postman](https://www.getpostman.com/)  
+
  ```
 POST http://localhost:21354/connect/token
 
