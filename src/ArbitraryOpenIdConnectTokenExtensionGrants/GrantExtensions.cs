@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProfileServiceManager;
 
 namespace ArbitraryOpenIdConnectTokenExtensionGrants
 {
@@ -22,6 +23,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
         {
             services.AddTransient<ArbitraryOpenIdConnectIdentityTokenRequestValidator>();
             services.AddTransient<ProviderValidatorManager>();
+            services.AddTransient<IProfileServicePlugin, ArbitraryOpenIdConnectIdentityTokenProfileService>();
         }
     }
 }

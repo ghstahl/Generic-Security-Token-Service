@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" />
   </ItemGroup>
 
 </Project>

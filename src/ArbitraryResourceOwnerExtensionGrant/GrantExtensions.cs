@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using ProfileServiceManager;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
@@ -15,6 +16,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
         public static void AddArbitraryResourceOwnerExtentionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryResourceOwnerRequestValidator>();
+            services.AddTransient<IProfileServicePlugin, ArbitraryResourceOwnerProfileService>();
         }
     }
 }

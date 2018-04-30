@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Newtonsoft.Json;
+using ProfileServiceManager;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
-    public class ArbitraryResourceOwnerProfileService : IProfileService
+    public class ArbitraryResourceOwnerProfileService : IProfileService, IProfileServicePlugin
     {
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
@@ -49,5 +50,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
         {
           
         }
+
+        public string Name => Constants.ArbitraryResourceOwnerProfileService;
+        public IProfileService ProfileService => this;
     }
 }

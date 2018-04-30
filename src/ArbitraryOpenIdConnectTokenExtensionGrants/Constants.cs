@@ -8,5 +8,6 @@
         public const string IdToken = "id_token";
         public const string ClientId = "client_id";
         public const string ClientSecret = "client_secret";
+        public const string ArbitraryOpenIdConnectIdTokenProfileService = "arbitrary_openidconnect_id_token_profile_service";
     }
 }

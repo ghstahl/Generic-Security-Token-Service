@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Newtonsoft.Json;
+using ProfileServiceManager;
 
 namespace ArbitraryOpenIdConnectTokenExtensionGrants
 {
-    public class ArbitraryOpenIdConnectIdentityTokenProfileService : IProfileService
+    public class ArbitraryOpenIdConnectIdentityTokenProfileService : IProfileService,IProfileServicePlugin
     {
         public async Task GetProfileDataAsync(ProfileDataRequestContext context)
         {
@@ -47,7 +48,10 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
-          
+
         }
+        public string Name => Constants.ArbitraryOpenIdConnectIdTokenProfileService;
+        public IProfileService ProfileService => this;
+
     }
 }

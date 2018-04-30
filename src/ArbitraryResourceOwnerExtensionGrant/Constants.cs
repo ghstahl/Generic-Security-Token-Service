@@ -4,6 +4,6 @@
     {
         public const string ArbitraryResourceOwner = "arbitrary_resource_owner";
         public const string ArbitraryClaims = "arbitrary_claims";
-        public const string ExternalAuthenticationMethod = "external";
+        public const string ArbitraryResourceOwnerProfileService = "arbitrary_resource_owner_profile_service";
     }
 }
