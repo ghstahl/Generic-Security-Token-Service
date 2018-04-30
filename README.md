@@ -8,7 +8,7 @@ Some useful generic extension grants
 ## Configuration
 [client-config](src/IdentityServer4.HostApp/Config.cs)
 
-## Extension Grant: arbitrary_resource_owner  
+## Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md)  
 ## Access Token Request  
 
    The client makes a request to the token endpoint by adding the
