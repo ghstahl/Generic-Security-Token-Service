@@ -11,7 +11,9 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
+using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace ArbitraryOpenIdConnectTokenExtensionGrants
@@ -31,6 +33,8 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
         private ISystemClock _clock;
         private ArbitraryOpenIdConnectIdentityTokenRequestValidator _arbitraryOpenIdConnectIdentityTokenRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
+        private ProviderValidatorManager _providerValidatorManager;
+        private IMemoryCache _cache;
         public ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator(
             IdentityServerOptions options,
             IClientStore clientStore,
@@ -41,8 +45,11 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator> logger,
             ArbitraryOpenIdConnectIdentityTokenRequestValidator arbitraryOpenIdConnectIdentityTokenRequestValidator,
-            PrincipalAugmenter principalAugmenter)
+            PrincipalAugmenter principalAugmenter,
+            ProviderValidatorManager providerValidatorManager,
+            IMemoryCache cache)
         {
+            _cache = cache;
             _logger = logger;
             _clock = clock;
             _events = events;
@@ -53,6 +60,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryOpenIdConnectIdentityTokenRequestValidator = arbitraryOpenIdConnectIdentityTokenRequestValidator;
             _principalAugmenter = principalAugmenter;
+            _providerValidatorManager = providerValidatorManager;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -99,22 +107,22 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                 return;
             }
 
+            var providerValidator = _providerValidatorManager.FetchProviderValidator(raw[Constants.Authority]);
+            var idToken = raw[Constants.IdToken];
+            var principal = await providerValidator.ValidateToken(idToken);
+
             _validatedRequest.GrantType = grantType;
             var resource = await _resourceStore.GetAllResourcesAsync();
             // get user's identity
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, context.Request.Raw.Get("subject")),
-                new Claim("sub", context.Request.Raw.Get("subject"))
-            };
 
-            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
             _principalAugmenter.AugmentPrincipal(principal);
             var userClaimsFinal = new List<Claim>()
             {
                 new Claim(Constants.ArbitraryClaims, raw[Constants.ArbitraryClaims])
             };
-            context.Result = new GrantValidationResult(principal.GetSubjectId(), Constants.ArbitraryOIDCResourceOwner, userClaimsFinal);
+            userClaimsFinal.AddRange(principal.Claims);
+
+            context.Result = new GrantValidationResult(principal.GetNamedIdentifier(), Constants.ArbitraryOIDCResourceOwner, userClaimsFinal);
         }
         private void LogError(string message = null, params object[] values)
         {

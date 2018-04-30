@@ -6,18 +6,21 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
 {
     public class OpenIdConnectDiscoverCacheContainer : DiscoverCacheContainer
     {
-        private string _authority;
-        private List<string> _additionalEndpointBaseAddresses;
+       
+        private AuthorityConfig _authorityConfig;
         private DiscoveryCache _discoveryCache { get; set; }
 
 
-        public OpenIdConnectDiscoverCacheContainer(string authority, List<string> additionalEndpointBaseAddresses)
+        public OpenIdConnectDiscoverCacheContainer(AuthorityConfig authorityConfig)
         {
-            if(string.IsNullOrWhiteSpace(authority)) throw new ArgumentNullException(nameof(authority));
-            if(additionalEndpointBaseAddresses == null) throw new ArgumentNullException(nameof(additionalEndpointBaseAddresses));
-
-            _authority = authority;
-            _additionalEndpointBaseAddresses = additionalEndpointBaseAddresses;
+            if(authorityConfig == null) throw new ArgumentNullException(nameof(authorityConfig));
+            if (string.IsNullOrWhiteSpace(authorityConfig.Name)) throw new ArgumentNullException(nameof(authorityConfig.Name));
+            if (string.IsNullOrWhiteSpace(authorityConfig.Authority)) throw new ArgumentNullException(nameof(authorityConfig.Authority));
+            if (authorityConfig.AdditionalEndpointBaseAddresses == null)
+            {
+                authorityConfig.AdditionalEndpointBaseAddresses = new List<string>();
+            }
+            _authorityConfig = authorityConfig;
         }
         public override DiscoveryCache DiscoveryCache
         {
@@ -25,8 +28,8 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             {
                 if (_discoveryCache == null)
                 {
-                    var discoveryClient = new DiscoveryClient(_authority) {Policy = {ValidateEndpoints = false}};
-                    foreach (var additionalEndpointBaseAddress in _additionalEndpointBaseAddresses)
+                    var discoveryClient = new DiscoveryClient(_authorityConfig.Authority) {Policy = {ValidateEndpoints = false}};
+                    foreach (var additionalEndpointBaseAddress in _authorityConfig.AdditionalEndpointBaseAddresses)
                     {
                         discoveryClient.Policy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
                     }

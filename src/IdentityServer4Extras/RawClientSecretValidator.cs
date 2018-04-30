@@ -7,6 +7,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using IdentityServer4Extras.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer4Extras

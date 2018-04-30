@@ -38,12 +38,14 @@ namespace IdentityServer4.HostApp
                 .AddInMemoryClientsExtra(Config.GetClients())
                 .AddIdentityServer4Extras()
                 .AddArbitraryOwnerResourceExtensionGrant()
-                .AddArbitraryOpenIdConnectTokenExtensionGrant();
-
+                //.AddArbitraryOpenIdConnectTokenExtensionGrant()
+                //.AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService()
+                ;
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
 
+            services.AddMemoryCache();
             services.AddMvc();
 
             services.AddLogging();

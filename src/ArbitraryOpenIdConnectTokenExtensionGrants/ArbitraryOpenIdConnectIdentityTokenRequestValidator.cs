@@ -16,12 +16,11 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                                                                   (_requiredArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "subject",
-                                                                          "client_id",
-                                                                          "client_secret",
-                                                                          "id_token",
-                                                                          "authority",
-                                                                          "arbitrary_claims"
+                                                                          Constants.ClientId,
+                                                                          Constants.ClientSecret,
+                                                                          Constants.IdToken,
+                                                                          Constants.Authority,
+                                                                          Constants.ArbitraryClaims
                                                                       });
         public ArbitraryOpenIdConnectIdentityTokenRequestValidator(
             ILogger<ArbitraryOpenIdConnectIdentityTokenRequestValidator> logger)

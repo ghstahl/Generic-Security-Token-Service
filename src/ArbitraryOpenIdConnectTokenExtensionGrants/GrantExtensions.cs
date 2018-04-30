@@ -9,14 +9,19 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
         public static IIdentityServerBuilder AddArbitraryOpenIdConnectTokenExtensionGrant(this IIdentityServerBuilder builder)
         {
             builder
-                .AddExtensionGrantValidator<ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator>()
+                .AddExtensionGrantValidator<ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator>();
+            return builder;
+        }
+        public static IIdentityServerBuilder AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService(this IIdentityServerBuilder builder)
+        {
+            builder
                 .AddProfileService<ArbitraryOpenIdConnectIdentityTokenProfileService>();
             return builder;
         }
-
         public static void AddArbitraryOpenIdConnectTokenExtensionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryOpenIdConnectIdentityTokenRequestValidator>();
+            services.AddTransient<ProviderValidatorManager>();
         }
     }
 }
