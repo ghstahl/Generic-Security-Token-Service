@@ -2,7 +2,15 @@
 
 This is not a generic grant as it attempts to exchange an id_token for tokens that give your subject access to your resources.  In this example I am simply passing along the original id_token's subject.  Odds are that this id_token's subject is not your actual user id, so a mapping is done in the ExtensionGrantValidator.  Here I replace the ClaimTypes.NamedIdentifier of the incoming id_token, to one that you would find in your user database.  The example prepends MyCompany.{original ClaimTypes.NamedIdentifier}
 
-[Example ExtensionGrantValidator](../src/ArbitraryOpenIdConnectTokenExtensionGrants/ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator.cs)
+[Example ExtensionGrantValidator](../src/ArbitraryOpenIdConnectTokenExtensionGrants/ArbitraryOpenIdConnectIdentityTokenExtensionGrantValidator.cs)  
+```
+var idToken = raw[Constants.IdToken];
+var principal = await providerValidator.ValidateToken(idToken);
+
+var subjectId = principal.GetClaimValue(ClaimTypes.NameIdentifier);
+var newPrincipal = principal.AddUpdateClaim(ClaimTypes.NameIdentifier, $"myCompany.{subjectId}");
+principal = newPrincipal;
+```
 
 ## Access Token Request  
 
