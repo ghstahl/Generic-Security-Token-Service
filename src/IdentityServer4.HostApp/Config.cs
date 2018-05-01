@@ -23,10 +23,10 @@ namespace IdentityServer4.HostApp
         public static IEnumerable<Client> GetClients()
         {
             // client credentials client
-            return new List<ClientExtra>
+            return new List<Client>
             {
                 // arbitrary resource owner grant client
-                new ClientExtra
+                new Client
                 {
                     ClientId = "arbitrary-resource-owner-client",
                     AllowedGrantTypes = new[]
@@ -41,7 +41,7 @@ namespace IdentityServer4.HostApp
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "nitro","metal" },
-                    RequireRefreshTokenClientSecret = false
+                    RequireClientSecret = false
                 } 
             };
         }

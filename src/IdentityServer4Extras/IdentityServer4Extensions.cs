@@ -2,6 +2,7 @@
 using System.Linq;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,7 +21,7 @@ namespace IdentityServer4Extras
         {
             builder.Services.AddSingleton(clients);
 
-            builder.AddClientStore<InMemoryClientStoreExtra>();
+            builder.AddClientStore<InMemoryClientStore>();
 
             var existingCors = builder.Services.Where(x => x.ServiceType == typeof(ICorsPolicyService)).LastOrDefault();
             if (existingCors != null &&
@@ -36,8 +37,6 @@ namespace IdentityServer4Extras
 
         public static IIdentityServerBuilder AddIdentityServer4Extras(this IIdentityServerBuilder builder)
         {
-            builder.Services.AddTransient<ISecretParser, ClientRefreshTokenRequiredSecretParser>();
-            builder.Services.AddTransient<ISecretValidator, ClientRefreshTokenRequiredSecretValidator>();
 
             return builder;
         }
