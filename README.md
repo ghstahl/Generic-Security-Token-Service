@@ -8,5 +8,6 @@ Some useful generic extension grants
 ## Configuration
 [client-config](src/IdentityServer4.HostApp/Config.cs)
 
+## Extension Grants  
 #### Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md)  
 #### Extension Grant: [arbitrary_oidc_resource_owner](docs/arbitrary_oidc_resource_owner.md)  
