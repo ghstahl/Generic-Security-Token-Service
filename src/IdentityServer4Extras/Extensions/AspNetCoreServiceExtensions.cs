@@ -1,7 +1,6 @@
-﻿using IdentityServer4.Stores;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityServer4Extras
+namespace IdentityServer4Extras.Extensions
 {
     public static class AspNetCoreServiceExtensions
     {

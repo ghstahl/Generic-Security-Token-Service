@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
@@ -111,6 +112,10 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             var idToken = raw[Constants.IdToken];
             var principal = await providerValidator.ValidateToken(idToken);
 
+            var subjectId = principal.GetClaimValue(ClaimTypes.NameIdentifier);
+            var newPrincipal = principal.AddUpdateClaim(ClaimTypes.NameIdentifier, $"myCompany.{subjectId}");
+            principal = newPrincipal;
+
             _validatedRequest.GrantType = grantType;
             var resource = await _resourceStore.GetAllResourcesAsync();
             // get user's identity
@@ -121,6 +126,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                 new Claim(Constants.ArbitraryClaims, raw[Constants.ArbitraryClaims])
             };
             userClaimsFinal.AddRange(principal.Claims);
+            userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryOpenIdConnectIdTokenProfileService));
 
             context.Result = new GrantValidationResult(principal.GetNamedIdentifier(), Constants.ArbitraryOIDCResourceOwner, userClaimsFinal);
         }

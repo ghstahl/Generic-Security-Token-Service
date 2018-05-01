@@ -13,14 +13,11 @@ namespace ProfileServiceManager
         private Dictionary<string,IProfileServicePlugin> _plugins;
         private ILogger<ProfileServiceManager> _logger;
 
-        public ProfileServiceManager(ILogger<ProfileServiceManager> logger, List<IProfileServicePlugin> plugins)
+        public ProfileServiceManager(ILogger<ProfileServiceManager> logger,
+            IEnumerable<IProfileServicePlugin> plugins)
         {
-            if (_logger == null) throw new ArgumentNullException(nameof(_logger));
+        //    if (_logger == null) throw new ArgumentNullException(nameof(_logger));
             if (plugins == null) throw new ArgumentNullException(nameof(plugins));
-            if (plugins.Count == 0)
-            {
-                throw new Exception($"{nameof(plugins)} contains no entries.");
-            }
 
             _plugins = new Dictionary<string, IProfileServicePlugin>();
             _logger = logger;
@@ -42,6 +39,7 @@ namespace ProfileServiceManager
                 {
                     var plugin = _plugins[pluginKey];
                     await plugin.ProfileService.GetProfileDataAsync(context);
+                    return;
                 }
             }
             throw new Exception($"{Constants.ClaimKey} is not present, or does not reference a plugin.");

@@ -115,6 +115,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
             {
                 new Claim(ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims, raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims])
             };
+
+            userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
+
             context.Result = new GrantValidationResult(principal.GetSubjectId(), ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner, userClaimsFinal);
         }
         

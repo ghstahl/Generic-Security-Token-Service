@@ -4,14 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ArbitraryOpenIdConnectTokenExtensionGrants;
+using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
+using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
+using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProfileServiceManager.Extensions;
 using Serilog;
 
 namespace IdentityServer4.HostApp
@@ -37,8 +41,9 @@ namespace IdentityServer4.HostApp
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClientsExtra(Config.GetClients())
                 .AddIdentityServer4Extras()
+                .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
-                //.AddArbitraryOpenIdConnectTokenExtensionGrant()
+                .AddArbitraryOpenIdConnectTokenExtensionGrant()
                 //.AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService()
                 ;
             services.AddArbitraryResourceOwnerExtentionGrantTypes();

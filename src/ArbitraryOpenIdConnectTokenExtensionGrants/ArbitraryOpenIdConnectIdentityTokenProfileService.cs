@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
+using IdentityModel;
+using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using IdentityServer4.Stores.Serialization;
 using Newtonsoft.Json;
 using ProfileServiceManager;
 
@@ -21,7 +26,9 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                     select item.Value;
                 var grantType = query.FirstOrDefault();
                 if (!string.IsNullOrWhiteSpace(grantType) &&
-                    string.Compare(grantType, ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner, StringComparison.OrdinalIgnoreCase) == 0)
+                    string.Compare(grantType,
+                        ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner,
+                        StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     var queryClaims = from item in context.Subject.Claims
                         where item.Type == ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryClaims

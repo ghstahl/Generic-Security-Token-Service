@@ -1,11 +1,9 @@
-﻿using System.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using ProfileServiceManager;
 
-namespace ArbitraryOpenIdConnectTokenExtensionGrants
+namespace ArbitraryOpenIdConnectTokenExtensionGrants.Extensions
 {
-    public static class GrantExtensions
+    public static class IdentityServer4Extensions
     {
         public static IIdentityServerBuilder AddArbitraryOpenIdConnectTokenExtensionGrant(this IIdentityServerBuilder builder)
         {
@@ -18,12 +16,6 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             builder
                 .AddProfileService<ArbitraryOpenIdConnectIdentityTokenProfileService>();
             return builder;
-        }
-        public static void AddArbitraryOpenIdConnectTokenExtensionGrantTypes(this IServiceCollection services)
-        {
-            services.AddTransient<ArbitraryOpenIdConnectIdentityTokenRequestValidator>();
-            services.AddTransient<ProviderValidatorManager>();
-            services.AddTransient<IProfileServicePlugin, ArbitraryOpenIdConnectIdentityTokenProfileService>();
         }
     }
 }
