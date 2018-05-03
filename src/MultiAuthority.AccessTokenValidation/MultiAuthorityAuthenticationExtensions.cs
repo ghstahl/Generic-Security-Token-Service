@@ -29,7 +29,7 @@ namespace Microsoft.AspNetCore.Builder
         {
             foreach (var schemeRecord in schemeRecords)
             {
-                builder.AddJwtBearer(authenticationScheme + schemeRecord.Name, configureOptions: null);
+                builder.AddJwtBearer(authenticationScheme + schemeRecord.Name, configureOptions: schemeRecord.Options);
             }
 
             builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>>(services =>
