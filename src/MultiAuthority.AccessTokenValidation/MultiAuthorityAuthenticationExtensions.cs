@@ -17,6 +17,16 @@ namespace Microsoft.AspNetCore.Builder
     public static class MultiAuthorityAuthenticationExtensions
     {
         /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="configureOptions">The configure options.</param>
+        /// <returns></returns>
+        public static AuthenticationBuilder AddMultiAuthorityAuthentication(this AuthenticationBuilder builder,
+            IEnumerable<SchemeRecord> schemeRecords, Action<MultiAuthorityAuthenticationOptions> configureOptions) =>
+            builder.AddMultiAuthorityAuthentication(MultiAuthorityAuthenticationDefaults.AuthenticationScheme, schemeRecords, configureOptions);
+
+        /// <summary>
         /// Registers the MultiAuthority authentication handler.
         /// </summary>
         /// <param name="builder">The builder.</param>
@@ -29,16 +39,12 @@ namespace Microsoft.AspNetCore.Builder
         {
             foreach (var schemeRecord in schemeRecords)
             {
-                builder.AddJwtBearer(authenticationScheme + schemeRecord.Name, configureOptions: schemeRecord.Options);
+                Global.SchemeRecords[schemeRecord.Name] = schemeRecord;
+                builder.AddJwtBearer(authenticationScheme + schemeRecord.Name, configureOptions: schemeRecord.JwtBearerOptions);
             }
 
-            builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>>(services =>
-            {
-                var monitor = services.GetRequiredService<IOptionsMonitor<MultiAuthorityAuthenticationOptions>>();
-                return new ConfigureInternalOptions(monitor.Get(authenticationScheme), authenticationScheme);
-            });
-
-            return builder.AddScheme<MultiAuthorityAuthenticationOptions, MultiAuthorityAuthenticationHandler>(authenticationScheme, configureOptions);
+            return builder.AddScheme<MultiAuthorityAuthenticationOptions, MultiAuthorityAuthenticationHandler>(authenticationScheme,
+                (o) => { });
         }
     }
 }

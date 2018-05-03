@@ -6,6 +6,6 @@ namespace MultiAuthority.AccessTokenValidation
     public class SchemeRecord
     {
         public string Name { get; set; }
-        public Action<JwtBearerOptions> Options { get; set; }
+        public Action<JwtBearerOptions> JwtBearerOptions { get; set; }
     }
 }

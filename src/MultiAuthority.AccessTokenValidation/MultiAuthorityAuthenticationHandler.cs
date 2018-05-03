@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -43,6 +44,11 @@ namespace MultiAuthority.AccessTokenValidation
 
             var authScheme = Context.Request.Headers["x-authScheme"];
             if (string.IsNullOrWhiteSpace(authScheme))
+            {
+                return AuthenticateResult.NoResult();
+            }
+
+            if (!Global.SchemeRecords.ContainsKey(authScheme))
             {
                 return AuthenticateResult.NoResult();
             }

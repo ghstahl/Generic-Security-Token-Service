@@ -43,23 +43,7 @@ namespace MultiAuthority.AccessTokenValidation
         /// Callback to retrieve token from incoming request
         /// </summary>
         public Func<HttpRequest, string> TokenRetriever { get; set; } = TokenRetrieval.FromAuthorizationHeader();
-
-        /// <summary>
-        /// Name of the API resource used for authentication against introspection endpoint
-        /// </summary>
-        public string ApiName { get; set; }
-
-        /// <summary>
-        /// Secret used for authentication against introspection endpoint
-        /// </summary>
-        public string ApiSecret { get; set; }
-
-        /// <summary>
-        /// Enable if this API is being secured by IdentityServer3, and if you need to support both JWTs and reference tokens.
-        /// If you enable this, you should add scope validation for incoming JWTs.
-        /// </summary>
-        public bool LegacyAudienceValidation { get; set; } = false;
-
+ 
         /// <summary>
         /// Claim type for name
         /// </summary>
@@ -76,16 +60,6 @@ namespace MultiAuthority.AccessTokenValidation
         public Dictionary<string, string> InboundJwtClaimTypeMap { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
-        /// Specifies whether caching is enabled for introspection responses (requires a distributed cache implementation)
-        /// </summary>
-        public bool EnableCaching { get; set; } = false;
-
-        /// <summary>
-        /// Specifies ttl for introspection response caches
-        /// </summary>
-        public TimeSpan CacheDuration { get; set; } = TimeSpan.FromMinutes(10);
-
-        /// <summary>
         /// specifies whether the token should be saved in the authentication properties
         /// </summary>
         public bool SaveToken { get; set; } = true;
@@ -95,21 +69,7 @@ namespace MultiAuthority.AccessTokenValidation
         /// </summary>
         public TimeSpan? JwtValidationClockSkew { get; set; }
 
-        /// <summary>
-        /// back-channel handler for JWT middleware
-        /// </summary>
-        public HttpMessageHandler JwtBackChannelHandler { get; set; }
-
-        /// <summary>
-        /// back-channel handler for introspection endpoint
-        /// </summary>
-        public HttpMessageHandler IntrospectionBackChannelHandler { get; set; }
-
-        /// <summary>
-        /// back-channel handler for introspection discovery endpoint
-        /// </summary>
-        public HttpMessageHandler IntrospectionDiscoveryHandler { get; set; }
-
+   
         /// <summary>
         /// timeout for back-channel operations
         /// </summary>
@@ -132,127 +92,6 @@ namespace MultiAuthority.AccessTokenValidation
         /// Gets a value indicating whether JWTs are supported.
         /// </summary>
         public bool SupportsJwt => SupportedTokens == SupportedTokens.Jwt || SupportedTokens == SupportedTokens.Both;
-
-        /// <summary>
-        /// Gets a value indicating whether reference tokens are supported.
-        /// </summary>
-        public bool SupportsIntrospection => SupportedTokens == SupportedTokens.Reference || SupportedTokens == SupportedTokens.Both;
-
-        internal void ConfigureJwtBearer(JwtBearerOptions jwtOptions)
-        {
-            jwtOptions.Authority = Authority;
-            jwtOptions.RequireHttpsMetadata = RequireHttpsMetadata;
-            jwtOptions.BackchannelTimeout = BackChannelTimeouts;
-            jwtOptions.RefreshOnIssuerKeyNotFound = true;
-            jwtOptions.SaveToken = SaveToken;
-
-            jwtOptions.Events = new JwtBearerEvents
-            {
-                OnMessageReceived = e =>
-                {
-                    e.Token = InternalTokenRetriever(e.Request);
-                    return JwtBearerEvents.MessageReceived(e);
-                },
-
-                OnTokenValidated = e => JwtBearerEvents.TokenValidated(e),
-                OnAuthenticationFailed = e => JwtBearerEvents.AuthenticationFailed(e),
-                OnChallenge = e => JwtBearerEvents.Challenge(e)
-            };
-
-            if (DiscoveryDocumentRefreshInterval.HasValue)
-            {
-                var parsedUrl = DiscoveryClient.ParseUrl(Authority);
-
-                var httpClient = new HttpClient(JwtBackChannelHandler ?? new HttpClientHandler())
-                {
-                    Timeout = BackChannelTimeouts,
-                    MaxResponseContentBufferSize = 1024 * 1024 * 10 // 10 MB
-                };
-
-                var manager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                    parsedUrl.Url,
-                    new OpenIdConnectConfigurationRetriever(),
-                    new HttpDocumentRetriever(httpClient) { RequireHttps = RequireHttpsMetadata })
-                {
-                    AutomaticRefreshInterval = DiscoveryDocumentRefreshInterval.Value
-                };
-
-                jwtOptions.ConfigurationManager = manager;
-            }
-
-            if (JwtBackChannelHandler != null)
-            {
-                jwtOptions.BackchannelHttpHandler = JwtBackChannelHandler;
-            }
-
-            // if API name is set, do a strict audience check for
-            if (!string.IsNullOrWhiteSpace(ApiName) && !LegacyAudienceValidation)
-            {
-                jwtOptions.Audience = ApiName;
-            }
-            else
-            {
-                // no audience validation, rely on scope checks only
-                jwtOptions.TokenValidationParameters.ValidateAudience = false;
-            }
-
-            jwtOptions.TokenValidationParameters.NameClaimType = NameClaimType;
-            jwtOptions.TokenValidationParameters.RoleClaimType = RoleClaimType;
-
-            if (JwtValidationClockSkew.HasValue)
-            {
-                jwtOptions.TokenValidationParameters.ClockSkew = JwtValidationClockSkew.Value;
-            }
-
-            if (InboundJwtClaimTypeMap != null)
-            {
-                var handler = new JwtSecurityTokenHandler
-                {
-                    InboundClaimTypeMap = InboundJwtClaimTypeMap
-                };
-
-                jwtOptions.SecurityTokenValidators.Clear();
-                jwtOptions.SecurityTokenValidators.Add(handler);
-            }
-        }
-
-        internal void ConfigureIntrospection(OAuth2IntrospectionOptions introspectionOptions)
-        {
-            if (String.IsNullOrWhiteSpace(ApiSecret))
-            {
-                return;
-            }
-
-            if (String.IsNullOrWhiteSpace(ApiName))
-            {
-                throw new ArgumentException("ApiName must be configured if ApiSecret is set.");
-            }
-
-            introspectionOptions.Authority = Authority;
-            introspectionOptions.ClientId = ApiName;
-            introspectionOptions.ClientSecret = ApiSecret;
-            introspectionOptions.NameClaimType = NameClaimType;
-            introspectionOptions.RoleClaimType = RoleClaimType;
-            introspectionOptions.TokenRetriever = InternalTokenRetriever;
-            introspectionOptions.SaveToken = SaveToken;
-
-            introspectionOptions.EnableCaching = EnableCaching;
-            introspectionOptions.CacheDuration = CacheDuration;
-
-            introspectionOptions.DiscoveryTimeout = BackChannelTimeouts;
-            introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
-
-            introspectionOptions.DiscoveryPolicy.RequireHttps = RequireHttpsMetadata;
-
-            if (IntrospectionBackChannelHandler != null)
-            {
-                introspectionOptions.IntrospectionHttpHandler = IntrospectionBackChannelHandler;
-            }
-
-            if (IntrospectionDiscoveryHandler != null)
-            {
-                introspectionOptions.DiscoveryHttpHandler = IntrospectionDiscoveryHandler;
-            }
-        }
+ 
     }
 }
