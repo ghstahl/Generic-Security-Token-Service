@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/values/echo?message=hi",
+      "launchUrl": "api/values/bind?subject=bob",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

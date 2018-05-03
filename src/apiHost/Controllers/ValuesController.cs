@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace apiHost.Controllers
 {
@@ -54,6 +58,33 @@ namespace apiHost.Controllers
         public string Echo2(string message)
         {
             return message;
+        }
+ 
+        [HttpGet]
+        [Route("bind")]
+        public string Bind(string subject)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, subject),
+                new Claim("sub", subject),
+                new Claim("aud", "yourdomain.com"),
+                new Claim("aud", "nitro"),
+            };
+                
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Global.SecurityKey));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+
+
+            var jwtToken = new JwtSecurityToken(
+                issuer: "yourdomain.com",
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+            var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
+            return token;
         }
     }
 }
