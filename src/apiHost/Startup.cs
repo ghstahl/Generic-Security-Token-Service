@@ -106,10 +106,8 @@ namespace apiHost
             };
 
             services.AddAuthentication("Bearer")
-                .AddMultiAuthorityAuthentication(schemeRecords, options =>
-                {
- 
-                });
+                .AddMultiAuthorityAuthentication(schemeRecords);
+                
             /*
                 .AddIdentityServerAuthentication(options =>
                 {
