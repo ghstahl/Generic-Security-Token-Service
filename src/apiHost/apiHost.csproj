@@ -18,7 +18,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\MultiAuthority.AccessTokenValidation\MultiAuthority.AccessTokenValidation.csproj" />
-    <ProjectReference Include="..\OpenIdPassthrough\OpenIdPassthrough.csproj" />
   </ItemGroup>
 
 </Project>

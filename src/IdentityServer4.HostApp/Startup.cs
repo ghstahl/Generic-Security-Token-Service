@@ -15,7 +15,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NoSubjectExtensionGrant.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 
@@ -45,13 +44,11 @@ namespace IdentityServer4.HostApp
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
-                .AddNoSubjectExtensionGrant()
                 //.AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService()
                 ;
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
-            services.AddNoSubjectExtensionGrantTypes();
 
             services.AddMemoryCache();
             services.AddMvc();
