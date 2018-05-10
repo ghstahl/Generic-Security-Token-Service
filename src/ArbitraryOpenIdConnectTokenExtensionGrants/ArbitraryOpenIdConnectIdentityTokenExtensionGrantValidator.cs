@@ -107,6 +107,24 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                 context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
                 return;
             }
+            // optional stuff;
+            var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
+            if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
+            {
+                var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
+                if (accessTokenLifetime > 0 && accessTokenLifetime < context.Request.AccessTokenLifetime)
+                {
+                    context.Request.AccessTokenLifetime = accessTokenLifetime;
+                }
+                else
+                {
+                    var errorDescription =
+                        $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and less than configured AccessTokenLifetime.";
+                    LogError(errorDescription);
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
+                    return;
+                }
+            }
 
             var providerValidator = _providerValidatorManager.FetchProviderValidator(raw[Constants.Authority]);
             var idToken = raw[Constants.IdToken];

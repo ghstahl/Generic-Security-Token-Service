@@ -2,6 +2,8 @@
 {
     public static class Constants
     {
+        public const string AccessTokenLifetime = "access_token_lifetime";
+        public const string AbsoluteRefreshTokenLifetime = "absolute_refresh_token_lifetime";
         public const string ArbitraryOIDCResourceOwner = "arbitrary_oidc_resource_owner";
         public const string ArbitraryClaims = "arbitrary_claims";
         public const string Authority = "authority";
