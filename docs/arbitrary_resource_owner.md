@@ -49,6 +49,7 @@ Body:
 	scope: offline_access nitro metal
 	arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
 	subject:Ratt
+	access_token_lifetime:3600
  ```
  ```
  {
