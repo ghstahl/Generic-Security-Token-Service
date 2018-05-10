@@ -28,7 +28,10 @@
   <dt>arbitrary_claims</dt>
   <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
 	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
-</dl>
+	
+  <dt>access_token_lifetime</dt>
+  <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
+</dl>  
 
 ## Example  
 I use [Postman](https://www.getpostman.com/)  
@@ -46,6 +49,7 @@ Body:
 	scope: offline_access nitro metal
 	arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
 	subject:Ratt
+	access_token_lifetime:3600
  ```
  ```
  {
