@@ -31,7 +31,8 @@
 	
   <dt>access_token_lifetime</dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
-</dl>
+</dl>  
+
 ## Example  
 I use [Postman](https://www.getpostman.com/)  
 
