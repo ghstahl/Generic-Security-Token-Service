@@ -116,8 +116,26 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 new Claim(ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims, raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims])
             };
 
-            userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
+            // optional stuff;
+            var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
+            if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
+            {
+                var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
+                if (accessTokenLifetime > 0 && accessTokenLifetime < context.Request.AccessTokenLifetime)
+                {
+                    context.Request.AccessTokenLifetime = accessTokenLifetime;
+                }
+                else
+                {
+                    var errorDescription =
+                        $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and less than configured AccessTokenLifetime.";
+                    LogError(errorDescription);
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
+                    return;
+                }
+            }
 
+            userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
             context.Result = new GrantValidationResult(principal.GetSubjectId(), ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner, userClaimsFinal);
         }
         

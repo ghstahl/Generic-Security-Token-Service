@@ -19,6 +19,9 @@ namespace IdentityServer4.HostApp
             };
         }
 
+        private static int AccessTokenLifetimeMax => 60 * 60 * 24 * 30;// 30 day
+
+        private static int AbsoluteRefreshTokenLifetimeMax => 60 * 60 * 24 * 30 * 12;// 1 yearish
         // clients want to access resources (aka scopes)
         public static IEnumerable<Client> GetClients()
         {
@@ -41,7 +44,9 @@ namespace IdentityServer4.HostApp
                         new Secret("secret".Sha256())
                     },
                     AllowedScopes = { "nitro","metal" },
-                    RequireClientSecret = false
+                    RequireClientSecret = false,
+                    AccessTokenLifetime = AccessTokenLifetimeMax,//this is the default if not pased in, and the upperrange.
+                    AbsoluteRefreshTokenLifetime =AbsoluteRefreshTokenLifetimeMax
                 } 
             };
         }
