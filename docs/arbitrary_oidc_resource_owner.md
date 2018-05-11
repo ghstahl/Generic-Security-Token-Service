@@ -77,6 +77,7 @@ Body:
     "refresh_token": "a89d5053355efda2b7657e4b58a4f6d82892c1a1594b5ddd385571305b3761c1"
 }
 ```
+[jwt.io](https://jwt.io/)  
 ```
 {
   "nbf": 1525970967,
