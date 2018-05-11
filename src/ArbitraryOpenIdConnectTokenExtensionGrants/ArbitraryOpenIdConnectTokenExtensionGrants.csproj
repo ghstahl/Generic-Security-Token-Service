@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="IdentityModel" Version="3.6.1" />
-    <PackageReference Include="IdentityServer4" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
