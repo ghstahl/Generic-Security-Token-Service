@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArbitraryNoSubjectExtension
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4\IdentityServer4.csproj", "{6CD54B58-FD9E-4123-B4EB-516FD77E8FBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests_ExtensionGrants", "Tests_ExtensionGrants\Tests_ExtensionGrants.csproj", "{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{6CD54B58-FD9E-4123-B4EB-516FD77E8FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CD54B58-FD9E-4123-B4EB-516FD77E8FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CD54B58-FD9E-4123-B4EB-516FD77E8FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{391F2E85-5E5B-4AE3-8A49-F73760371A79} = {019B24FC-5A59-45CC-B07E-2399CF53AC53}
 		{437E1CF6-FBA1-4332-A714-FB5B4CC9F5CB} = {ED3E98C1-9DDC-41A7-AA8A-9FCF2B0663AB}
 		{6CD54B58-FD9E-4123-B4EB-516FD77E8FBF} = {019B24FC-5A59-45CC-B07E-2399CF53AC53}
+		{5BAA3343-8BA0-4145-93D0-F2BB8C4C77C8} = {ED3E98C1-9DDC-41A7-AA8A-9FCF2B0663AB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}
