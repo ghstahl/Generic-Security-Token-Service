@@ -110,10 +110,6 @@ namespace Tests_ExtensionGrants
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
 
-            client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
             paramaters = new Dictionary<string, string>()
             {
                 {OidcConstants.TokenRequest.ClientId, ClientId},
@@ -154,10 +150,6 @@ namespace Tests_ExtensionGrants
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
 
-            client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
             paramaters = new Dictionary<string, string>()
             {
                 {OidcConstants.TokenRequest.ClientId, ClientId},
@@ -169,7 +161,7 @@ namespace Tests_ExtensionGrants
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
 
-            client = new TokenClient(
+            var revocationTokenClient = new TokenClient(
                 _server.BaseAddress + "connect/revocation",
                 ClientId,
                 ClientSecret,
@@ -179,12 +171,8 @@ namespace Tests_ExtensionGrants
                 {"token_type_hint", OidcConstants.TokenTypes.RefreshToken},
                 {"token", result.RefreshToken}
             };
-            await client.RequestAsync(paramaters);
+            await revocationTokenClient.RequestAsync(paramaters);
 
-            client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
             paramaters = new Dictionary<string, string>()
             {
                 {OidcConstants.TokenRequest.ClientId, ClientId},
@@ -264,7 +252,7 @@ namespace Tests_ExtensionGrants
             };
             await revocationTokenClient.RequestAsync(paramaters);
 
-            
+            // try refreshing, these should now fail the refresh.
             paramaters = new Dictionary<string, string>()
             {
                 {OidcConstants.TokenRequest.ClientId, ClientId},
