@@ -57,4 +57,24 @@ Body:
     "token_type": "Bearer",
     "refresh_token": "d70394dea53d481146b4054bdfcbf8aa2f912c662f6e434fdce103238ddb71b5"
 }
- ```
+```
+```
+{
+  "nbf": 1526011675,
+  "exp": 1528603675,
+  "iss": "http://localhost:21354",
+  "aud": [
+    "http://localhost:21354/resources",
+    "metal",
+    "nitro"
+  ],
+  "client_id": "arbitrary-resource-owner-client",
+  "sub": "Ratt",
+  "some-guid": "1234abcd",
+  "In": "Flames",
+  "scope": [
+    "metal",
+    "nitro"
+  ]
+}
+```
