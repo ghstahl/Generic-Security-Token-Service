@@ -35,7 +35,8 @@ namespace IdentityServer4.HostApp
                     AllowedGrantTypes = new[]
                     { 
                         ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner,
-                        ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner
+                        ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner,
+                        ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject
                     },
                     AllowOfflineAccess = true,
                     RefreshTokenUsage = TokenUsage.OneTimeOnly,
@@ -46,7 +47,8 @@ namespace IdentityServer4.HostApp
                     AllowedScopes = { "nitro","metal" },
                     RequireClientSecret = false,
                     AccessTokenLifetime = AccessTokenLifetimeMax,//this is the default if not pased in, and the upperrange.
-                    AbsoluteRefreshTokenLifetime =AbsoluteRefreshTokenLifetimeMax
+                    AbsoluteRefreshTokenLifetime =AbsoluteRefreshTokenLifetimeMax,
+                    ClientClaimsPrefix = null
                 } 
             };
         }

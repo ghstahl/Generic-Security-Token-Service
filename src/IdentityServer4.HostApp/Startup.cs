@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
@@ -44,8 +45,10 @@ namespace IdentityServer4.HostApp
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
+                .AddArbitraryNoSubjectExtensionGrant()
                 //.AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService()
                 ;
+            services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
