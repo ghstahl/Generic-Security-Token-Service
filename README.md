@@ -3,10 +3,10 @@
 
 I wanted to use [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) as a generic token managment service.
 I wanted this service to be without knowledge of any user database, let alone claims for users.  
-I wanted this service to manage the scopes that a give client is allowed.  
+I wanted this service to manage the scopes that a given client is allowed.  
 I wanted this service to take care of the job of what its good at, token managment when tokens are in flight.  
 
-By the time I call this service to build a token for me, I have already figured out the user and claims on my side.
+By the time I call this service to mint a token for me, I have already figured out the user and claims on my side.
 
 
 ## References 
