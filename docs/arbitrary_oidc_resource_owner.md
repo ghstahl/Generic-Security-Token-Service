@@ -76,4 +76,31 @@ Body:
     "token_type": "Bearer",
     "refresh_token": "a89d5053355efda2b7657e4b58a4f6d82892c1a1594b5ddd385571305b3761c1"
 }
- ```
+```
+```
+{
+  "nbf": 1525970967,
+  "exp": 1525974567,
+  "iss": "http://localhost:21354",
+  "aud": [
+    "http://localhost:21354/resources",
+    "metal",
+    "nitro"
+  ],
+  "client_id": "arbitrary-resource-owner-client",
+  "sub": "myCompany.104758924428036663951",
+  "auth_time": 1525970967,
+  "idp": "local",
+  "some-guid": "1234abcd",
+  "In": "Flames",
+  "scope": [
+    "metal",
+    "nitro",
+    "offline_access"
+  ],
+  "amr": [
+    "arbitrary_oidc_resource_owner",
+    "pwd"
+  ]
+}
+```
