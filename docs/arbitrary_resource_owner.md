@@ -59,3 +59,29 @@ Body:
     "refresh_token": "71e7c354d005f50b1e2cd52089c0dff2efc45c6e25072948b04c4d947c7c5b5c"
 }
  ```
+ ```
+ {
+  "nbf": 1524947009,
+  "exp": 1524950609,
+  "iss": "http://localhost:21354",
+  "aud": [
+    "http://localhost:21354/resources",
+    "metal",
+    "nitro"
+  ],
+  "client_id": "arbitrary-resource-owner-client",
+  "sub": "Ratt",
+  "auth_time": 1524947009,
+  "idp": "local",
+  "some-guid": "1234abcd",
+  "In": "Flames",
+  "scope": [
+    "metal",
+    "nitro",
+    "offline_access"
+  ],
+  "amr": [
+    "arbitrary_resource_owner"
+  ]
+}
+ ```
