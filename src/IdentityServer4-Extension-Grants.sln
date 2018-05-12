@@ -39,6 +39,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests_ExtensionGrants", "Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4\IdentityServer4.csproj", "{1C8786DB-B967-4704-B3CE-F65B4AB215FE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiRefreshTokenSameSubjectSameClientIdWorkAround", "MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj", "{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{1C8786DB-B967-4704-B3CE-F65B4AB215FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C8786DB-B967-4704-B3CE-F65B4AB215FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C8786DB-B967-4704-B3CE-F65B4AB215FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

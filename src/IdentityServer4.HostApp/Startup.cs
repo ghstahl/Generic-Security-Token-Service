@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 
@@ -37,7 +38,7 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentityServer()
+            var builder = services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryApiResources(Config.GetApiResources())
                 .AddInMemoryClientsExtra(Config.GetClients())
@@ -45,19 +46,23 @@ namespace IdentityServer4.HostApp
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
-                .AddArbitraryNoSubjectExtensionGrant()
-                //.AddArbitraryOpenIdConnectTokenExtensionGrantPassThroughProfileService()
-                ;
+                .AddArbitraryNoSubjectExtensionGrant();
+
+            // my replacement services.
+            builder.AddRefreshTokenRevokationGeneratorWorkAround();
+
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
+            services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
 
             services.AddMemoryCache();
             services.AddMvc();
 
             services.AddLogging();
             services.AddWebEncoders();
+           
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

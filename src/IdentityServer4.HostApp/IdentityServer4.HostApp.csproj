@@ -18,5 +18,6 @@
     <ProjectReference Include="..\ArbitraryOpenIdConnectTokenExtensionGrants\ArbitraryOpenIdConnectTokenExtensionGrants.csproj" />
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
   </ItemGroup>
 </Project>
