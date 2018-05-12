@@ -22,3 +22,5 @@ By the time I call this service to mint a token for me, I have already figured o
 #### Extension Grant: [arbitrary_oidc_resource_owner](docs/arbitrary_oidc_resource_owner.md)  
 
 
+## Workarounds  
+[refresh_token_revocation_workaround](docs/refresh_token_revocation_workaround.md)  
