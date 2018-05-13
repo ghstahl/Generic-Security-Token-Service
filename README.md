@@ -1,5 +1,5 @@
 # IdentityServer4 Extension Grants
-## This is really a generic JWT service  
+## An OAuth2 service that lets you create tokens for anything!  
 
 I wanted to use [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) as a generic token managment service.
 I wanted this service to be without knowledge of any user database, let alone claims for users.  
