@@ -4,24 +4,26 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
-using ArbitraryOpenIdConnectTokenExtensionGrants;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
-using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
-using IdentityServer4.Models;
-using IdentityServer4.Stores;
-using IdentityServer4Extras;
-using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using IdentityServer4.HostApp.IDP.Data;
+using IdentityServer4.HostApp.IDP.Services;
+using IdentityServer4.Test;
+using IdentityServer4Extras;
+using IdentityServer4Extras.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 
-namespace IdentityServer4.HostApp
+namespace IdentityServer4.HostApp.IDP
 {
     public class Startup
     {
@@ -34,12 +36,20 @@ namespace IdentityServer4.HostApp
             StartupLogger();
         }
 
-        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+                
+
             var builder = services.AddIdentityServer()
+                .AddAspNetIdentity<ApplicationUser>()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
@@ -50,7 +60,7 @@ namespace IdentityServer4.HostApp
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
                 .AddArbitraryNoSubjectExtensionGrant();
-
+                
             // my replacement services.
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
 
@@ -84,21 +94,26 @@ namespace IdentityServer4.HostApp
                 });
 
             services.AddMemoryCache();
-            services.AddMvc();
-
+            services.AddMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions.AuthorizeFolder("/Account/Manage");
+                    options.Conventions.AuthorizePage("/Account/Logout");
+                });
             services.AddLogging();
-            services.AddWebEncoders();
-           
+            // Register no-op EmailSender used by account confirmation and password reset during development
+            // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
+            services.AddSingleton<IEmailSender, EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, 
-            IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
             }
             else
             {
@@ -107,9 +122,10 @@ namespace IdentityServer4.HostApp
 
             app.UseStaticFiles();
             app.UseIdentityServer();
+            app.UseAuthentication();
+
             app.UseMvc();
         }
-
         private void StartupLogger()
         {
             var appDataPath = Path.Combine(_hostingEnvironment.ContentRootPath, "App_Data");

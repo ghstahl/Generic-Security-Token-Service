@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4.HostApp\IdentityServer4.HostApp.csproj" />
+    <ProjectReference Include="..\IdentityServer4.HostApp.IDP\IdentityServer4.HostApp.IDP.csproj" />
   </ItemGroup>
 
 </Project>

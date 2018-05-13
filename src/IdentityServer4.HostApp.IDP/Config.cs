@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using IdentityServer4.Models;
 using IdentityServer4.Test;
-using IdentityServer4Extras;
 
-namespace IdentityServer4.HostApp
+namespace IdentityServer4.HostApp.IDP
 {
     public class Config
     {
