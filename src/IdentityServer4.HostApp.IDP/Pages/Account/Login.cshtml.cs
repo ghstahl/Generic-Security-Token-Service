@@ -27,17 +27,18 @@ namespace IdentityServer4.HostApp.IDP.Pages.Account
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
 
-        private readonly SignInManager<ApplicationUser> _signInManager;
+       
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger,
+        public LoginModel( 
+            ILogger<LoginModel> logger,
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
             TestUserStore users = null)
         {
-            _signInManager = signInManager;
+           
             _logger = logger;
 
             // if the TestUserStore is not in DI, then we'll just use the global users collection
@@ -74,6 +75,13 @@ namespace IdentityServer4.HostApp.IDP.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
+        public async Task<IActionResult> ExternalLogin(string provider, string returnUrl = null)
+        {
+            // Request a redirect to the external login provider.
+            var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
 
         public async Task<IActionResult> OnGetAsync(string returnUrl = null)
         {
@@ -92,12 +100,16 @@ namespace IdentityServer4.HostApp.IDP.Pages.Account
 
             if (LoginViewModel.IsExternalLoginOnly)
             {
-
+                return await ExternalLogin(LoginViewModel.ExternalLoginScheme, returnUrl);
             }
+            var externalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            var qui = from externalLogin in externalLogins
+                join visibleExternalProviders in LoginViewModel.VisibleExternalProviders
+                    on externalLogin.Name equals visibleExternalProviders.AuthenticationScheme
+                select externalLogin;
+            ExternalLogins = qui.ToList();
 
-            ReturnUrl = returnUrl;
             return Page();
         }
 

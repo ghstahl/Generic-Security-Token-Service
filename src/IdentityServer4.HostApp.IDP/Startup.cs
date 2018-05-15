@@ -40,16 +40,8 @@ namespace IdentityServer4.HostApp.IDP
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-                
 
             var builder = services.AddIdentityServer()
-                .AddAspNetIdentity<ApplicationUser>()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
@@ -75,8 +67,8 @@ namespace IdentityServer4.HostApp.IDP
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
 
-                    options.ClientId = "434483408261-55tc8n0cs4ff1fe21ea8df2o443v2iuc.apps.googleusercontent.com";
-                    options.ClientSecret = "3gcoTrEDPPJ0ukn_aYYT6PWo";
+                    options.ClientId = Configuration["Google-ClientId"];
+                    options.ClientSecret = Configuration["Google-ClientSecret"];
                 })
                 .AddOpenIdConnect("oidc", "OpenID Connect", options =>
                 {
@@ -103,7 +95,7 @@ namespace IdentityServer4.HostApp.IDP
             services.AddLogging();
             // Register no-op EmailSender used by account confirmation and password reset during development
             // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=532713
-            services.AddSingleton<IEmailSender, EmailSender>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -122,7 +114,7 @@ namespace IdentityServer4.HostApp.IDP
 
             app.UseStaticFiles();
             app.UseIdentityServer();
-            app.UseAuthentication();
+           // app.UseAuthentication();
 
             app.UseMvc();
         }
