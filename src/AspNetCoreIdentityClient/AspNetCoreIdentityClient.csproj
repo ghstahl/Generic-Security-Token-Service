@@ -14,6 +14,7 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IdentityModelExtras\IdentityModelExtras.csproj" />
     <ProjectReference Include="..\P7.AspNetCore.Identity.InMemory\P7.AspNetCore.Identity.InMemory.csproj" />
   </ItemGroup>
 </Project>

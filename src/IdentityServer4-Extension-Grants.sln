@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspNetCoreIdentityClient", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.AspNetIdentityHost", "IdentityServer4.AspNetIdentityHost\IdentityServer4.AspNetIdentityHost.csproj", "{A4BEFDDE-A84A-44EA-B342-C94E5243B01B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityModelExtras", "IdentityModelExtras\IdentityModelExtras.csproj", "{017B2247-2FE4-466B-9843-67EE21976A71}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -131,6 +133,10 @@ Global
 		{A4BEFDDE-A84A-44EA-B342-C94E5243B01B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4BEFDDE-A84A-44EA-B342-C94E5243B01B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4BEFDDE-A84A-44EA-B342-C94E5243B01B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{017B2247-2FE4-466B-9843-67EE21976A71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{017B2247-2FE4-466B-9843-67EE21976A71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{017B2247-2FE4-466B-9843-67EE21976A71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{017B2247-2FE4-466B-9843-67EE21976A71}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +153,7 @@ Global
 		{D94E5824-162E-4AE9-AF78-FA0B02FEF03A} = {8DE49F3D-036E-4993-AFA2-0ADB9306FB42}
 		{61550785-65ED-43AE-B3CD-7FA42E97D85E} = {8DE49F3D-036E-4993-AFA2-0ADB9306FB42}
 		{A4BEFDDE-A84A-44EA-B342-C94E5243B01B} = {2A08CE43-F1C7-4557-BA6A-E72277B9C483}
+		{017B2247-2FE4-466B-9843-67EE21976A71} = {8DE49F3D-036E-4993-AFA2-0ADB9306FB42}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}

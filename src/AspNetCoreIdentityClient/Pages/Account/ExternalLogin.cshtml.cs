@@ -73,8 +73,12 @@ namespace AspNetCoreIdentityClient.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
+           
             if (result.Succeeded)
-            {
+            { 
+                // Update the token
+                await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(Url.GetLocalUrl(returnUrl));
             }
@@ -116,10 +120,15 @@ namespace AspNetCoreIdentityClient.Pages.Account
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
+
+                        // Update the token
+                        await _signInManager.UpdateExternalAuthenticationTokensAsync(info);
+
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                         return LocalRedirect(Url.GetLocalUrl(returnUrl));
                     }
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

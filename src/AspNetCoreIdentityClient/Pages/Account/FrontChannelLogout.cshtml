@@ -1,0 +1,18 @@
+﻿@page
+@model AspNetCoreIdentityClient.Pages.Account.FrontChannelLogoutModel
+@{
+    ViewData["Title"] = "FrontChannelLogout";
+    var id_token = Model.IdToken;
+}
+
+<h2>@id_token</h2>
+
+@section Scripts {
+    <script>
+
+        function doRedirect() {
+            window.location.replace("/Index");
+        }
+        setTimeout(doRedirect, 5000);
+    </script>
+}

@@ -1,0 +1,47 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AspNetCoreIdentityClient.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Logging;
+
+namespace AspNetCoreIdentityClient.Pages.Account
+{
+    public class FrontChannelLogoutModel : PageModel
+    {
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private OIDCDiscoverCacheContainer _discoverCacheContainer;
+        private readonly ILogger _logger;
+        public FrontChannelLogoutModel(
+            SignInManager<ApplicationUser> signInManager,
+            OIDCDiscoverCacheContainer discoverCacheContainer,
+            ILogger<FrontChannelLogoutModel> logger)
+        {
+            _signInManager = signInManager;
+            _discoverCacheContainer = discoverCacheContainer;
+            _logger = logger;
+        }
+
+        public string IdToken { get; private set; }
+        public string EndSessionUrl { get; set; }
+        public async Task OnGetAsync()
+        {
+            var clientSignoutCallback = $"{Request.Scheme}://{Request.Host}/Account/SignoutCallbackOidc";
+            // Get id_token first to seed the iframe logout
+            var user = await _signInManager.UserManager.GetUserAsync(User);
+            IdToken = await _signInManager.UserManager.GetAuthenticationTokenAsync(user, "oidc", "id_token");
+
+            var discoveryCache = await _discoverCacheContainer.DiscoveryCache.GetAsync();
+            var endSession = discoveryCache.EndSessionEndpoint;
+            EndSessionUrl = $"{endSession}?id_token_hint={IdToken}&post_logout_redirect_uri={clientSignoutCallback}";
+          
+            // no matter what, we are logging out our own app.
+            await _signInManager.SignOutAsync();
+            _logger.LogInformation("User logged out.");
+        }
+
+    }
+}

@@ -21,13 +21,12 @@ namespace AspNetCoreIdentityClient.InMemory
                 options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             });
- 
 
-            authenticationBuilder.AddOpenIdConnect("oidc", options =>
+
+            var scheme = "oidc";
+            authenticationBuilder.AddOpenIdConnect(scheme, options =>
             {
-             //   options.SignInScheme = "Cookies";
-
-                options.Authority = "http://localhost:5000";
+                options.Authority = configuration[$"oauth2:{scheme}:authority"];
                 options.RequireHttpsMetadata = false;
 
                 options.ClientId = "mvc2";
