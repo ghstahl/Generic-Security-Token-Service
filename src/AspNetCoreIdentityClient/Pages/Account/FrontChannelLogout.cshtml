@@ -3,9 +3,12 @@
 @{
     ViewData["Title"] = "FrontChannelLogout";
     var id_token = Model.IdToken;
+    var endSessionUrl = Model.EndSessionUrl;
 }
 
 <h2>@id_token</h2>
+
+<iframe  src="@endSessionUrl"></iframe>
 
 @section Scripts {
     <script>
@@ -13,6 +16,6 @@
         function doRedirect() {
             window.location.replace("/Index");
         }
-        setTimeout(doRedirect, 5000);
+      //  setTimeout(doRedirect, 5000);
     </script>
 }
