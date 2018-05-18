@@ -28,7 +28,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                       new List<string>
                                                                       {
                                                                           "subject",
-                                                                          "token"
+                                                                          "access_token"
                                                                       });
 
         public ArbitraryResourceOwnerRequestValidator(

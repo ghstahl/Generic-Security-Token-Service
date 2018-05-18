@@ -6,12 +6,10 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityModel.Client;
-using IdentityModelExtras;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ArbitraryOpenIdConnectTokenExtensionGrants
+namespace IdentityModelExtras
 {
     public class ProviderValidator
     {
@@ -70,11 +68,28 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
 
             return cacheEntry;
         }
-        public async Task<ClaimsPrincipal> ValidateToken(string idToken)
+
+        public async Task<ClaimsPrincipal> ValidateToken(string idToken, TokenValidationParameters tvp)
         {
             var doc = await GetDiscoveryResponseAsync();
             var certificates = await this.FetchCertificates();
+            tvp.IssuerSigningKeys = certificates;
+            tvp.ValidIssuers = new List<string> {doc.Issuer};
+            if (!string.IsNullOrEmpty(_audience))
+            {
+                tvp.ValidateAudience = true;
+                tvp.ValidAudience = _audience;
+            }
 
+            JwtSecurityTokenHandler jsth = new JwtSecurityTokenHandler();
+            SecurityToken validatedToken;
+            ClaimsPrincipal cp = jsth.ValidateToken(idToken, tvp, out validatedToken);
+
+            return cp;
+        }
+
+        public async Task<ClaimsPrincipal> ValidateToken(string idToken)
+        {
             TokenValidationParameters tvp = new TokenValidationParameters()
             {
                 ValidateActor = false, // check the profile ID
@@ -82,31 +97,15 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
                 ValidateAudience = false, // check the client ID
                 ValidAudience = null,
 
-                ValidateIssuer = true, // check token came from Google
-                ValidIssuers = new List<string> { doc.Issuer },
-
+                ValidateIssuer = true, // check token came from ?
                 ValidateIssuerSigningKey = true,
                 RequireSignedTokens = true,
-                //     IssuerSigningKeys = certificates.Values.Select(x => new X509SecurityKey(x)),
-                IssuerSigningKeys = certificates,
 
                 ValidateLifetime = true,
                 RequireExpirationTime = true,
                 ClockSkew = TimeSpan.FromHours(13)
             };
-
-            if (!string.IsNullOrEmpty(_audience))
-            {
-                tvp.ValidateAudience = true;
-                tvp.ValidAudience = _audience;
-            }
-
-
-            JwtSecurityTokenHandler jsth = new JwtSecurityTokenHandler();
-            SecurityToken validatedToken;
-            ClaimsPrincipal cp = jsth.ValidateToken(idToken, tvp, out validatedToken);
-
-            return cp;
+            return await ValidateToken(idToken, tvp);
         }
     }
 }

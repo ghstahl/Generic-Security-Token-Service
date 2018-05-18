@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityModelExtras;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
@@ -15,6 +16,7 @@ using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
 namespace ArbitraryResourceOwnerExtensionGrant
@@ -30,9 +32,12 @@ namespace ArbitraryResourceOwnerExtensionGrant
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
         private ISystemClock _clock;
+        private IMemoryCache _cache;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
         private OIDCDiscoverCacheContainer _discoveryCacheContainer;
+        private ProviderValidator ProviderValidator { get; set; }
+
         public ArbitraryResourceOwnerExtensionGrantValidator(
             IdentityServerOptions options,
             IClientStore clientStore,
@@ -40,6 +45,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             IResourceStore resourceStore,
             IEventService events,
             ISystemClock clock,
+            IMemoryCache cache,
             ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
@@ -48,6 +54,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
         {
             _logger = logger;
             _clock = clock;
+            _cache = cache;
             _events = events;
             _clientSecretValidator = clientSecretValidator;
             _options = options;
@@ -57,6 +64,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
             _principalAugmenter = principalAugmenter;
             _discoveryCacheContainer = discoveryCacheContainer;
+            ProviderValidator = new ProviderValidator(discoveryCacheContainer,_cache);
+
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -105,11 +114,28 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
             _validatedRequest.GrantType = grantType;
             var resource = await _resourceStore.GetAllResourcesAsync();
+
+            var subject = "";
+
+            // if access_token exists, it wins.
+            var accessToken = context.Request.Raw.Get("access_token");
+            if (!string.IsNullOrWhiteSpace(accessToken))
+            {
+                var pp = await ProviderValidator.ValidateToken(accessToken);
+
+                subject = pp.GetSubjectOrNamedIdentifier();
+              
+            }
+
+            if (string.IsNullOrWhiteSpace(subject))
+            {
+                subject = context.Request.Raw.Get("subject");
+            }
             // get user's identity
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, context.Request.Raw.Get("subject")),
-                new Claim("sub", context.Request.Raw.Get("subject"))
+                new Claim(ClaimTypes.NameIdentifier, subject),
+                new Claim("sub", subject)
             };
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));

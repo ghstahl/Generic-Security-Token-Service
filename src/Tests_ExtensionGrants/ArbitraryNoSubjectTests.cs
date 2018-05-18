@@ -24,6 +24,7 @@ namespace Tests_ExtensionGrants
         {
             // Arrange
             _server = new TestServer(new WebHostBuilder()
+                .UseEnvironment("UnitTest") // You can set the environment you want (development, staging, production)
                 .UseStartup<Startup>());
         }
 

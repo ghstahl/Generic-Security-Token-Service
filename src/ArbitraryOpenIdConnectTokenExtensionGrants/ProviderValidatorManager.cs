@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IdentityModelExtras;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 

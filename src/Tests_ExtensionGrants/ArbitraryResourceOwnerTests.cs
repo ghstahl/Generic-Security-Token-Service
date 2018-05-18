@@ -24,6 +24,7 @@ namespace Tests_ExtensionGrants
         {
             // Arrange
             _server = new TestServer(new WebHostBuilder()
+                .UseEnvironment("UnitTest") // You can set the environment you want (development, staging, production)
                 .UseStartup<Startup>());
         }
         [TestMethod]
@@ -53,6 +54,63 @@ namespace Tests_ExtensionGrants
             var result = await client.RequestAsync(paramaters);
             result.Error.ShouldNotBeNullOrEmpty();
             result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
+        }
+        [TestMethod]
+        public async Task Mint_arbitrary_resource_owner_remint_with_access_token()
+        {
+            var client = new TokenClient(
+                _server.BaseAddress + "connect/token",
+                ClientId,
+                _server.CreateHandler());
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
+                    "{'some-guid':'1234abcd','In':'Flames'}"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
+                    "Ratt"
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.AccessToken.ShouldNotBeNullOrEmpty();
+            result.RefreshToken.ShouldNotBeNullOrEmpty();
+            result.ExpiresIn.ShouldNotBeNull();
+
+            // remint, but pass in the access_token from above
+            paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
+                    "{'some-guid':'1234abcd','In':'Flames'}"
+                },
+                {
+                    OidcConstants.TokenTypes.AccessToken,
+                    result.AccessToken
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
+            };
+            result = await client.RequestAsync(paramaters);
+            result.AccessToken.ShouldNotBeNullOrEmpty();
+            result.RefreshToken.ShouldNotBeNullOrEmpty();
+            result.ExpiresIn.ShouldNotBeNull();
         }
 
         [TestMethod]
