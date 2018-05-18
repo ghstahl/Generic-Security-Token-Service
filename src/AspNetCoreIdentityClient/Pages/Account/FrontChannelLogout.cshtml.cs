@@ -27,7 +27,7 @@ namespace AspNetCoreIdentityClient.Pages.Account
 
         public string IdToken { get; private set; }
         public string EndSessionUrl { get; set; }
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
             var clientSignoutCallback = $"{Request.Scheme}://{Request.Host}/Account/SignoutCallbackOidc";
             // Get id_token first to seed the iframe logout
@@ -40,6 +40,8 @@ namespace AspNetCoreIdentityClient.Pages.Account
           
             // no matter what, we are logging out our own app.
             await _signInManager.SignOutAsync();
+
+            return new RedirectResult(EndSessionUrl);
             _logger.LogInformation("User logged out.");
         }
 
