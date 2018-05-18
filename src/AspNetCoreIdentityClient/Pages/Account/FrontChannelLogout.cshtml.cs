@@ -37,12 +37,17 @@ namespace AspNetCoreIdentityClient.Pages.Account
             var discoveryCache = await _discoverCacheContainer.DiscoveryCache.GetAsync();
             var endSession = discoveryCache.EndSessionEndpoint;
             EndSessionUrl = $"{endSession}?id_token_hint={IdToken}&post_logout_redirect_uri={clientSignoutCallback}";
-          
-            // no matter what, we are logging out our own app.
-            await _signInManager.SignOutAsync();
 
-            return new RedirectResult(EndSessionUrl);
+            // no matter what, we are logging out our own app.
+            // Do Not trust the provider to keep its end of the bargain to frontchannel sign us out.
+            await _signInManager.SignOutAsync();
             _logger.LogInformation("User logged out.");
+
+            // this redirect is to the provider to log everyone else out.  
+            // We will get a double hit here, as our $"{Request.Scheme}://{Request.Host}/Account/SignoutFrontChannel";
+            // will get hit as well.  
+           return new RedirectResult(EndSessionUrl);
+           //return Page();  return this is you want iFrame loggout.  Your OIDC provider needs to let this go through though.
         }
 
     }
