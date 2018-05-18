@@ -21,6 +21,7 @@ using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 
+
 namespace IdentityServer4.HostApp
 {
     public class Startup
@@ -39,6 +40,8 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<OIDCDiscoverCacheContainer>();
+
             var builder = services.AddIdentityServer()
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())

@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityModel.Client;
+using IdentityModelExtras;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.IdentityModel.Tokens;
@@ -16,11 +17,11 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
     {
         private MemoryCache _certCache;
         private List<RsaSecurityKey> _cachedCerts;
-        private DiscoverCacheContainer _discoverCacheContainer;
+        private IDiscoveryCacheContainer _discoverCacheContainer;
         private string _audience;
         public DiscoveryResponse _discoveryResponse;
         private IMemoryCache _cache;
-        public ProviderValidator(DiscoverCacheContainer discoverCacheContainer, 
+        public ProviderValidator(IDiscoveryCacheContainer discoverCacheContainer, 
             IMemoryCache cache,string audience = null)
         {
             _discoverCacheContainer = discoverCacheContainer;

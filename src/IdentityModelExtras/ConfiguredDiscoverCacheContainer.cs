@@ -24,7 +24,7 @@ namespace IdentityModelExtras
   }
 
      */
-    public class ConfiguredDiscoverCacheContainer : DiscoverCacheContainer
+    public class ConfiguredDiscoverCacheContainer : IDiscoveryCacheContainer
     {
         private IConfiguration _configuration;
         private DiscoveryCache _discoveryCache { get; set; }
@@ -35,7 +35,7 @@ namespace IdentityModelExtras
             _configuration = configuration;
             Scheme = scheme;
         }
-        public override DiscoveryCache DiscoveryCache
+        public  DiscoveryCache DiscoveryCache
         {
             get
             {

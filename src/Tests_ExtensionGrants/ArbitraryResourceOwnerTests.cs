@@ -26,6 +26,34 @@ namespace Tests_ExtensionGrants
             _server = new TestServer(new WebHostBuilder()
                 .UseStartup<Startup>());
         }
+        [TestMethod]
+        public async Task Mint_arbitrary_resource_owner_missing_subject_and_token()
+        {
+            var client = new TokenClient(
+                _server.BaseAddress + "connect/token",
+                ClientId,
+                _server.CreateHandler());
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
+                    "{'some-guid':'1234abcd','In':'Flames'}"
+                },
+               
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
+        }
 
         [TestMethod]
         public async Task Mint_arbitrary_resource_owner_with_offline_access()

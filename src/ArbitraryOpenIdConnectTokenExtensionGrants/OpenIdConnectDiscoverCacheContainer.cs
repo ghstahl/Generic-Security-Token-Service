@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using IdentityModel.Client;
+using IdentityModelExtras;
 
 namespace ArbitraryOpenIdConnectTokenExtensionGrants
 {
-    public class OpenIdConnectDiscoverCacheContainer : DiscoverCacheContainer
+
+    public class OpenIdConnectDiscoverCacheContainer : IDiscoveryCacheContainer
     {
        
         private AuthorityConfig _authorityConfig;
@@ -22,7 +24,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants
             }
             _authorityConfig = authorityConfig;
         }
-        public override DiscoveryCache DiscoveryCache
+        public DiscoveryCache DiscoveryCache
         {
             get
             {

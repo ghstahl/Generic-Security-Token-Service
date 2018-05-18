@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
+    
     public class ArbitraryResourceOwnerRequestValidator
     {
         private readonly ILogger<ArbitraryResourceOwnerRequestValidator> _logger;
@@ -16,11 +17,20 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "subject",
                                                                           "client_id",
                                                                           "client_secret",
                                                                           "arbitrary_claims"
                                                                       });
+
+        private static List<string> _oneMustExitsArguments;
+        private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
+                                                                  (_oneMustExitsArguments =
+                                                                      new List<string>
+                                                                      {
+                                                                          "subject",
+                                                                          "token"
+                                                                      });
+
         public ArbitraryResourceOwnerRequestValidator(
             ILogger<ArbitraryResourceOwnerRequestValidator> logger)
         {
@@ -33,6 +43,15 @@ namespace ArbitraryResourceOwnerExtensionGrant
             var error = false;
             var los = new List<string>();
 
+            var oneMustExistResult = (from item in OneMustExitsArguments
+                where rr.Keys.Contains(item)
+                select item).ToList();
+
+            if (!oneMustExistResult.Any())
+            {
+                error = true;
+                los.AddRange(OneMustExitsArguments.Select(item => $"[on or the other] {item} is missing!"));
+            }
             var result = RequiredArbitraryArguments.Except(rr.Keys);
             if (result.Any())
             {

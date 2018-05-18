@@ -9,6 +9,7 @@ namespace ArbitraryResourceOwnerExtensionGrant.Extensions
         {
             services.AddTransient<ArbitraryResourceOwnerRequestValidator>();
             services.AddTransient<IProfileServicePlugin, ArbitraryResourceOwnerProfileService>();
+            services.AddSingleton<OIDCDiscoverCacheContainer>();
         }
     }
 }

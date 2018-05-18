@@ -32,6 +32,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
         private ISystemClock _clock;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
+        private OIDCDiscoverCacheContainer _discoveryCacheContainer;
         public ArbitraryResourceOwnerExtensionGrantValidator(
             IdentityServerOptions options,
             IClientStore clientStore,
@@ -42,7 +43,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
             ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
-            PrincipalAugmenter principalAugmenter)
+            PrincipalAugmenter principalAugmenter,
+            OIDCDiscoverCacheContainer discoveryCacheContainer)
         {
             _logger = logger;
             _clock = clock;
@@ -54,6 +56,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
             _principalAugmenter = principalAugmenter;
+            _discoveryCacheContainer = discoveryCacheContainer;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
