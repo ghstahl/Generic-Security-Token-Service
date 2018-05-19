@@ -1,3 +1,8 @@
+<!--
+  Title: IdentityServer4 Extension Grants
+  Description: An OAuth2 service that lets you create tokens for anything.
+  Author: Herb Stahl
+  -->
 # IdentityServer4 Extension Grants
 ## An OAuth2 service that lets you create tokens for anything!  
 
