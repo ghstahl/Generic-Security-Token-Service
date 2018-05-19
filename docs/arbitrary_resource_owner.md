@@ -47,12 +47,12 @@ Headers:
 
 Body:
     grant_type:arbitrary_resource_owner
-	client_id:arbitrary-resource-owner-client
-	client_secret:secret
-	scope: offline_access nitro metal
-	arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
-	subject:Ratt
-	access_token_lifetime:3600
+    client_id:arbitrary-resource-owner-client
+    client_secret:secret
+    scope: offline_access nitro metal
+    arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
+    subject:Ratt
+    access_token_lifetime:3600
 ```
 or ...  
 ```
@@ -62,13 +62,13 @@ Headers:
     Content-Type:application/x-www-form-urlencoded
 
 Body:
-	grant_type:arbitrary_resource_owner
-	client_id:arbitrary-resource-owner-client
-	client_secret:secret
-	scope:offline_access nitro metal
-	arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
-	access_token_lifetime:3600
-	access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6ImQxOTU1YjExZjAxZGQ5ZGI5ZmFhNTE3OGU0YWE2MjI2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE1MjY2OTcwMTMsImV4cCI6MTUyNjcwMDYxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTYiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTYvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiUmF0dCIsImF1dGhfdGltZSI6MTUyNjY5NzAxMywiaWRwIjoibG9jYWwiLCJzb21lLWd1aWQiOiIxMjM0YWJjZCIsIkluIjoiRmxhbWVzIiwic2NvcGUiOlsibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.lLai2_h2bP7Pda_qplK9gXhaHCk2MThXu4ypMFDPm3RdlBMjErCCUNQFiueHsI314797EhX361pDjDw_smn5noTcVioRsbJYFZYMOjgWrKTmOjZiDwn7rlLPQOe5ubI_qv9rKkTjh076BrwMJF9u-c9CaByfnwrQmsHlFiG1q3HA01G38M77F0Z3g4Cyf2-whEVYQUspp5eND2hAkT10xcMFeNfJKp-gU4b6TF35hiXwYv_pxK3C4rH305iPVW8zu5oKZCkKu-Kt9dIOyRVt2mnAgSEmbVIbdff0QTu_3hgrI9IfrI24B3WSEP9rjM91YUJMAPbkMM6A1a0dKelOMw
+    grant_type:arbitrary_resource_owner
+    client_id:arbitrary-resource-owner-client
+    client_secret:secret
+    scope:offline_access nitro metal
+    arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}
+    access_token_lifetime:3600
+    access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6ImQxOTU1YjExZjAxZGQ5ZGI5ZmFhNTE3OGU0YWE2MjI2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE1MjY2OTcwMTMsImV4cCI6MTUyNjcwMDYxMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTYiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzNTYvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiUmF0dCIsImF1dGhfdGltZSI6MTUyNjY5NzAxMywiaWRwIjoibG9jYWwiLCJzb21lLWd1aWQiOiIxMjM0YWJjZCIsIkluIjoiRmxhbWVzIiwic2NvcGUiOlsibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.lLai2_h2bP7Pda_qplK9gXhaHCk2MThXu4ypMFDPm3RdlBMjErCCUNQFiueHsI314797EhX361pDjDw_smn5noTcVioRsbJYFZYMOjgWrKTmOjZiDwn7rlLPQOe5ubI_qv9rKkTjh076BrwMJF9u-c9CaByfnwrQmsHlFiG1q3HA01G38M77F0Z3g4Cyf2-whEVYQUspp5eND2hAkT10xcMFeNfJKp-gU4b6TF35hiXwYv_pxK3C4rH305iPVW8zu5oKZCkKu-Kt9dIOyRVt2mnAgSEmbVIbdff0QTu_3hgrI9IfrI24B3WSEP9rjM91YUJMAPbkMM6A1a0dKelOMw
 ```
 Produces...  
 
