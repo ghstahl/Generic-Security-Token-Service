@@ -20,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
+using ZeroRefreshTokenStore.Extensions;
 
 
 namespace IdentityServer4.HostApp
@@ -42,7 +43,7 @@ namespace IdentityServer4.HostApp
         {
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
-            var builder = services.AddIdentityServer()
+            var builder = services.AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 2048; })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
@@ -55,13 +56,17 @@ namespace IdentityServer4.HostApp
                 .AddArbitraryNoSubjectExtensionGrant();
 
             // my replacement services.
-            builder.AddRefreshTokenRevokationGeneratorWorkAround();
+
+            //       builder.AddRefreshTokenRevokationGeneratorWorkAround();
+            builder.AddZeroRefreshTokenStore();
 
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
-            services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
+//            services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
+
+            services.AddZeroRefreshTokenStoreTypes();
 
             services.AddAuthentication()
                 .AddGoogle("Google", options =>
