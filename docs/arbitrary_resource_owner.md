@@ -11,9 +11,12 @@
   <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".</dd>
 
   <dt>subject</dt>
-  <dd><b>REQUIRED</b>.  The passed through subject</dd>
+  <dd><b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.</dd>
   
-  <dt>client_id</dt>
+  <dt>access_token</dt>
+  <dd><b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.</dd>
+
+<dt>client_id</dt>
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
          the registration process described by Section 2.2.</dd>
   
