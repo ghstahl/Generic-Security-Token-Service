@@ -60,6 +60,9 @@ namespace IdentityServer4.HostApp.Redis
         [JsonProperty("RequireClientSecret")]
         public bool RequireClientSecret { get; set; }
 
+        [JsonProperty("RequireRefreshClientSecret")]
+        public bool RequireRefreshClientSecret { get; set; }
+
         [JsonProperty("ClientClaimsPrefix")]
         public string ClientClaimsPrefix { get; set; }
     }
@@ -74,7 +77,7 @@ namespace IdentityServer4.HostApp.Redis
                 secrets.Add(new Secret(secret.Sha256()));
             }
 
-            return new Client()
+            return new ClientExtra()
             {
                 ClientId = self.ClientId,
                 AllowedGrantTypes = self.AllowedGrantTypes,
@@ -83,6 +86,7 @@ namespace IdentityServer4.HostApp.Redis
                 ClientSecrets = secrets,
                 AllowedScopes = self.AllowedScopes,
                 RequireClientSecret = self.RequireClientSecret,
+                RequireRefreshClientSecret = self.RequireRefreshClientSecret,
                 AccessTokenLifetime = self.AccessTokenLifetime,
                 AbsoluteRefreshTokenLifetime = self.AbsoluteRefreshTokenLifetime,
                 ClientClaimsPrefix = self.ClientClaimsPrefix
@@ -163,6 +167,7 @@ namespace IdentityServer4.HostApp.Redis
             // my replacement services.
 
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
+            builder.AddNoSecretRefreshClientSecretValidator();
 
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
