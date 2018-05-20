@@ -22,6 +22,7 @@ using Serilog;
 
 namespace IdentityServer4.HostApp.Redis
 {
+ 
     public partial class ClientRecord
     {
         [JsonIgnore]
@@ -116,22 +117,31 @@ namespace IdentityServer4.HostApp.Redis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            IConfigurationSection section = Configuration.GetSection("Clients");
+            IConfigurationSection section = Configuration.GetSection("clients");
             var clientRecords = new Dictionary<string, ClientRecord>();
             section.Bind(clientRecords);
             foreach (var clientRecord in clientRecords)
             {
                 clientRecord.Value.ClientId = clientRecord.Key;
             }
-
             var clients = clientRecords.ToClients();
+
+            section = Configuration.GetSection("apiResources");
+            var apiResourceSettings = new List<string>();
+            section.Bind(apiResourceSettings);
+            List<ApiResource> apiResources = new List<ApiResource>();
+            foreach (var apiResourceSetting in apiResourceSettings)
+            {
+                apiResources.Add(new ApiResource(apiResourceSetting));
+            }
+
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
             var builder = services
                 .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 2048; })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
+                .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
                 .AddTestUsers(Config.GetUsers())
                 .AddIdentityServer4Extras()
@@ -202,9 +212,10 @@ namespace IdentityServer4.HostApp.Redis
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.Clients.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.json", optional: true);
-
+            
             if (_hostingEnvironment.IsDevelopment())
             {
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
