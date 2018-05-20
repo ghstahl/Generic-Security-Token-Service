@@ -7,6 +7,7 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -15,11 +16,92 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
+using Newtonsoft.Json;
 using ProfileServiceManager.Extensions;
 using Serilog;
 
 namespace IdentityServer4.HostApp.Redis
 {
+    public partial class ClientRecord
+    {
+        [JsonIgnore]
+        public string ClientId { get; set; }
+        [JsonProperty("enabled")]
+        public bool Enabled { get; set; }
+
+        [JsonProperty("secrets")]
+        public List<string> Secrets { get; set; }
+
+        [JsonProperty("allowedScopes")]
+        public List<string> AllowedScopes { get; set; }
+
+        [JsonProperty("AllowedGrantTypes")]
+        public List<string> AllowedGrantTypes { get; set; }
+
+        [JsonProperty("AccessTokenLifetime")]
+        public int AccessTokenLifetime { get; set; }
+ 
+        [JsonProperty("AbsoluteRefreshTokenLifetime")]
+        public int AbsoluteRefreshTokenLifetime { get; set; }
+
+        [JsonProperty("SlidingRefreshTokenLifetime")]
+        public int SlidingRefreshTokenLifetime { get; set; }
+
+        [JsonProperty("RefreshTokenUsage")]
+        public long RefreshTokenUsage { get; set; }
+
+        [JsonProperty("AccessTokenType")]
+        public long AccessTokenType { get; set; }
+
+        [JsonProperty("AllowOfflineAccess")]
+        public bool AllowOfflineAccess { get; set; }
+
+        [JsonProperty("RequireClientSecret")]
+        public bool RequireClientSecret { get; set; }
+
+        [JsonProperty("ClientClaimsPrefix")]
+        public string ClientClaimsPrefix { get; set; }
+    }
+
+    public static class ClientRecordExtensions
+    {
+        public static Client ToClient(this ClientRecord self)
+        {
+            List<Secret> secrets = new List<Secret>();
+            foreach (var secret in self.Secrets)
+            {
+                secrets.Add(new Secret(secret.Sha256()));
+            }
+
+            return new Client()
+            {
+                ClientId = self.ClientId,
+                AllowedGrantTypes = self.AllowedGrantTypes,
+                AllowOfflineAccess = self.AllowOfflineAccess,
+                RefreshTokenUsage = (TokenUsage) self.RefreshTokenUsage,
+                ClientSecrets = secrets,
+                AllowedScopes = self.AllowedScopes,
+                RequireClientSecret = self.RequireClientSecret,
+                AccessTokenLifetime = self.AccessTokenLifetime,
+                AbsoluteRefreshTokenLifetime = self.AbsoluteRefreshTokenLifetime,
+                ClientClaimsPrefix = self.ClientClaimsPrefix
+            };
+        }
+
+        public static List<Client> ToClients(this Dictionary<string, ClientRecord> self)
+        {
+            List<Client> result = new List<Client>();
+            foreach (var clientRecord in self)
+            {
+                clientRecord.Value.ClientId = clientRecord.Key;
+                var client = clientRecord.Value.ToClient();
+                result.Add(client);
+            }
+
+            return result;
+        }
+    }
+
     public class Startup
     {
         private readonly IHostingEnvironment _hostingEnvironment;
@@ -34,6 +116,15 @@ namespace IdentityServer4.HostApp.Redis
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            IConfigurationSection section = Configuration.GetSection("Clients");
+            var clientRecords = new Dictionary<string, ClientRecord>();
+            section.Bind(clientRecords);
+            foreach (var clientRecord in clientRecords)
+            {
+                clientRecord.Value.ClientId = clientRecord.Key;
+            }
+
+            var clients = clientRecords.ToClients();
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
             var builder = services
@@ -41,7 +132,7 @@ namespace IdentityServer4.HostApp.Redis
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClientsExtra(Config.GetClients())
+                .AddInMemoryClientsExtra(clients)
                 .AddTestUsers(Config.GetUsers())
                 .AddIdentityServer4Extras()
                 .AddProfileServiceManager()
@@ -111,6 +202,7 @@ namespace IdentityServer4.HostApp.Redis
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.Clients.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.json", optional: true);
 
             if (_hostingEnvironment.IsDevelopment())
