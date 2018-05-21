@@ -136,7 +136,7 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                 {
                     Logger.LogDebug("Refresh token revoked");
                     var rt = await RefreshTokenStore.GetRefreshTokenAsync(validationResult.Token);
-                    var rts = RefreshTokenStore as IReferenceTokenStore2;
+                    var rts = RefreshTokenStore as IRefreshTokenStore2;
                     await RefreshTokenStore.RemoveRefreshTokenAsync(validationResult.Token);
                     await rts.RemoveRefreshTokensAsync(token.SubjectId, token.ClientId);
                     await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, token.ClientId);

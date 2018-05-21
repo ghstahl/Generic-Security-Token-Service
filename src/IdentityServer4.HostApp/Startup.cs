@@ -20,9 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
-using ZeroRefreshTokenStore.Extensions;
-
-
+ 
 namespace IdentityServer4.HostApp
 {
     public class Startup
@@ -41,13 +39,16 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var clients = Configuration.LoadClientsFromSettings();
+            var apiResources = Configuration.LoadApiResourcesFromSettings();
+
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
             var builder = services.AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 2048; })
                 .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
-                .AddInMemoryApiResources(Config.GetApiResources())
-                .AddInMemoryClientsExtra(Config.GetClients())
+                .AddInMemoryApiResources(apiResources)
+                .AddInMemoryClientsExtra(clients)
                 .AddTestUsers(Config.GetUsers())
                 .AddIdentityServer4Extras()
                 .AddProfileServiceManager()
@@ -55,41 +56,17 @@ namespace IdentityServer4.HostApp
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
                 .AddArbitraryNoSubjectExtensionGrant();
 
-            // my replacement services.
+            // My Replacement Services.
+            builder.AddRefreshTokenRevokationGeneratorWorkAround();
+            builder.AddNoSecretRefreshClientSecretValidator();
+            builder.AddInMemoryPersistedGrantStore2();
 
-            //       builder.AddRefreshTokenRevokationGeneratorWorkAround();
-            builder.AddZeroRefreshTokenStore();
-
+            // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
-//            services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
-
-            services.AddZeroRefreshTokenStoreTypes();
-
-            services.AddAuthentication()
-                .AddGoogle("Google", options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    options.ClientId = "434483408261-55tc8n0cs4ff1fe21ea8df2o443v2iuc.apps.googleusercontent.com";
-                    options.ClientSecret = "3gcoTrEDPPJ0ukn_aYYT6PWo";
-                })
-                .AddOpenIdConnect("oidc", "OpenID Connect", options =>
-                {
-                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                    options.SignOutScheme = IdentityServerConstants.SignoutScheme;
-
-                    options.Authority = "https://demo.identityserver.io/";
-                    options.ClientId = "implicit";
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        NameClaimType = "name",
-                        RoleClaimType = "role"
-                    };
-                });
+            services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
 
             services.AddMemoryCache();
             services.AddMvc();
@@ -136,6 +113,8 @@ namespace IdentityServer4.HostApp
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.Clients.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.json", optional: true);
 
             if (_hostingEnvironment.IsDevelopment())
