@@ -20,6 +20,9 @@ namespace Tests_ExtensionGrants
         private static string ClientId => "arbitrary-resource-owner-client";
         private static string ClientSecret => "secret";
 
+        private static string ClientId2 => "cct-client";
+        private static string ClientSecret2 => "secret";
+
         public ArbitraryNoSubjectTests()
         {
             // Arrange
@@ -187,11 +190,15 @@ namespace Tests_ExtensionGrants
         [TestMethod]
         public async Task Mint_multi_arbitrary_no_subject_and_refresh_and_revoke()
         {
+            var subject = "Ratt";
             var tokenClient = new TokenClient(
                 _server.BaseAddress + "connect/token",
                 ClientId,
                 _server.CreateHandler());
-
+            var tokenClient2 = new TokenClient(
+                _server.BaseAddress + "connect/token",
+                ClientId2,
+                _server.CreateHandler());
             Dictionary<string, string> paramaters = new Dictionary<string, string>()
             {
                 {OidcConstants.TokenRequest.ClientId, ClientId},
@@ -207,13 +214,28 @@ namespace Tests_ExtensionGrants
                 },
                 {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
             };
+            Dictionary<string, string> paramaters2 = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId2},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret2},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} olp"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
+            };
             var result = await tokenClient.RequestAsync(paramaters);
             result.AccessToken.ShouldNotBeNullOrEmpty();
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
 
             // mint a duplicate, this should be 2 refresh tokens.
-            var result2 = await tokenClient.RequestAsync(paramaters);
+            var result2 = await tokenClient2.RequestAsync(paramaters2);
             result.AccessToken.ShouldNotBeNullOrEmpty();
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
@@ -230,13 +252,13 @@ namespace Tests_ExtensionGrants
             result.RefreshToken.ShouldNotBeNull();
             result.ExpiresIn.ShouldNotBeNull();
 
-            paramaters = new Dictionary<string, string>()
+            paramaters2 = new Dictionary<string, string>()
             {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientId, ClientId2},
                 {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
                 {OidcConstants.TokenRequest.RefreshToken, result2.RefreshToken}
             };
-            result2 = await tokenClient.RequestAsync(paramaters);
+            result2 = await tokenClient2.RequestAsync(paramaters2);
             result2.AccessToken.ShouldNotBeNullOrEmpty();
             result2.RefreshToken.ShouldNotBeNull();
             result2.ExpiresIn.ShouldNotBeNull();
@@ -264,13 +286,13 @@ namespace Tests_ExtensionGrants
             result.Error.ShouldNotBeNullOrEmpty();
             result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
 
-            paramaters = new Dictionary<string, string>()
+            paramaters2 = new Dictionary<string, string>()
             {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientId, ClientId2},
                 {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
                 {OidcConstants.TokenRequest.RefreshToken, result2.RefreshToken}
             };
-            result2 = await tokenClient.RequestAsync(paramaters);
+            result2 = await tokenClient2.RequestAsync(paramaters);
             result2.Error.ShouldNotBeNullOrEmpty();
             result2.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
         }
