@@ -59,7 +59,8 @@ namespace IdentityServer4.HostApp
             // My Replacement Services.
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
-            builder.AddInMemoryPersistedGrantStore2();
+            builder.AddInMemoryClientStoreExtra();// InMemoryPersistedGrantStoreExtra extra needs IClientStoreExtra
+            builder.AddInMemoryPersistedGrantStoreExtra();
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();

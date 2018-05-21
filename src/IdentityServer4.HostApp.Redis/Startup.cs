@@ -7,6 +7,7 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -69,7 +70,11 @@ namespace IdentityServer4.HostApp.Redis
 
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
+            builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
+            builder.AddRedisOperationalStoreExtra();
 
+            // My Types
+            services.AddRedisOperationalStoreExtraTypes();
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();

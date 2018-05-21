@@ -19,12 +19,17 @@ namespace IdentityServer4Extras.Extensions
 
             return builder;
         }
-        public static IIdentityServerBuilder AddInMemoryPersistedGrantStore2(this IIdentityServerBuilder builder)
+        public static IIdentityServerBuilder AddInMemoryPersistedGrantStoreExtra(this IIdentityServerBuilder builder)
         {
-            builder.Services.Remove<IPersistedGrantStore>();
-            builder.Services.TryAddSingleton<IPersistedGrantStore2, InMemoryPersistedGrantStore2>();
-            builder.Services.TryAddSingleton<IPersistedGrantStore>(x => x.GetService<IPersistedGrantStore2>());
-
+            builder.Services.RemoveAll<IPersistedGrantStore>();
+            builder.Services.TryAddSingleton<IPersistedGrantStore, PersistedGrantStoreExtra>();
+            return builder;
+        }
+        public static IIdentityServerBuilder AddInMemoryClientStoreExtra(this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<IClientStore>();
+            builder.Services.TryAddSingleton<IClientStoreExtra, InMemoryClientStoreExtra>();
+            builder.Services.TryAddSingleton<IClientStore>(x => x.GetService<IClientStoreExtra>());
             return builder;
         }
     }
