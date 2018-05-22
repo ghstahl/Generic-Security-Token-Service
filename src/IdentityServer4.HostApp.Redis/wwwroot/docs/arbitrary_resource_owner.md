@@ -6,35 +6,16 @@
    format per Appendix B with a character encoding of UTF-8 in the HTTP
    request entity-body:
 
-<dl>
-  <dt>grant_type</dt>
-  <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".</dd>
-
-  <dt>subject</dt>
-  <dd><b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.</dd>
-  
-  <dt>access_token</dt>
-  <dd><b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.</dd>
-
-<dt>client_id</dt>
-  <dd><b>REQUIRED</b>.  The client identifier issued to the client during
-         the registration process described by Section 2.2.</dd>
-  
-  <dt>client_secret</dt>
-  <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
-         parameter if the client secret is an empty string.</dd>
-  
-  <dt>scope</dt>
-  <dd><b>OPTIONAL</b>.  The scope of the access request as described by
-         Section 3.3.</dd>
-	 
-  <dt>arbitrary_claims</dt>
-  <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
-	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
-	
-  <dt>access_token_lifetime</dt>
-  <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
-</dl>  
+paramater | description
+--------- | -
+grant_type | <b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".
+subject | <b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.
+access_token | <b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.
+client_id | <b>REQUIRED</b>.  The client identifier issued to the client during the registration process described by Section 2.2.
+client_secret | <b>REQUIRED</b>.  The client secret.  The client MAY omit the parameter if the client secret is an empty string.
+scope | <b>OPTIONAL</b>.  The scope of the access request as described by Section 3.3.
+arbitrary_claims | <b>REQUIRED</b>.  This is a json string object of key/value pairs.  i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
+access_token_lifetime | <b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.
 
 ## Example  
 I use [Postman](https://www.getpostman.com/)  
