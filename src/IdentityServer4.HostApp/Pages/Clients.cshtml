@@ -1,0 +1,25 @@
+﻿@page "{id?}"
+@model IdentityServer4.HostApp.Pages.ClientsModel
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="sidebar">
+            <ul class="nav nav-sidebar">
+                <vc:clients></vc:clients>
+            </ul>
+        </div>
+        <div class="col-sm-12 main">
+            <vc:client id="@Model.ClientId"></vc:client>
+        </div>
+    </div>
+</div>
+
+
+@section StyleHead
+    {
+    <link rel="stylesheet" href="~/css/sidebar.css" />
+
+}

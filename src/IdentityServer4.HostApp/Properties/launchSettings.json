@@ -11,7 +11,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:44356/.well-known/openid-configuration",
+      "launchUrl": "https://localhost:44356",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
