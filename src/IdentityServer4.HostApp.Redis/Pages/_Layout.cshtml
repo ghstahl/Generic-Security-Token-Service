@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - IdentityServer4.HostApp.Redis</title>
+    <title>@ViewData["Title"] - The Fighting Nudibranch</title>
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -15,6 +15,7 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    @RenderSection("StyleHead", required: false)
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -26,11 +27,11 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-page="/Index" class="navbar-brand">IdentityServer4.HostApp.Redis</a>
+                <a asp-page="/Index" class="navbar-brand">The Fighting Nudibranch</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-page="/Index">Home</a></li>
+                    <li><a asp-page="/Clients">Clients</a></li>
                     <li><a asp-page="/About">About</a></li>
                     <li><a asp-page="/Contact">Contact</a></li>
                 </ul>
@@ -41,7 +42,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2017 - IdentityServer4.HostApp.Redis</p>
+            <p>&copy; 2017 - The Fighting Nudibranch</p>
         </footer>
     </div>
 

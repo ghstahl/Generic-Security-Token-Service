@@ -1,0 +1,10 @@
+﻿@model List<string>
+<h3>Clients</h3>
+<ul>
+    @foreach (var clientId in Model)
+    {
+        var url = $"/Clients/{clientId}";
+        <li><a href="@url">@clientId</a></li>
+    }
+</ul>
+
