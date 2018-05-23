@@ -1,5 +1,4 @@
-
-# Extension Grant: arbitrary_no_subject  
+# [Extension Grant](https://tools.ietf.org/html/rfc6749#section-4.5): arbitrary_no_subject  
 This is really the only grant_type you will need...  
 
 ## Access Token Request  

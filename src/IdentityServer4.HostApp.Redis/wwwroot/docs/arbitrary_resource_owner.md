@@ -1,4 +1,4 @@
-# Extension Grant: arbitrary_resource_owner  
+# [Extension Grant](https://tools.ietf.org/html/rfc6749#section-4.5): arbitrary_resource_owner  
 ## Access Token Request  
 
    The client makes a request to the token endpoint by adding the
