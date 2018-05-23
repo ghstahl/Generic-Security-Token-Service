@@ -7,6 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.HostApp", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{5F8A16A8-A228-49FF-9EDB-1244192B6CA8}"
 	ProjectSection(SolutionItems) = preProject
+		..\docs\arbitrary_no_subject.md = ..\docs\arbitrary_no_subject.md
 		..\docs\arbitrary_resource_owner.md = ..\docs\arbitrary_resource_owner.md
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -63,7 +64,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.HostApp.Red
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "REDIS", "REDIS", "{5AFACF15-C355-40AC-BD7D-1D4C82FD501E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.Contrib.RedisStoreExtra", "IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj", "{9BE999CA-5C05-4BCC-9DAB-6A6BB149758D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Contrib.RedisStoreExtra", "IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj", "{9BE999CA-5C05-4BCC-9DAB-6A6BB149758D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
