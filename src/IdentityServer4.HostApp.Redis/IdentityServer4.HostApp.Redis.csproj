@@ -13,6 +13,7 @@
     <None Remove="Properties\PublishProfiles\P7IdentityServer4 - Web Deploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="FakeItEasy" Version="4.6.0" />
     <PackageReference Include="IdentityServer4.Contrib.RedisStore" Version="1.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
