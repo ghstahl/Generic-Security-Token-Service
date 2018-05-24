@@ -16,7 +16,7 @@ namespace IdentityServer4Extras.Validators
     /// <summary>
     /// Validates a client secret using the registered secret validators and parsers
     /// </summary>
-    public class NoSecretRefreshClientSecretValidator : IClientSecretValidatorExtra
+    public class NoSecretRefreshClientSecretValidator : IClientSecretValidatorExtra, IClientSecretValidator
     {
         private IClientSecretValidator StockClientSecretValidator { get; set; }
         private readonly ILogger _logger;
