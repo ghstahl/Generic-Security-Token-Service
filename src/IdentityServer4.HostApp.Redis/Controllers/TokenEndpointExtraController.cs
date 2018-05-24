@@ -46,21 +46,8 @@ namespace IdentityServer4.HostApp.Redis.Controllers
                 {"subject", "Ratt"},
                 {"access_token_lifetime", "3600"},
             });
-          
 
-            var request = A.Fake<HttpRequest>();
-            A.CallTo(() => request.Method).Returns("POST");
-            IHeaderDictionary headerDictionary = new HeaderDictionary();
-            A.CallTo(() => request.Headers).Returns(headerDictionary);
-            A.CallTo(() => request.Form).Returns(formCollection);
-            A.CallTo(() => request.ReadFormAsync(A<CancellationToken>._)).Returns(Task.FromResult(formCollection));
-            
-            A.CallTo(() => request.HasFormContentType).Returns(true);
-           
-            var httpContext = A.Fake<HttpContext>();
-            A.CallTo(() => httpContext.Request).Returns(request);
-
-            return await _endpointHandlerExtra.ProcessAsync(httpContext);
+            return await _endpointHandlerExtra.ProcessAsync(formCollection);
         }
     }
 }

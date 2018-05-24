@@ -1,9 +1,18 @@
-﻿using IdentityServer4.Hosting;
+﻿using System.Threading.Tasks;
+using IdentityServer4.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4Extras.Endpoints
 {
-    public interface IEndpointHandlerExtra: IEndpointHandler
+    public interface IEndpointHandlerExtra
     {
-
+        //
+        // Summary:
+        //     Processes the request.
+        //
+        // Parameters:
+        //   context:
+        //     The formCollection.
+        Task<IEndpointResult> ProcessAsync(IFormCollection formCollection);
     }
 }

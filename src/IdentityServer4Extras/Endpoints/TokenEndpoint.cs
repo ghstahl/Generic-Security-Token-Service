@@ -19,11 +19,11 @@ namespace IdentityServer4Extras.Endpoints
     /// <seealso cref="IEndpointHandlerExtra" />
     public class TokenEndpointExtra : IEndpointHandlerExtra
     {
-        private readonly IClientSecretValidator _clientValidator;
         private readonly ITokenRequestValidator _requestValidator;
         private readonly ITokenResponseGenerator _responseGenerator;
         private readonly IEventService _events;
         private readonly ILogger _logger;
+        private readonly IClientSecretValidatorExtra _clientValidator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenEndpointExtra" /> class.
@@ -34,7 +34,7 @@ namespace IdentityServer4Extras.Endpoints
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
         public TokenEndpointExtra(
-            IClientSecretValidator clientValidator,
+            IClientSecretValidatorExtra clientValidator,
             ITokenRequestValidator requestValidator,
             ITokenResponseGenerator responseGenerator,
             IEventService events,
@@ -47,39 +47,25 @@ namespace IdentityServer4Extras.Endpoints
             _logger = logger;
         }
 
-        /// <summary>
-        /// Processes the request.
-        /// </summary>
-        /// <param name="context">The HTTP context.</param>
-        /// <returns></returns>
-        public async Task<IEndpointResult> ProcessAsync(HttpContext context)
+        public async Task<IEndpointResult> ProcessAsync(IFormCollection formCollection)
         {
             _logger.LogTrace("Processing token request.");
 
             // validate HTTP
-            if (!HttpMethods.IsPost(context.Request.Method) || !context.Request.HasFormContentType)
+            if (formCollection.IsNullOrEmpty())
             {
-                _logger.LogWarning("Invalid HTTP request for token endpoint");
+                _logger.LogWarning($"Invalid {nameof(formCollection)} for token endpoint");
                 return Error(OidcConstants.TokenErrors.InvalidRequest);
             }
-
-            return await ProcessTokenRequestAsync(context);
-        }
-
-        private async Task<IEndpointResult> ProcessTokenRequestAsync(HttpContext context)
-        {
-            _logger.LogDebug("Start token request.");
-
             // validate client
-            var clientResult = await _clientValidator.ValidateAsync(context);
+            var clientResult = await _clientValidator.ValidateAsync(formCollection);
 
             if (clientResult.Client == null)
             {
                 return Error(OidcConstants.TokenErrors.InvalidClient);
             }
-
             // validate request
-            var form = (await context.Request.ReadFormAsync()).AsNameValueCollection();
+            var form = formCollection.AsNameValueCollection();
             _logger.LogTrace("Calling into token request validator: {type}", _requestValidator.GetType().FullName);
             var requestResult = await _requestValidator.ValidateRequestAsync(form, clientResult);
 
