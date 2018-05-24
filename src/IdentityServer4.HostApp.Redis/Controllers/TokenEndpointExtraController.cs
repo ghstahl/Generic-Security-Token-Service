@@ -25,9 +25,9 @@ namespace IdentityServer4.HostApp.Redis.Controllers
             _endpointHandlerExtra = endpointHandlerExtra;
         }
 
-        // POST: api/Default
-        [HttpPost]
-        public async Task<IEndpointResult> PostAsync()
+        // GET: api/Default
+        [HttpGet]
+        public async Task<IEndpointResult> GetAsync()
         {
             var arbitraryClaims = new Dictionary<string, string>
             {
