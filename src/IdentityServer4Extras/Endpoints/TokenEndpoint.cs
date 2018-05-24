@@ -7,6 +7,7 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Hosting;
 using IdentityServer4.ResponseHandling;
 using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -23,24 +24,23 @@ namespace IdentityServer4Extras.Endpoints
         private readonly ITokenResponseGenerator _responseGenerator;
         private readonly IEventService _events;
         private readonly ILogger _logger;
-        private readonly IClientSecretValidatorExtra _clientValidator;
-
+        private readonly IClientStore _clients;
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenEndpointExtra" /> class.
         /// </summary>
-        /// <param name="clientValidator">The client validator.</param>
+        /// <param name="clients">The clients store.</param>
         /// <param name="requestValidator">The request validator.</param>
         /// <param name="responseGenerator">The response generator.</param>
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
         public TokenEndpointExtra(
-            IClientSecretValidatorExtra clientValidator,
+            IClientStore clients,
             ITokenRequestValidator requestValidator,
             ITokenResponseGenerator responseGenerator,
             IEventService events,
             ILogger<TokenEndpointExtra> logger)
         {
-            _clientValidator = clientValidator;
+            _clients = clients;
             _requestValidator = requestValidator;
             _responseGenerator = responseGenerator;
             _events = events;
@@ -57,17 +57,26 @@ namespace IdentityServer4Extras.Endpoints
                 _logger.LogWarning($"Invalid {nameof(formCollection)} for token endpoint");
                 return Error(OidcConstants.TokenErrors.InvalidRequest);
             }
-            // validate client
-            var clientResult = await _clientValidator.ValidateAsync(formCollection);
 
-            if (clientResult.Client == null)
+            var clientId = formCollection[OidcConstants.TokenRequest.ClientId];
+            var client = await _clients.FindEnabledClientByIdAsync(clientId);
+            if (client == null)
             {
-                return Error(OidcConstants.TokenErrors.InvalidClient);
+                _logger.LogError($"No client with id '{clientId}' found. aborting");
+                return Error($"{OidcConstants.TokenRequest.ClientId} bad", 
+                    $"No client with id '{clientId}' found. aborting");
             }
+            var clientSecretValidationResult = new ClientSecretValidationResult
+            {
+                IsError = false,
+                Client = client,
+                Secret = null
+            };
+
             // validate request
             var form = formCollection.AsNameValueCollection();
             _logger.LogTrace("Calling into token request validator: {type}", _requestValidator.GetType().FullName);
-            var requestResult = await _requestValidator.ValidateRequestAsync(form, clientResult);
+            var requestResult = await _requestValidator.ValidateRequestAsync(form, clientSecretValidationResult);
 
             if (requestResult.IsError)
             {

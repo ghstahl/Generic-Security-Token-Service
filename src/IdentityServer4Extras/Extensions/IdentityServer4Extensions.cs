@@ -16,8 +16,7 @@ namespace IdentityServer4Extras.Extensions
 
             builder.Services.Remove<IClientSecretValidator>();
             builder.Services.TryAddTransient<IClientSecretValidator, NoSecretRefreshClientSecretValidator>();
-            builder.Services.TryAddTransient<IClientSecretValidatorExtra, NoSecretRefreshClientSecretValidator>();
-
+          
             return builder;
         }
         public static IIdentityServerBuilder AddInMemoryPersistedGrantStoreExtra(this IIdentityServerBuilder builder)
