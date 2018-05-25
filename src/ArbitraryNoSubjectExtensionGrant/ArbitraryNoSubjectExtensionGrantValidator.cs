@@ -102,20 +102,20 @@ namespace ArbitraryNoSubjectExtensionGrant
             var resource = await _resourceStore.GetAllResourcesAsync();
 
             var values =
-                JsonConvert.DeserializeObject<Dictionary<string, string>>(raw[Constants.ArbitraryClaims]);
+                JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(raw[Constants.ArbitraryClaims]);
             // paranoia check.  In no way can we allow creation which tries to spoof someone elses client_id.
-            var qq = from item in values
-                let c = item.Key
-                select c;
+            var trimmedQuery = from item in values
+                where String.Compare(item.Key, "client_id", StringComparison.OrdinalIgnoreCase) != 0
+                select item;
 
-            var queryF = from value in values
-                where String.Compare(value.Key, "client_id", StringComparison.OrdinalIgnoreCase) != 0
-                select value;
-            var trimmedClaims = queryF.ToList();
+            var finalClaims = (
+                from item in trimmedQuery
+                from c in item.Value
+                select new Claim(item.Key, c)).ToList();
 
-            foreach (var item in trimmedClaims)
+            foreach (var item in finalClaims)
             {
-                context.Request.ClientClaims.Add(new Claim(item.Key,item.Value));
+                context.Request.ClientClaims.Add(item);
             }
             context.Result = new GrantValidationResult();
         }

@@ -30,17 +30,17 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     if (claimsJson != null)
                     {
                         var values =
-                            JsonConvert.DeserializeObject<Dictionary<string, string>>(claimsJson);
+                            JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(claimsJson);
                         // paranoia check.  In no way can we allow creation which tries to spoof someone elses client_id.
-                        var qq = from item in values
-                            let c = item.Key
-                            select c;
+                        var trimmedQuery = from item in values
+                            where String.Compare(item.Key, "client_id", StringComparison.OrdinalIgnoreCase) != 0
+                            select item;
+                        var finalClaims = (
+                            from item in trimmedQuery
+                            from c in item.Value
+                            select new Claim(item.Key, c)).ToList();
 
-                        var queryF = from value in values
-                            where String.Compare(value.Key, "client_id", StringComparison.OrdinalIgnoreCase) != 0
-                            select value;
-                        var trimmedClaims = queryF.ToList();
-                        context.IssuedClaims.AddRange(trimmedClaims.Select(value => new Claim(value.Key, value.Value)));
+                        context.IssuedClaims.AddRange(finalClaims);
                     }
                 }
             }
