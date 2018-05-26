@@ -57,7 +57,8 @@ namespace apiHost
                             ValidateIssuerSigningKey = true,
                             ValidAudiences = new List<string>()
                             {
-                                "nitro"
+                                "nitro",
+                                "nag"
                             } 
                         };
                     }
@@ -97,7 +98,9 @@ namespace apiHost
                             ValidateIssuerSigningKey = true,
                             ValidAudiences = new List<string>()
                             {
-                                "metal"
+                                "metal",
+                                "nag",
+                                "olp"
                             }
                         };
                     }
