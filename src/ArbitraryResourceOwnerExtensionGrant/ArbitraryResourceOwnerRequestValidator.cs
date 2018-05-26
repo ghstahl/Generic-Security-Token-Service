@@ -4,12 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Schema;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
     
     public class ArbitraryResourceOwnerRequestValidator
     {
+ 
         private readonly ILogger<ArbitraryResourceOwnerRequestValidator> _logger;
 
         private static List<string> _requiredArbitraryArguments;
@@ -38,6 +42,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
         }
         public async Task ValidateAsync(CustomTokenRequestValidationContext context)
         {
+
             var raw = context.Result.ValidatedRequest.Raw;
             var rr = raw.AllKeys.ToDictionary(k => k, k => raw[(string)k]);
             var error = false;
@@ -59,6 +64,23 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 los.AddRange(result.Select(item => $"{item} is missing!"));
 
             }
+
+            try
+            {
+                var arbitraryClaims = raw["arbitrary_claims"];
+                if (!string.IsNullOrWhiteSpace(arbitraryClaims))
+                {
+                    var values =
+                        JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
+                }
+
+            }
+            catch (Exception _)
+            {
+                error = true;
+                los.Add($"arbitrary_claims is malformed!");
+            }
+ 
             if (error)
             {
                 context.Result.IsError = true;

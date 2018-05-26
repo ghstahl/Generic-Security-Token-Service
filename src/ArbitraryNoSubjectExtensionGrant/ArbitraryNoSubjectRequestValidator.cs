@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ArbitraryNoSubjectExtensionGrant
 {
@@ -39,6 +40,22 @@ namespace ArbitraryNoSubjectExtensionGrant
                 los.AddRange(result.Select(item => $"{item} is missing!"));
 
             }
+            try
+            {
+                var arbitraryClaims = raw["arbitrary_claims"];
+                if (!string.IsNullOrWhiteSpace(arbitraryClaims))
+                {
+                    var values =
+                        JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
+                }
+
+            }
+            catch (Exception _)
+            {
+                error = true;
+                los.Add($"arbitrary_claims is malformed!");
+            }
+
             if (error)
             {
                 context.Result.IsError = true;
