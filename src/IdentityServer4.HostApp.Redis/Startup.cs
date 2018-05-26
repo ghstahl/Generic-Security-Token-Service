@@ -21,6 +21,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using Newtonsoft.Json;
+using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 using Westwind.AspNetCore.Markdown;
@@ -49,7 +50,7 @@ namespace IdentityServer4.HostApp.Redis
 
             var builder = services
                 .AddIdentityServer()
-                .AddDeveloperSigningCredential()
+             //   .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
@@ -68,21 +69,36 @@ namespace IdentityServer4.HostApp.Redis
                 {
                     options.RedisConnectionString = Configuration["redisConnectionString"];
                     options.KeyPrefix = "prefix";
-                });  
+                });
+
+            if (_hostingEnvironment.IsDevelopment())
+            {
+               
+            }
+            else
+            {
+               
+            }
+
             // my replacement services.
 
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
             builder.AddRedisOperationalStoreExtra();
+            builder.AddKeyVaultTokenCreateService();
 
             // My Types
+            services.AddKeyVaultTokenCreateServiceTypes();
             services.AddRedisOperationalStoreExtraTypes();
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
+
+            // my configurations
+            services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
 
             services.AddMemoryCache();
             services.AddMvc();

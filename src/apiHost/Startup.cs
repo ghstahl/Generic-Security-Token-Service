@@ -58,7 +58,7 @@ namespace apiHost
                             ValidAudiences = new List<string>()
                             {
                                 "nitro"
-                            }
+                            } 
                         };
                     }
                 },
@@ -68,6 +68,26 @@ namespace apiHost
                     JwtBearerOptions = options =>
                     {
                         options.Authority = "https://p7identityserver4two.azurewebsites.net";
+                        options.RequireHttpsMetadata = false;
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidAudiences = new List<string>()
+                            {
+                                "metal"
+                            }
+                        };
+                    }
+                },
+                new SchemeRecord()
+                {
+                    Name = "local",
+                    JwtBearerOptions = options =>
+                    {
+                        options.Authority = "https://localhost:44332/";
                         options.RequireHttpsMetadata = false;
                         options.TokenValidationParameters = new TokenValidationParameters
                         {

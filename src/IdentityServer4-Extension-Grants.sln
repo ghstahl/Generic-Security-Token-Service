@@ -68,9 +68,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Contrib.Red
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "KeyVault", "KeyVault", "{447224EC-BC35-4791-BFA8-0AF2B13409F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyVaultTokenCreateService", "KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj", "{BBC1350A-5096-423C-8B68-08EDAEC8ECC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyVaultTokenCreateService", "KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj", "{BBC1350A-5096-423C-8B68-08EDAEC8ECC2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServer4.All", "IdentityServer4.All\IdentityServer4.All.csproj", "{10965046-6526-437F-BA5A-B12D103C2735}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.All", "IdentityServer4.All\IdentityServer4.All.csproj", "{10965046-6526-437F-BA5A-B12D103C2735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureKeyVaultApp", "AzureKeyVaultApp\AzureKeyVaultApp.csproj", "{9D0F4B5F-6ACB-449D-96CB-F629F6E28699}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -178,6 +180,10 @@ Global
 		{10965046-6526-437F-BA5A-B12D103C2735}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{10965046-6526-437F-BA5A-B12D103C2735}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10965046-6526-437F-BA5A-B12D103C2735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D0F4B5F-6ACB-449D-96CB-F629F6E28699}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D0F4B5F-6ACB-449D-96CB-F629F6E28699}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D0F4B5F-6ACB-449D-96CB-F629F6E28699}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D0F4B5F-6ACB-449D-96CB-F629F6E28699}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -199,6 +205,7 @@ Global
 		{9BE999CA-5C05-4BCC-9DAB-6A6BB149758D} = {5AFACF15-C355-40AC-BD7D-1D4C82FD501E}
 		{BBC1350A-5096-423C-8B68-08EDAEC8ECC2} = {447224EC-BC35-4791-BFA8-0AF2B13409F7}
 		{10965046-6526-437F-BA5A-B12D103C2735} = {019B24FC-5A59-45CC-B07E-2399CF53AC53}
+		{9D0F4B5F-6ACB-449D-96CB-F629F6E28699} = {447224EC-BC35-4791-BFA8-0AF2B13409F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}
