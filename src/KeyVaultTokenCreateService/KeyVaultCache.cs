@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Services;
 using Microsoft.Azure.KeyVault;
@@ -36,11 +37,17 @@ namespace P7IdentityServer4
             _logger = logger;
             _cachedData = new DefaultCache<CacheData>(_cache);
         }
-        public async Task<CacheData> GetKeyVaultCacheDataAsync()
+        public async Task<CacheData> GetKeyVaultCacheDataAsync(CancellationToken cancellationToken)
         {
             var cachedData = await _cachedData.GetAsync(CacheValidationKey) ?? await RefreshCacheData();
             return cachedData;
         }
+
+        public async Task RefreshCacheFromSourceAsync(CancellationToken cancellationToken)
+        {
+            await RefreshCacheData();
+        }
+
         private async Task<CacheData> RefreshCacheData()
         {
             var keyBundles = await GetKeyBundleVersionsAsync();
@@ -90,7 +97,7 @@ namespace P7IdentityServer4
                 JsonWebKeys = jwks,
                 KeyIdentifier = kid
             };
-            await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromMinutes(5));
+            await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
             return cacheData;
         }
 

@@ -6,5 +6,6 @@
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string KeyVaultUrl { get; set; }
+        public int DataRefreshCycleSeconds { get; set; } = 60 * 5;
     }
 }
