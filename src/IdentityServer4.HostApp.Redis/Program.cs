@@ -19,6 +19,7 @@ namespace IdentityServer4.HostApp.Redis
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseHealthChecks("/health", TimeSpan.FromSeconds(3))     // Or to host on a separate port: .UseHealthChecks(port)
                 .UseStartup<Startup>()
                 .Build();
     }

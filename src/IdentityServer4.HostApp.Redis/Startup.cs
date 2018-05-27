@@ -7,7 +7,9 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using HealthCheck.Core.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
+using IdentityServer4.HostApp.Redis.Health;
 using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -18,9 +20,11 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using Newtonsoft.Json;
+using P7.Core.Scheduler.Scheduling;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
@@ -96,10 +100,13 @@ namespace IdentityServer4.HostApp.Redis
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
+            services.AddHealthCheckCoreTypes();
 
             // my configurations
             services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
+            services.AddSingleton<IHostedService, SchedulerHostedService>();
 
+            services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
             services.AddMvc();
 
@@ -165,6 +172,8 @@ namespace IdentityServer4.HostApp.Redis
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_hostingEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ratelimiting.json", optional: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.healthcheck.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.Clients.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.json", optional: true);

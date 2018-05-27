@@ -1,11 +1,13 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 
-namespace P7IdentityServer4.Cron
+namespace P7.Core.Scheduler
 {
-    // I don't want to share this one.
-    internal abstract class HostedService : IHostedService
+    public abstract class HostedService : IHostedService
     {
         // Example untested base class code kindly provided by David Fowler: https://gist.github.com/davidfowl/a7dd5064d9dcf35b6eae1a7953d615e3
 

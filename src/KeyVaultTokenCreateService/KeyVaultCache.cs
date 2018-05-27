@@ -50,55 +50,64 @@ namespace P7IdentityServer4
 
         private async Task<CacheData> RefreshCacheData()
         {
-            var keyBundles = await GetKeyBundleVersionsAsync();
-            var queryKbs = from item in keyBundles
-                where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
-                select item;
-            keyBundles = queryKbs.ToList();
-
-            var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
-            var queryRsaSecurityKeys = from item in keyBundles
-                let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
-                select c;
-
-       //     var currentKeyBundle = await _publicKeyProvider.GetKeyBundleAsync();
-       //     var securityKey = new RsaSecurityKey(keyVaultClient.ToRSA(currentKeyBundle));
-       //     var signingCredentials = new SigningCredentials(securityKey, securityKey.Rsa.SignatureAlgorithm);
-
-            var jwks = new List<JsonWebKey>();
-            var query = from item in keyBundles
-                where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
-                select item;
-            _keyBundles = query.ToList();
-            foreach (var keyBundle in _keyBundles)
+            try
             {
-                jwks.Add(new JsonWebKey(keyBundle.Key.ToString()));
+                var keyBundles = await GetKeyBundleVersionsAsync();
+                var queryKbs = from item in keyBundles
+                               where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
+                               select item;
+                keyBundles = queryKbs.ToList();
+
+                var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
+                var queryRsaSecurityKeys = from item in keyBundles
+                                           let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
+                                           select c;
+
+                //     var currentKeyBundle = await _publicKeyProvider.GetKeyBundleAsync();
+                //     var securityKey = new RsaSecurityKey(keyVaultClient.ToRSA(currentKeyBundle));
+                //     var signingCredentials = new SigningCredentials(securityKey, securityKey.Rsa.SignatureAlgorithm);
+
+                var jwks = new List<JsonWebKey>();
+                var query = from item in keyBundles
+                            where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
+                            select item;
+                _keyBundles = query.ToList();
+                foreach (var keyBundle in _keyBundles)
+                {
+                    jwks.Add(new JsonWebKey(keyBundle.Key.ToString()));
+                }
+
+                var kid = await _publicKeyProvider.GetKeyIdentifierAsync();
+
+                var jwk = await _publicKeyProvider.GetAsync();
+                var parameters = new RSAParameters
+                {
+                    Exponent = Base64UrlEncoder.DecodeBytes(jwk.E),
+                    Modulus = Base64UrlEncoder.DecodeBytes(jwk.N)
+                };
+                var securityKey = new RsaSecurityKey(parameters)
+                {
+                    KeyId = jwk.Kid,
+                };
+
+                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
+                var tokenCreateSigningCredentials = await GetTokenCreationSigningCredentialsAsync();
+                CacheData cacheData = new CacheData()
+                {
+                    RsaSecurityKeys = queryRsaSecurityKeys.ToList(),
+                    SigningCredentials = signingCredentials,
+                    JsonWebKeys = jwks,
+                    KeyIdentifier = kid
+                };
+                await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
+                return cacheData;
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e,"KeyVault RefreshCacheData fatal exception");
+                throw;
             }
 
-            var kid = await _publicKeyProvider.GetKeyIdentifierAsync();
-
-            var jwk = await _publicKeyProvider.GetAsync();
-            var parameters = new RSAParameters
-            {
-                Exponent = Base64UrlEncoder.DecodeBytes(jwk.E),
-                Modulus = Base64UrlEncoder.DecodeBytes(jwk.N)
-            };
-            var securityKey = new RsaSecurityKey(parameters)
-            {
-                KeyId = jwk.Kid,
-            };
-
-            var signingCredentials =  new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
-            var tokenCreateSigningCredentials = await GetTokenCreationSigningCredentialsAsync();
-            CacheData cacheData = new CacheData()
-            {
-                RsaSecurityKeys = queryRsaSecurityKeys.ToList(),
-                SigningCredentials = signingCredentials,
-                JsonWebKeys = jwks,
-                KeyIdentifier = kid
-            };
-            await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
-            return cacheData;
         }
 
         private async Task<SigningCredentials> GetTokenCreationSigningCredentialsAsync()

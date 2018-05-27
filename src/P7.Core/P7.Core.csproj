@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Autofac.Configuration" Version="4.0.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Rewrite" Version="2.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Abstractions" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.FileProviders.Physical" Version="2.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.2" />
+    <PackageReference Include="Microsoft.Extensions.PlatformAbstractions" Version="1.1.0" />
+    <PackageReference Include="Newtonsoft.Json.Schema" Version="3.0.10" />
+    <PackageReference Include="Remotion.Linq" Version="2.2.0" />
+    <PackageReference Include="Serilog" Version="2.7.1" />
+    <PackageReference Include="ZeroFormatter" Version="1.6.4" />
+  </ItemGroup>
+
+</Project>

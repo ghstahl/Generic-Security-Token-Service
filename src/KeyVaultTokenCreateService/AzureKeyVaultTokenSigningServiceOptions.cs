@@ -6,6 +6,7 @@
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
         public string KeyVaultUrl { get; set; }
-        public int DataRefreshCycleSeconds { get; set; } = 60 * 5;
+//        https://crontab.guru/every-6-hours
+        public string CronScheduleDataRefresh { get; set; } = "0 */6 * * *"; // “At minute 0 past every 6th hour.”
     }
 }
