@@ -46,16 +46,25 @@ namespace IdentityServer4Extras.Endpoints
             _events = events;
             _logger = logger;
         }
-
         public async Task<IEndpointResult> ProcessAsync(IFormCollection formCollection)
+        {
+            var result = await ProcessRawAsync(formCollection);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<TokenRawResult> ProcessRawAsync(IFormCollection formCollection)
         {
             _logger.LogTrace("Processing token request.");
 
+            var rawResult = new TokenRawResult();
             // validate HTTP
             if (formCollection.IsNullOrEmpty())
             {
                 _logger.LogWarning($"Invalid {nameof(formCollection)} for token endpoint");
-                return Error(OidcConstants.TokenErrors.InvalidRequest);
+                rawResult.TokenErrorResult = Error(OidcConstants.TokenErrors.InvalidRequest);
+                return rawResult;
             }
 
             var clientId = formCollection[OidcConstants.TokenRequest.ClientId];
@@ -63,8 +72,9 @@ namespace IdentityServer4Extras.Endpoints
             if (client == null)
             {
                 _logger.LogError($"No client with id '{clientId}' found. aborting");
-                return Error($"{OidcConstants.TokenRequest.ClientId} bad", 
+                rawResult.TokenErrorResult = Error($"{OidcConstants.TokenRequest.ClientId} bad",
                     $"No client with id '{clientId}' found. aborting");
+                return rawResult;
             }
             var clientSecretValidationResult = new ClientSecretValidationResult
             {
@@ -81,7 +91,8 @@ namespace IdentityServer4Extras.Endpoints
             if (requestResult.IsError)
             {
                 await _events.RaiseAsync(new TokenIssuedFailureEvent(requestResult));
-                return Error(requestResult.Error, requestResult.ErrorDescription, requestResult.CustomResponse);
+                rawResult.TokenErrorResult = Error(requestResult.Error, requestResult.ErrorDescription, requestResult.CustomResponse);
+                return rawResult;
             }
 
             // create response
@@ -93,7 +104,8 @@ namespace IdentityServer4Extras.Endpoints
 
             // return result
             _logger.LogDebug("Token request success.");
-            return new TokenResult(response);
+            rawResult.TokenResult = new TokenResult(response);
+            return rawResult;
         }
 
         private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)

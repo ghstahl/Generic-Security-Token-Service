@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4Extras.Endpoints
 {
-    internal class TokenResult : IEndpointResult
+    public class TokenResult : IEndpointResult
     {
         public TokenResponse Response { get; set; }
 

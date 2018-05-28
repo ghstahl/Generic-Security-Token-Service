@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4Extras.Endpoints
 {
-    internal class TokenErrorResult : IEndpointResult
+    public class TokenErrorResult : IEndpointResult
     {
         public TokenErrorResponse Response { get; }
 

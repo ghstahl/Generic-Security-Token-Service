@@ -25,6 +25,7 @@ using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using Newtonsoft.Json;
 using P7.Core.Scheduler.Scheduling;
+using P7IdentityServer4.Cron;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
@@ -45,7 +46,7 @@ namespace IdentityServer4.HostApp.Redis
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var clients = Configuration.LoadClientsFromSettings();
             var apiResources = Configuration.LoadApiResourcesFromSettings();
@@ -94,6 +95,7 @@ namespace IdentityServer4.HostApp.Redis
 
             // My Types
             services.AddKeyVaultTokenCreateServiceTypes();
+            services.AddTransient<IScheduledTask, TokenEndpointHealthTask>();
             services.AddRedisOperationalStoreExtraTypes();
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
@@ -105,7 +107,6 @@ namespace IdentityServer4.HostApp.Redis
             // my configurations
             services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
             services.AddSingleton<IHostedService, SchedulerHostedService>();
-
             services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
             services.AddMvc();
@@ -134,7 +135,9 @@ namespace IdentityServer4.HostApp.Redis
                         .UseCustomContainers()
                         .UseGenericAttributes();
                 };
-            });
+            });  
+            // Build the intermediate service provider then return it
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

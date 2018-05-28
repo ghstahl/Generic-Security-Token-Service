@@ -14,5 +14,6 @@ namespace IdentityServer4Extras.Endpoints
         //   context:
         //     The formCollection.
         Task<IEndpointResult> ProcessAsync(IFormCollection formCollection);
+        Task<TokenRawResult> ProcessRawAsync(IFormCollection formCollection);
     }
 }
