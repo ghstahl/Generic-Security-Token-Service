@@ -53,9 +53,10 @@ namespace IdentityServer4.HostApp.Redis
 
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
+            bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
+            bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
             var builder = services
                 .AddIdentityServer()
-             //   .AddDeveloperSigningCredential()
                 .AddInMemoryIdentityResources(Config.GetIdentityResources())
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
@@ -64,17 +65,24 @@ namespace IdentityServer4.HostApp.Redis
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
-                .AddArbitraryNoSubjectExtensionGrant()
-                .AddOperationalStore(options =>
-                {
-                    options.RedisConnectionString = Configuration["redisConnectionString"];
-                    options.Db = 1;
-                })
-                .AddRedisCaching(options =>
-                {
-                    options.RedisConnectionString = Configuration["redisConnectionString"];
-                    options.KeyPrefix = "prefix";
-                });
+                .AddArbitraryNoSubjectExtensionGrant();
+            if (useRedis)
+            {
+                var redisConnectionString = Configuration["appOptions:redis:redisConnectionString"];
+                builder.AddOperationalStore(options =>
+                    {
+                        options.RedisConnectionString = redisConnectionString;
+                        options.Db = 1;
+                    })
+                    .AddRedisCaching(options =>
+                    {
+                        options.RedisConnectionString = redisConnectionString;
+                        options.KeyPrefix = "prefix";
+                    });
+                builder.AddRedisOperationalStoreExtra();
+                services.AddRedisOperationalStoreExtraTypes();
+
+            }
 
             if (_hostingEnvironment.IsDevelopment())
             {
@@ -85,17 +93,31 @@ namespace IdentityServer4.HostApp.Redis
                
             }
 
+            if (useKeyVault)
+            {
+                builder.AddKeyVaultTokenCreateService();
+                services.AddKeyVaultTokenCreateServiceTypes();
+                services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
+            }
+            else
+            {
+                if (_hostingEnvironment.IsDevelopment())
+                {
+                    builder.AddDeveloperSigningCredential();
+                }
+                else
+                {
+                    //crash
+                }
+            }
+
             // my replacement services.
 
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
-            builder.AddRedisOperationalStoreExtra();
-            builder.AddKeyVaultTokenCreateService();
 
             // My Types
-            services.AddKeyVaultTokenCreateServiceTypes();
-            services.AddRedisOperationalStoreExtraTypes();
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
@@ -104,7 +126,6 @@ namespace IdentityServer4.HostApp.Redis
             services.AddHealthCheckCoreTypes();
 
             // my configurations
-            services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
             services.AddSingleton<IHostedService, SchedulerHostedService>();
             services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
@@ -173,7 +194,9 @@ namespace IdentityServer4.HostApp.Redis
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(_hostingEnvironment.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.redis.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.keyVault.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ratelimiting.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.healthcheck.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)

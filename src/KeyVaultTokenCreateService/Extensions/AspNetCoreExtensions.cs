@@ -13,12 +13,11 @@ namespace P7IdentityServer4.Extensions
             services.AddTransient<IPublicKeyProvider, AzureKeyVaultPublicKeyProvider>();
             services.AddSingleton<IKeyVaultCache, KeyVaultCache>();
             services.AddTransient<IScheduledTask, DataRefreshServiceTask>();
-            
         }
 
         public static void AddKeyVaultTokenCreateServiceConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<AzureKeyVaultTokenSigningServiceOptions>(configuration.GetSection("azureKeyVaultTokenSigningServiceOptions"));
+            services.Configure<AzureKeyVaultTokenSigningServiceOptions>(configuration.GetSection("appOptions:keyVault"));
         }
     }
 }
