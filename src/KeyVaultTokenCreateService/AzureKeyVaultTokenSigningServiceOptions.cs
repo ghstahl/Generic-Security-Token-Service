@@ -7,6 +7,6 @@
         public string ClientSecret { get; set; }
         public string KeyVaultUrl { get; set; }
 //        https://crontab.guru/every-6-hours
-        public string CronScheduleDataRefresh { get; set; } = "0 */6 * * *"; // “At minute 0 past every 6th hour.”
+        public string CronScheduleDataRefresh { get; set; } = "*/5 * * * *"; //https://crontab.guru/every-5-minutes
     }
 }
