@@ -24,12 +24,13 @@ namespace P7IdentityServer4.Cron
 
     public class TokenEndpointHealthTask : IScheduledTask
     {
-        private IConfiguration  _configuration;
+        private IConfiguration _configuration;
         private IHealthCheckStore _healthCheckStore;
         private ILogger _logger;
         private const string Every5Minutes = "*/5 * * * *"; //https://crontab.guru/every-5-minutes
         private IEndpointHandlerExtra _endpointHandlerExtra;
         private IServiceProvider _serviceProvider;
+
         public TokenEndpointHealthTask(
             IConfiguration configuration,
             IServiceProvider serviceProvider,
@@ -47,9 +48,9 @@ namespace P7IdentityServer4.Cron
                 Schedule = Every5Minutes;
             }
         }
-        
+
         public string Schedule { get; }
-        
+
 
         public async Task Invoke(CancellationToken cancellationToken)
         {
@@ -59,10 +60,11 @@ namespace P7IdentityServer4.Cron
             var keyVaultcurrentHealth = await _healthCheckStore.GetHealthAsync(keyKeyVaultRefresh);
             if (keyKeyVaultRefresh == null || !keyVaultcurrentHealth.Healty)
             {
-                return;  // done for now, as we don't do anything until the keyvault has been updated.
+                return; // done for now, as we don't do anything until the keyvault has been updated.
             }
 
-            IEndpointHandlerExtra endpoint = _serviceProvider.GetService(typeof(IEndpointHandlerExtra)) as IEndpointHandlerExtra;
+            IEndpointHandlerExtra endpoint =
+                _serviceProvider.GetService(typeof(IEndpointHandlerExtra)) as IEndpointHandlerExtra;
             currentHealth = await _healthCheckStore.GetHealthAsync(key);
             if (currentHealth == null)
             {
@@ -74,44 +76,41 @@ namespace P7IdentityServer4.Cron
                 await _healthCheckStore.SetHealthAsync(key, currentHealth);
             }
 
-            while (!cancellationToken.IsCancellationRequested)
+            bool success = false;
+            try
             {
-                bool success = false;
-                try
+                var arbitraryClaims = new Dictionary<string, List<string>>
                 {
-                    var arbitraryClaims = new Dictionary<string, List<string>>
-                    {
-                        {"some_guid", new List<string>(){Guid.NewGuid().ToString()}},
-                        {"in", new List<string>(){"flames"}}
-                    };
-                    var jsonArbitraryClaims = JsonConvert.SerializeObject(arbitraryClaims);
+                    {"some_guid", new List<string>() {Guid.NewGuid().ToString()}},
+                    {"in", new List<string>() {"flames"}}
+                };
+                var jsonArbitraryClaims = JsonConvert.SerializeObject(arbitraryClaims);
 
-                    IFormCollection formCollection = new FormCollection(new Dictionary<string, StringValues>()
-                    {
-                        {"grant_type", "arbitrary_resource_owner"},
-                        {"client_id", _configuration["TokenEndpointHealthTask:clientId"]},
-                        {"client_secret", _configuration["TokenEndpointHealthTask:clientSecret"]},
-                        {"scope", "offline_access nitro metal"},
-                        {"arbitrary_claims", jsonArbitraryClaims},
-                        {"subject", "flatratt-e1da-4243-84d0-42233b145382"},
-                        {"access_token_lifetime", "360"},
-                    });
-                    var result = await endpoint.ProcessRawAsync(formCollection);
-                    success = result.TokenResult != null;
-                }
-                catch (Exception e)
+                IFormCollection formCollection = new FormCollection(new Dictionary<string, StringValues>()
                 {
-                    _logger.LogCritical(e,"Cron job to pull keyvault data failure!");
-                }
-                finally
+                    {"grant_type", "arbitrary_resource_owner"},
+                    {"client_id", _configuration["TokenEndpointHealthTask:clientId"]},
+                    {"client_secret", _configuration["TokenEndpointHealthTask:clientSecret"]},
+                    {"scope", "offline_access nitro metal"},
+                    {"arbitrary_claims", jsonArbitraryClaims},
+                    {"subject", "flatratt-e1da-4243-84d0-42233b145382"},
+                    {"access_token_lifetime", "360"},
+                });
+                var result = await endpoint.ProcessRawAsync(formCollection);
+                success = result.TokenResult != null;
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e, "Cron job to pull keyvault data failure!");
+            }
+            finally
+            {
+                currentHealth = new HealthRecord()
                 {
-                    currentHealth = new HealthRecord()
-                    {
-                        Healty = success,
-                        State = null
-                    };
-                    await _healthCheckStore.SetHealthAsync(key, currentHealth);
-                }
+                    Healty = success,
+                    State = null
+                };
+                await _healthCheckStore.SetHealthAsync(key, currentHealth);
             }
         }
     }

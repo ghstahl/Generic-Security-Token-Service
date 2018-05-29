@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading;
@@ -14,9 +15,14 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace P7IdentityServer4
 {
+    class TimeStamp
+    {
+        public string UtcTime { get; set; }
+    }
     public class KeyVaultCache : IKeyVaultCache
     {
         private const string CacheValidationKey = "62777f80-2be6-4882-b1cc-28a202d423e6";
+        private const string CacheValidationKeyTimeStamp = "104895ef-71cc-4c98-9a72-d3ffea75977b";
         private readonly IPublicKeyProvider _publicKeyProvider;
         private readonly AzureKeyVaultTokenSigningServiceOptions _keyVaultOptions;
         private readonly AzureKeyVaultAuthentication _azureKeyVaultAuthentication;
@@ -24,6 +30,8 @@ namespace P7IdentityServer4
         private IMemoryCache _cache;
         private ILogger _logger;
         private readonly DefaultCache<CacheData> _cachedData;
+        private DefaultCache<TimeStamp> _cacheTimeStamp;
+
         public KeyVaultCache(
             IPublicKeyProvider publicKeyProvider,
             IOptions<AzureKeyVaultTokenSigningServiceOptions> keyVaultOptions,
@@ -36,10 +44,25 @@ namespace P7IdentityServer4
             _cache = cache;
             _logger = logger;
             _cachedData = new DefaultCache<CacheData>(_cache);
+            _cacheTimeStamp = new DefaultCache<TimeStamp>(_cache);
         }
+
+        public async Task<DateTime?> GetKeyVaultCacheDataUtcAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var timeStamp = await _cacheTimeStamp.GetAsync(CacheValidationKeyTimeStamp);
+            if (timeStamp == null)
+                return null;
+            DateTime nowUtc = DateTime.ParseExact(timeStamp.UtcTime, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+            return nowUtc;
+        }
+
         public async Task<CacheData> GetKeyVaultCacheDataAsync(CancellationToken cancellationToken)
         {
-            var cachedData = await _cachedData.GetAsync(CacheValidationKey) ?? await RefreshCacheData();
+            var cachedData = await _cachedData.GetAsync(CacheValidationKey);
+            if (cachedData == null)
+            {
+                await RefreshCacheData();
+            }
             return cachedData;
         }
 
@@ -48,10 +71,22 @@ namespace P7IdentityServer4
             await RefreshCacheData();
         }
 
-        private async Task<CacheData> RefreshCacheData()
+        private async Task RefreshCacheData()
         {
             try
             {
+                DateTime now = DateTime.UtcNow;
+                DateTime cacheTime = DateTime.UtcNow.AddHours(-7);
+
+                var timeStamp = await _cacheTimeStamp.GetAsync(CacheValidationKeyTimeStamp);
+                if (timeStamp != null)
+                {
+                    cacheTime = DateTime.ParseExact(timeStamp.UtcTime, "O", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
+                }
+
+                if (now < cacheTime.AddHours(6))
+                    return;
+
                 var keyBundles = await GetKeyBundleVersionsAsync();
                 var queryKbs = from item in keyBundles
                                where item.Attributes.Enabled != null && (bool)item.Attributes.Enabled
@@ -100,7 +135,12 @@ namespace P7IdentityServer4
                     KeyIdentifier = kid
                 };
                 await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
-                return cacheData;
+
+                await _cacheTimeStamp.SetAsync(CacheValidationKeyTimeStamp, new TimeStamp()
+                {
+                    UtcTime = DateTime.UtcNow.ToString("O")
+                }, TimeSpan.FromHours(6));
+                
             }
             catch (Exception e)
             {

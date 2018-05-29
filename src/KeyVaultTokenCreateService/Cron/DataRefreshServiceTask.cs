@@ -31,12 +31,13 @@ namespace P7IdentityServer4.Cron
             {
                 _azureKeyVaultTokenSigningServiceOptions.CronScheduleDataRefresh = Every5Minutes;
             }
+
             _keyVaultCache = keyVaultCache;
             Schedule = _azureKeyVaultTokenSigningServiceOptions.CronScheduleDataRefresh;
         }
 
         public string Schedule { get; }
-        
+
 
         public async Task Invoke(CancellationToken cancellationToken)
         {
@@ -52,27 +53,24 @@ namespace P7IdentityServer4.Cron
                 await _healthCheckStore.SetHealthAsync(key, currentHealth);
             }
 
-            while (!cancellationToken.IsCancellationRequested)
+            bool success = false;
+            try
             {
-                bool success = false;
-                try
+                await _keyVaultCache.RefreshCacheFromSourceAsync(cancellationToken);
+                success = true;
+            }
+            catch (Exception e)
+            {
+                _logger.LogCritical(e, "Cron job to pull keyvault data failure!");
+            }
+            finally
+            {
+                currentHealth = new HealthRecord()
                 {
-                    await _keyVaultCache.RefreshCacheFromSourceAsync(cancellationToken);
-                    success = true;
-                }
-                catch (Exception e)
-                {
-                    _logger.LogCritical(e,"Cron job to pull keyvault data failure!");
-                }
-                finally
-                {
-                    currentHealth = new HealthRecord()
-                    {
-                        Healty = success,
-                        State = null
-                    };
-                    await _healthCheckStore.SetHealthAsync(key, currentHealth);
-                }
+                    Healty = success,
+                    State = null
+                };
+                await _healthCheckStore.SetHealthAsync(key, currentHealth);
             }
         }
     }

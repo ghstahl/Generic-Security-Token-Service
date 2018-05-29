@@ -95,7 +95,6 @@ namespace IdentityServer4.HostApp.Redis
 
             // My Types
             services.AddKeyVaultTokenCreateServiceTypes();
-            services.AddTransient<IScheduledTask, TokenEndpointHealthTask>();
             services.AddRedisOperationalStoreExtraTypes();
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
