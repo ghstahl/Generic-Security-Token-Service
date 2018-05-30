@@ -1,5 +1,4 @@
 ﻿using System;
-using HealthCheck.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.HealthChecks;
@@ -19,21 +18,6 @@ namespace IdentityServer4.HostApp.Redis.Health
 
             services.AddHealthChecks(checks =>
             {
-                foreach (var group in appConfig.Groups)
-                {
-                    if (String.Equals(group.Type, "url",
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        checks.AddHealthCheckGroup(group.Name, g =>
-                        {
-                            foreach (var url in group.Urls)
-                            {
-                                g.AddUrlCheck(url);
-                            }
-                        });
-                    }
-                }
-                checks.AddCheck<AggregateHealthCheck>("aggregate-health");
                 checks.AddCheck<RedisHealthCheck>("redis-health");
                 checks.AddCheck<KeyVaultHealthCheck>("keyvault-health");
 

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using HealthCheck.Core;
 using IdentityServer4Extras.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -25,7 +24,6 @@ namespace P7IdentityServer4.Cron
     public class TokenEndpointHealthTask : IScheduledTask
     {
         private IConfiguration _configuration;
-        private IHealthCheckStore _healthCheckStore;
         private ILogger _logger;
         private const string Every5Minutes = "*/5 * * * *"; //https://crontab.guru/every-5-minutes
         private IEndpointHandlerExtra _endpointHandlerExtra;
@@ -34,13 +32,11 @@ namespace P7IdentityServer4.Cron
         public TokenEndpointHealthTask(
             IConfiguration configuration,
             IServiceProvider serviceProvider,
-            IHealthCheckStore healthCheckStore,
             ILogger<KeyVaultCache> logger,
             IKeyVaultCache keyVaultCache)
         {
             _logger = logger;
             _serviceProvider = serviceProvider;
-            _healthCheckStore = healthCheckStore;
             _configuration = configuration;
             Schedule = _configuration["TokenEndpointHealthTask:scheduleCron"];
             if (string.IsNullOrWhiteSpace(Schedule))
@@ -55,26 +51,12 @@ namespace P7IdentityServer4.Cron
         public async Task Invoke(CancellationToken cancellationToken)
         {
             var key = "TokenEndpointHealthTask";
-            HealthRecord currentHealth = null;
             var keyKeyVaultRefresh = "keyvault-data-refresh";
-            var keyVaultcurrentHealth = await _healthCheckStore.GetHealthAsync(keyKeyVaultRefresh);
-            if (keyKeyVaultRefresh == null || !keyVaultcurrentHealth.Healty)
-            {
-                return; // done for now, as we don't do anything until the keyvault has been updated.
-            }
+           
 
             IEndpointHandlerExtra endpoint =
                 _serviceProvider.GetService(typeof(IEndpointHandlerExtra)) as IEndpointHandlerExtra;
-            currentHealth = await _healthCheckStore.GetHealthAsync(key);
-            if (currentHealth == null)
-            {
-                currentHealth = new HealthRecord()
-                {
-                    Healty = false,
-                    State = null
-                };
-                await _healthCheckStore.SetHealthAsync(key, currentHealth);
-            }
+             
 
             bool success = false;
             try
@@ -103,15 +85,7 @@ namespace P7IdentityServer4.Cron
             {
                 _logger.LogCritical(e, "Cron job to pull keyvault data failure!");
             }
-            finally
-            {
-                currentHealth = new HealthRecord()
-                {
-                    Healty = success,
-                    State = null
-                };
-                await _healthCheckStore.SetHealthAsync(key, currentHealth);
-            }
+             
         }
     }
 }

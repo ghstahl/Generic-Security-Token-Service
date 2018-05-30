@@ -4,7 +4,6 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
-using HealthCheck.Core.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Redis.Health;
 using IdentityServer4Extras;
@@ -115,7 +114,6 @@ namespace IdentityServer4.HostApp.Redis
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
-            services.AddHealthCheckCoreTypes();
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
