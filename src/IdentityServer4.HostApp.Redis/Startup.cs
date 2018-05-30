@@ -1,8 +1,5 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
@@ -10,10 +7,8 @@ using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using HealthCheck.Core.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Redis.Health;
-using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
-using IdentityServer4Extras.Models;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Builder;
@@ -21,11 +16,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
-using Newtonsoft.Json;
 using P7.Core.Scheduler.Scheduling;
-using P7IdentityServer4.Cron;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
@@ -127,6 +119,9 @@ namespace IdentityServer4.HostApp.Redis
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
+            services.Configure<Options.RedisOptions>(Configuration.GetSection("appOptions:redis"));
+
+
             services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
             services.AddMvc();

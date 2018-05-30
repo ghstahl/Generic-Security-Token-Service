@@ -11,6 +11,7 @@ namespace IdentityServer4.HostApp.Redis.Health
     {
         public static IServiceCollection AddMyHealthCheck(this IServiceCollection services, IConfiguration config)
         {
+            services.AddTransient<RedisHealthCheck>();
             var appConfig = new HealthCheckOptions();
             config.GetSection("healthCheck").Bind(appConfig);
 
@@ -31,6 +32,8 @@ namespace IdentityServer4.HostApp.Redis.Health
                     }
                 }
                 checks.AddCheck<AggregateHealthCheck>("aggregate-health");
+                checks.AddCheck<RedisHealthCheck>("redis-health");
+                
                 /*
                 checks.AddUrlCheck("https://github.com")
                     .AddHealthCheckGroup(
