@@ -119,7 +119,8 @@ namespace IdentityServer4.HostApp.Redis
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
-            services.Configure<Options.RedisOptions>(Configuration.GetSection("appOptions:redis"));
+            services.Configure<Options.RedisAppOptions>(Configuration.GetSection("appOptions:redis"));
+            services.Configure<Options.KeyVaultAppOptions>(Configuration.GetSection("appOptions:keyVault"));
 
 
             services.AddMyHealthCheck(Configuration);

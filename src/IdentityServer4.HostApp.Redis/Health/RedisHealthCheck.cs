@@ -3,37 +3,38 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Contrib.RedisStore;
 using IdentityServer4.Contrib.RedisStore.Cache;
+using IdentityServer4.HostApp.Redis.Options;
 using IdentityServer4.Services;
 using Microsoft.Extensions.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RedisOptions = IdentityServer4.HostApp.Redis.Options.RedisOptions;
+
 
 namespace IdentityServer4.HostApp.Redis.Health
 {
     public class RedisHealthCheck : IHealthCheck
     {
         private const string CacheKey = "6a1b9283-a375-4487-babb-b00081f3a762";
-        private RedisOptions _redisOptions;
+        private RedisAppOptions _options;
         private IServiceProvider _serviceProvider;
         private ILogger _logger;
-        public RedisHealthCheck(IOptions<RedisOptions> options, IServiceProvider serviceProvider,
+        public RedisHealthCheck(IOptions<RedisAppOptions> options, IServiceProvider serviceProvider,
             ILogger<RedisHealthCheck> logger):this(options.Value, serviceProvider, logger)
         {
             
         }
         public RedisHealthCheck(
-            RedisOptions options, 
+            RedisAppOptions options, 
             IServiceProvider serviceProvider,
             ILogger<RedisHealthCheck> logger)
         {
             _serviceProvider = serviceProvider;
-            _redisOptions = options;
+            _options = options;
             _logger = logger;
         }
         public async ValueTask<IHealthCheckResult> CheckAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (!_redisOptions.UseRedis)
+            if (!_options.UseRedis)
             {
                 return HealthCheckResult.Healthy("Redis is not configured for this app");
             }
