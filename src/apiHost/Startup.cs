@@ -34,8 +34,15 @@ namespace apiHost
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
-                .AddAuthorization()
+                .AddAuthorization(options =>
+                {
+                    options.AddPolicy("Nitro", policy =>
+                    {
+                        policy.RequireClaim("scope", "nitro");
+                    });
+                })
                 .AddJsonFormatters();
+
             var securityKey = Global.SecurityKey;
             var securityKeyBytes = Encoding.UTF8.GetBytes(securityKey);
             var issuerSigningKey = new SymmetricSecurityKey(securityKeyBytes);

@@ -32,7 +32,7 @@ namespace apiHost.Controllers
         }// GET api/values
         [HttpGet]
         [Route("closed")]
-        [Authorize]
+        [Authorize("Nitro")]
         public async Task<IEnumerable<ClaimHandle>> GetClosedAsync()
         {
             if (Request.HttpContext.User != null)
