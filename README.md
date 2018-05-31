@@ -6,6 +6,8 @@
 # IdentityServer4 Extension Grants
 ## An OAuth2 service that lets you create tokens for anything!  
 
+![Image of Yaktocat](/docs/The_Fighting_Nudibranch_WebApp.png)
+
 I wanted to use [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) as a generic token managment service.
 I wanted this service to be without knowledge of any user database, let alone claims for users.  
 I wanted this service to manage the scopes that a given client is allowed.  
