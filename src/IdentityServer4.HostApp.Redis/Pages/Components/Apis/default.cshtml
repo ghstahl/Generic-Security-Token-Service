@@ -1,0 +1,10 @@
+﻿@model List<Models.ApiResource>
+<h3>API Resources</h3>
+<ul>
+    @foreach (var item in Model)
+    {
+        var url = $"/ApiResources/{item.Name}";
+        <li><a href="@url">@item.Name</a></li>
+    }
+</ul>
+

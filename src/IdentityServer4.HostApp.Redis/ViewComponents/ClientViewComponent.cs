@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Stores;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +18,14 @@ namespace IdentityServer4.HostApp.Redis.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync(string id)
         {
-            var client = await _clientStore.FindClientByIdAsync(id);
+           
+            string clientId = id;
+            if (string.IsNullOrWhiteSpace(clientId))
+            {
+                var clients = await _clientStore.GetAllClientIdsAsync();
+                clientId = clients.FirstOrDefault();
+            }
+            var client = await _clientStore.FindClientByIdAsync(clientId);
             return View(client as ClientExtra);
         }
     }

@@ -1,0 +1,26 @@
+﻿@page "{id?}"
+@model ApiResourcesModel
+@{
+    ViewData["Title"] = "API Resources";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="sidebar">
+            <ul class="nav nav-sidebar">
+                <vc:apis></vc:apis>
+            </ul>
+        </div>
+        <div class="col-sm-12 main">
+            <vc:api id="@Model.ClientId"></vc:api>
+        </div>
+    </div>
+</div>
+
+
+@section StyleHead
+    {
+    <link rel="stylesheet" href="~/css/sidebar.css" />
+    <link rel="stylesheet" href="~/css/markdown-table.css" />
+
+}
