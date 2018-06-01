@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using IdentityServer4.Models;
+using IdentityServer4Extras.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace IdentityServer4Extras.Extensions
@@ -10,12 +11,26 @@ namespace IdentityServer4Extras.Extensions
         {
 
             IConfigurationSection section = configuration.GetSection("apiResources");
-            var apiResourceSettings = new List<string>();
-            section.Bind(apiResourceSettings);
+            var apiResourceRecords = new List<ApiResourceRecord>();
+            section.Bind(apiResourceRecords);
             List<ApiResource> apiResources = new List<ApiResource>();
-            foreach (var apiResourceSetting in apiResourceSettings)
+            foreach (var apiResourceRecord in apiResourceRecords)
             {
-                apiResources.Add(new ApiResource(apiResourceSetting));
+                List<Scope> scopes = new List<Scope>(); 
+                if (apiResourceRecord.Scopes != null)
+                {
+                    var prePend = string.IsNullOrWhiteSpace(apiResourceRecord.ScopeNameSpace) 
+                        ? "" 
+                        : $"{apiResourceRecord.ScopeNameSpace}.";
+                    foreach (var scopeRecord in apiResourceRecord.Scopes)
+                    {
+                        scopes.Add(new Scope($"{prePend}{scopeRecord.Name}",scopeRecord.DisplayName));
+                    }
+                }
+                apiResources.Add(new ApiResource(apiResourceRecord.Name)
+                {
+                    Scopes = scopes
+                });
             }
 
             return apiResources;

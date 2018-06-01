@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using apiHost.Controllers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -64,11 +67,50 @@ namespace apiHost
                             ValidateIssuerSigningKey = true,
                             ValidAudiences = new List<string>()
                             {
-                                "nitro",
-                                "nag"
+                                "aggregator-service"
                             } 
                         };
+                        options.Events = new JwtBearerEvents
+                        {
+                            OnTokenValidated = context =>
+                            {
+                                // get rid of the namespace on the claims.
+                                ClaimsIdentity identity = context.Principal.Identity as ClaimsIdentity;
+                                if (identity != null)
+                                {
+                                    // Add the access_token as a claim, as we may actually need it
+                                    var accessToken = context.SecurityToken as JwtSecurityToken;
+                                    if (accessToken != null)
+                                    {
+                                        if (identity != null)
+                                        {
+                                            identity.AddClaim(new Claim("access_token", accessToken.RawData));
+                                        }
+                                    }
+                                    var newClaims = new List<Claim>();
+                                    foreach (var claim in identity.Claims)
+                                    {
+                                        var claimType = claim.Type;
+                                        if (claimType.StartsWith("blah."))
+                                        {
+                                            claimType = claimType.Substring("blah.".Length);
+                                            newClaims.Add(new Claim(claimType,claim.Value));
+                                        }
+                                        else
+                                        {
+                                            newClaims.Add(claim);
+                                        }
+                                    }
+                                    // replace the entire principal
+                                    var appIdentity = new ClaimsIdentity(newClaims);
+                                    var claimsPrincipal = new ClaimsPrincipal(appIdentity);
+                                    context.Principal = claimsPrincipal;
+                                }
+                                return Task.CompletedTask;
+                            }
+                        };
                     }
+                   
                 },
                 new SchemeRecord()
                 {
