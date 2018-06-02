@@ -4,23 +4,21 @@
     ViewData["Title"] = "API Resources";
 }
 
+ 
 <div class="container-fluid">
     <div class="row">
-        <div class="sidebar">
-            <ul class="nav nav-sidebar">
-                <vc:apis></vc:apis>
-            </ul>
+        <div class="sidebar2 col-sm-3 ">
+            <vc:apis></vc:apis>
         </div>
-        <div class="col-sm-12 main">
+        <div class="main2 col-sm-8 ">
             <vc:api id="@Model.ClientId"></vc:api>
         </div>
     </div>
 </div>
 
-
 @section StyleHead
     {
     <link rel="stylesheet" href="~/css/sidebar.css" />
-    <link rel="stylesheet" href="~/css/markdown-table.css" />
+ 
 
 }

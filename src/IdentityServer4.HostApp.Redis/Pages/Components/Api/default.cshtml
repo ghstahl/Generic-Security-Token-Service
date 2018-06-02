@@ -1,27 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Html
 @using Westwind.AspNetCore.Markdown
 @model ViewComponents.ApiViewComponentModel
-
+ 
 <div>
     @if (Model != null && Model.ApiResource != null)
     {
-        <h4 id="client">API Resource</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Value(s)</th>
-                </tr>
+    <h3 id="client">@Model.ApiResource.Name</h3>
+    <div class="table-responsive">
+        <table class="table  ">
+            <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Value(s)</th>
+            </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>@nameof(Model.ApiResource.Name)</td>
-                    <td>@Model.ApiResource.Name</td>
-                </tr>
-                <tr>
-                    <td>@nameof(Model.ApiResource.DisplayName)</td>
-                    <td>@Model.ApiResource.DisplayName</td>
-                </tr>
             <tr>
                 <td>@nameof(Model.ApiResource.Enabled)</td>
                 <td>@Model.ApiResource.Enabled</td>
@@ -29,21 +22,19 @@
             @if (Model.ApiResource.Scopes != null)
             {
                 foreach (var item in Model.ApiResource.Scopes)
-                 {
-                     <tr>
-                         <td>scope</td>
-                         <td>@item.Name</td>
-                     </tr>
+                {
+                    <tr>
+                        <td>scope</td>
+                        <td>@item.Name</td>
+                    </tr>
 
-                 }
+                }
 
             }
             </tbody>
         </table>
+    </div>
 
-
-
-
-    }
+   }
 </div>
 

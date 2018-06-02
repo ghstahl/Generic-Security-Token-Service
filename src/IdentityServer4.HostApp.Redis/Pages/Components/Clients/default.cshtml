@@ -1,10 +1,10 @@
 ﻿@model List<string>
 <h3>Clients</h3>
-<ul>
+ 
+<ul class="list-group">
     @foreach (var clientId in Model)
     {
         var url = $"/Clients/{clientId}";
-        <li><a href="@url">@clientId</a></li>
+        <a href="@url" class="list-group-item list-group-item-action  ">@clientId</a>
     }
 </ul>
-

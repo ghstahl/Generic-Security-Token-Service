@@ -3,30 +3,77 @@
 <div>
     @if(Model != null)
     {
-
         var secrets = from item in Model.ClientSecrets
-            select item.Value;
+                      select item.Value;
 
-        <markdown>
-            #### Client
+        <h3>@Model.ClientId</h3>
+        <div class="table-responsive">
+            <table class="table  ">
+                <thead class="thead-light">
+                <tr>
+                    <th>Name</th>
+                    <th>Value(s)</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@nameof(Model.Enabled)</td>
+                        <td>@Model.Enabled</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.ClientSecrets)</td>
+                        <td>@string.Join(" / ", secrets)</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AllowedScopes)</td>
+                        <td>@string.Join(" / ", Model.AllowedScopes)</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AllowedGrantTypes)</td>
+                        <td>@string.Join(" / ", Model.AllowedGrantTypes)</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AccessTokenLifetime)</td>
+                        <td>@Model.AccessTokenLifetime</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AbsoluteRefreshTokenLifetime)</td>
+                        <td>@Model.AbsoluteRefreshTokenLifetime</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.SlidingRefreshTokenLifetime)</td>
+                        <td>@Model.SlidingRefreshTokenLifetime</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.RefreshTokenUsage)</td>
+                        <td>@Model.RefreshTokenUsage</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AccessTokenType)</td>
+                        <td>@Model.AccessTokenType</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.AllowOfflineAccess)</td>
+                        <td>@Model.AllowOfflineAccess</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.RequireClientSecret)</td>
+                        <td>@Model.RequireClientSecret</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.RequireRefreshClientSecret)</td>
+                        <td>@Model.RequireRefreshClientSecret</td>
+                    </tr>
+                    <tr>
+                        <td>@nameof(Model.ClientClaimsPrefix)</td>
+                        <td>@Model.ClientClaimsPrefix</td>
+                    </tr>
+                     
+                </tbody>
+            </table>
+        </div>
 
-            Name                                        | Value(s)
-            --------------------------------------------|-------------------------
-            @nameof(Model.ClientId)                     | @Model.ClientId
-            @nameof(Model.Enabled)                      | @Model.Enabled
-            @nameof(Model.ClientSecrets)                | @string.Join(" / ", secrets)
-            @nameof(Model.AllowedScopes)                | @string.Join(" / ", Model.AllowedScopes)
-            @nameof(Model.AllowedGrantTypes)            | @string.Join(" / ", Model.AllowedGrantTypes)
-            @nameof(Model.AccessTokenLifetime)          | @Model.AccessTokenLifetime
-            @nameof(Model.AbsoluteRefreshTokenLifetime) | @Model.AbsoluteRefreshTokenLifetime
-            @nameof(Model.SlidingRefreshTokenLifetime)  | @Model.SlidingRefreshTokenLifetime
-            @nameof(Model.RefreshTokenUsage)            | @Model.RefreshTokenUsage
-            @nameof(Model.AccessTokenType)              | @Model.AccessTokenType
-            @nameof(Model.AllowOfflineAccess)           | @Model.AllowOfflineAccess
-            @nameof(Model.RequireClientSecret)          | @Model.RequireClientSecret
-            @nameof(Model.RequireRefreshClientSecret)   | @Model.RequireRefreshClientSecret
-            @nameof(Model.ClientClaimsPrefix)           | @Model.ClientClaimsPrefix
-        </markdown>
+       
 
         
     }

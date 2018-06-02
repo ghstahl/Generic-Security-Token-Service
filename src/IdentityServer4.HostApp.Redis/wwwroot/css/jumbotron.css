@@ -1,0 +1,19 @@
+/* Move down content because we have a fixed navbar that is 3.5rem tall */
+body {
+  padding-top: 3.5rem;
+}
+ 
+
+@media screen and (max-width: 768px) {
+    .jumbotron-img {
+        display: none;
+    }
+}
+ 
+@media all and (max-width: 720px) {
+
+    .jumbotron-img {
+        display: none;
+    }
+
+}
