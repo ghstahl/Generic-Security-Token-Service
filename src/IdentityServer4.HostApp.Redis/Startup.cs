@@ -139,6 +139,7 @@ namespace IdentityServer4.HostApp.Redis
                     pipeLineBuilder.UseEmphasisExtras(Markdig.Extensions.EmphasisExtras.EmphasisExtraOptions.Default)
                         .UsePipeTables()
                         .UseGridTables()
+                        .UseBootstrap()
                         .UseAutoIdentifiers(AutoIdentifierOptions.GitHub) // Headers get id="name" 
                         .UseAutoLinks() // URLs are parsed into anchors
                         .UseAbbreviations()
