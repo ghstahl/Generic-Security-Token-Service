@@ -1,16 +1,25 @@
 
 # Passing a Simple JWT Around 
-```
-JSON Web Token (JWT) is a compact, URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JavaScript Object Notation (JSON) object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or MACed and/or encrypted.
-```
+:::card
+<div class="bg-light p-4">
+ <p class="mb-0">JSON Web Token (JWT) is a compact, URL-safe means of representing claims to be transferred between two parties. The claims in a JWT are encoded as a JavaScript Object Notation (JSON) object that is used as the payload of a JSON Web Signature (JWS) structure or as the plaintext of a JSON Web Encryption (JWE) structure, enabling the claims to be digitally signed or MACed and/or encrypted.
+</p>
+</div>
+:::
+
 So you like a JWT because its a digitally signed way of sharing claims with external parties.  Exactly how is that external party going to validate that JWT?
 
 Using a service like this, you benifit from the openid-configuration discovery endpoint.  In particular the "jwks_uri".
 
 i.e  The following jwk_uri;
-```
-https://localhost:44332/.well-known/openid-configuration/jwks
-```
+:::card
+<div class="bg-light p-4">
+ <p class="mb-0">
+ https://localhost:44332/.well-known/openid-configuration/jwks
+</p>
+</div>
+:::
+ 
 produces...
 ```
 {
