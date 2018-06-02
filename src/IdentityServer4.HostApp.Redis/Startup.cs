@@ -21,6 +21,7 @@ using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
 using Westwind.AspNetCore.Markdown;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace IdentityServer4.HostApp.Redis
 {
