@@ -1,5 +1,7 @@
 ﻿.markdown-page {
     padding: 20px;
+}
 
-    table thead {}; 
+.markdown-page > table >thead {
+
 }

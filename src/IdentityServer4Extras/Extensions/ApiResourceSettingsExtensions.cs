@@ -16,17 +16,19 @@ namespace IdentityServer4Extras.Extensions
             List<ApiResource> apiResources = new List<ApiResource>();
             foreach (var apiResourceRecord in apiResourceRecords)
             {
-                List<Scope> scopes = new List<Scope>(); 
+                // no matter what add the api resource as a scope
+                List<Scope> scopes = new List<Scope> {new Scope(apiResourceRecord.Name)};
                 if (apiResourceRecord.Scopes != null)
                 {
                     var prePend = string.IsNullOrWhiteSpace(apiResourceRecord.ScopeNameSpace) 
-                        ? "" 
+                        ? $"{apiResourceRecord.Name}."
                         : $"{apiResourceRecord.ScopeNameSpace}.";
                     foreach (var scopeRecord in apiResourceRecord.Scopes)
                     {
                         scopes.Add(new Scope($"{prePend}{scopeRecord.Name}",scopeRecord.DisplayName));
                     }
                 }
+                
                 apiResources.Add(new ApiResource(apiResourceRecord.Name)
                 {
                     Scopes = scopes
