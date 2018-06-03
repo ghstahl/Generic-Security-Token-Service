@@ -5,6 +5,7 @@ using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
 using IdentityServer4.HostApp;
+using IdentityServer4.HostApp.Redis;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -45,8 +46,8 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                
                 {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
@@ -73,8 +74,9 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
@@ -98,8 +100,9 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+
                 },
                 {
                     OidcConstants.TokenTypes.AccessToken,
@@ -131,8 +134,9 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
@@ -164,8 +168,9 @@ namespace Tests_ExtensionGrants
                     $"nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
@@ -198,8 +203,8 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
@@ -253,8 +258,8 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
@@ -318,8 +323,9 @@ namespace Tests_ExtensionGrants
                     $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
                 },
                 {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims,
-                    "{'some-guid':'1234abcd','In':'Flames'}"
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+
                 },
                 {
                     ArbitraryResourceOwnerExtensionGrant.Constants.Subject,

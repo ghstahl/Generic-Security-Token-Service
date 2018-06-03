@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -25,6 +27,15 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                           "client_secret",
                                                                           "arbitrary_claims"
                                                                       });
+        private static List<string> _notAllowedArbitraryClaims;
+        private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
+                                                                 (_notAllowedArbitraryClaims =
+                                                                     new List<string>
+                                                                     {
+                                                                         "client_id",
+                                                                         JwtClaimTypes.Subject,
+                                                                         ClaimTypes.NameIdentifier
+                                                                     });
 
         private static List<string> _oneMustExitsArguments;
         private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
@@ -72,6 +83,21 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 {
                     var values =
                         JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
+                    var invalidClaims = (from o in values
+                        join p in NotAllowedArbitraryClaims on o.Key equals p into t
+                        from od in t.DefaultIfEmpty()
+                        where od != null
+                        select od).ToList();
+                    if (invalidClaims.Any())
+                    {
+                        // not allowed.
+                        error = true;
+                        foreach (var invalidClaim in invalidClaims)
+                        {
+                            los.Add($"The arbitrary claim: '{invalidClaim}' is not allowed.");
+                        }
+
+                    }
                 }
 
             }

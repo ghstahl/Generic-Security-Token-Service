@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -21,6 +23,22 @@ namespace ArbitraryNoSubjectExtensionGrant
                                                                           "client_secret",
                                                                           "arbitrary_claims"
                                                                       });
+        private static List<string> _notAllowedArbitraryClaims;
+        private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
+                                                                  (_notAllowedArbitraryClaims =
+                                                                      new List<string>
+                                                                      {
+                                                                          "client_id",
+                                                                          JwtClaimTypes.Subject,
+                                                                          ClaimTypes.NameIdentifier
+                                                                      });
+        private static List<string> _notAllowedScopes;
+        private static List<string> NotAllowedScopes => _notAllowedScopes ??
+                                                                 (_notAllowedScopes =
+                                                                     new List<string>
+                                                                     {
+                                                                         "offline_access"
+                                                                     });
         public ArbitraryNoSubjectRequestValidator(
             ILogger<ArbitraryNoSubjectRequestValidator> logger)
         {
@@ -32,6 +50,25 @@ namespace ArbitraryNoSubjectExtensionGrant
             var rr = raw.AllKeys.ToDictionary(k => k, k => raw[(string)k]);
             var error = false;
             var los = new List<string>();
+
+            if (rr.ContainsKey(JwtClaimTypes.Scope))
+            {
+                var scopes = rr[JwtClaimTypes.Scope].Split(' ');
+                var invalidScopes = (from o in scopes
+                                     join p in NotAllowedScopes on o equals p into t
+                    from od in t.DefaultIfEmpty()
+                    where od != null
+                    select od).ToList();
+                if (invalidScopes.Any())
+                {
+                    // not allowed.
+                    error = true;
+                    foreach (var invalidScope in invalidScopes)
+                    {
+                        los.Add($"The scope: '{invalidScope}' is not allowed.");
+                    }
+                }
+            }
 
             var result = RequiredArbitraryArguments.Except(rr.Keys);
             if (result.Any())
@@ -47,6 +84,21 @@ namespace ArbitraryNoSubjectExtensionGrant
                 {
                     var values =
                         JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
+                    var invalidClaims = (from o in values
+                                           join p in NotAllowedArbitraryClaims on o.Key equals p into t
+                        from od in t.DefaultIfEmpty()
+                        where od != null
+                        select od).ToList();
+                    if (invalidClaims.Any())
+                    {
+                        // not allowed.
+                        error = true;
+                        foreach (var invalidClaim in invalidClaims)
+                        {
+                            los.Add($"The arbitrary claim: '{invalidClaim}' is not allowed.");
+                        }
+                      
+                    }
                 }
 
             }

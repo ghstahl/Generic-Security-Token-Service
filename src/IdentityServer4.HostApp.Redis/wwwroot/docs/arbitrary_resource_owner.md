@@ -27,13 +27,13 @@ Headers:
     Content-Type:application/x-www-form-urlencoded
 
 Body:
-	grant_type:arbitrary_resource_owner
-	client_id:arbitrary-resource-owner-client
-	client_secret:secret
-	scope:offline_access nitro metal
-	arbitrary_claims:{"role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
-	subject:886bea3f-e025-4ab9-a811-e9b86f563668
-	access_token_lifetime:3600
+    grant_type:arbitrary_resource_owner
+    client_id:arbitrary-resource-owner-client
+    client_secret:secret
+    scope:offline_access metal nitro aggregator_service.read_only
+    arbitrary_claims:{ "role": ["application", "limited"],"query":["dashboard", "licensing"],"seatId":["1234abcd"]}
+    subject:886bea3f-e025-4ab9-a811-e9b86f563668
+    access_token_lifetime:3600
 ```
 or ...  
 ```
@@ -44,37 +44,38 @@ Headers:
 
 Body:
     grant_type:arbitrary_resource_owner
-	client_id:arbitrary-resource-owner-client
-	client_secret:secret
-	scope:offline_access nitro metal
-	arbitrary_claims:{"role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
-	access_token_lifetime:3600
-	access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1MjcyNjY2MTAsImV4cCI6MTUyNzI3MDIxMCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTI3MjY2NjA1LCJpZHAiOiJsb2NhbCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5Iiwic2NvcGUiOlsibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.RqReedvUUjt2u_myfmkLYWag2FUKvxMtYswlM5Lq1I8iQyr7kNl_PtbXDrw4EBHHQ4DQLPpAws2nexRTeXGnuXbVXSzSa_ZmqpoTCls94bzCt8HinIXQ3zULYI-74jXhtsQ5pa8IR9zrwKRXdDdTSdwDSiuctgKm8_9U9knPif6FwWqoXdPNtZDfxggUF8VZIUprbURum27KrvJkItWDwQedfzvBxANBlGNjRckLl7LiJm18aspifMug0IbYW1rgeFq75uyRCRPxdcKxQTd-Z0ctbEBUMmzUh9hZ18YGg98oPZY4tSM9da-I5ea5YaL9qHArw1oE2IQzyE9PGLT0fg
+    client_id:arbitrary-resource-owner-client
+    client_secret:secret
+    scope:offline_access metal nitro
+    arbitrary_claims:{ "role": ["application", "limited"],"query":["dashboard", "licensing"],"seatId":["1234abcd"]}
+    access_token_lifetime:3600
+    access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1MjgwNTM5MjUsImV4cCI6MTUyODA1NzUyNSwiaXNzIjoiaHR0cHM6Ly9wN2lkZW50aXR5c2VydmVyNC5henVyZXdlYnNpdGVzLm5ldCIsImF1ZCI6WyJodHRwczovL3A3aWRlbnRpdHlzZXJ2ZXI0LmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsImFnZ3JlZ2F0b3Jfc2VydmljZSIsIm1ldGFsIiwibml0cm8iXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTUyODA1MzkyNSwiaWRwIjoibG9jYWwiLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiMTIzNGFiY2QiLCJzY29wZSI6WyJhZ2dyZWdhdG9yX3NlcnZpY2UucmVhZF9vbmx5IiwibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.WuGY49tw8ZB1KUvYQyGAKPQHMpxqmi4Jmu0qQspLDV-QxBCitf2zGhMGt-RajUFajBYZy_2_mEA1ho3RsAQCJKNOWzN-1B0VhhGs1ajTGvNXhRIbbcCa0QwMBqeCWtOhAqj6-moIh0SK_6liCawwxL8-p_A5hHeEIly0qUZGoEdYXVjnSKMwUmBfnAZAWZqhqKMqTOAV1bGXLgD10OmcCkmzwvxc7A4HAvsmmt3_UnA-HNaViDwoDWYjgfzVVbDxPuhQPAmFrq5C_X3sy3FS58pknKhJBR-FO3_O3X3olbAwUugOaolAg2RINJxyEhT0AWkVgPMuarTmG8djbMYqpQ
 ```
 Produces...  
 
 ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1MjcyNjY3MDAsImV4cCI6MTUyNzI3MDMwMCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTI3MjY2NzAwLCJpZHAiOiJsb2NhbCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5Iiwic2NvcGUiOlsibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.ZHfUPZQ8t_2cWCoHb02Imd1LLf1-gx65PFwqV1HI3Im24JX5GZ35wC6gm7ThGU0E-fyzZUV27hr64bTSKHsS9gOzo96zm1eFPZ5wTaiS5IIi1Ov5oj66ZYIgdMoIvHbuxH4zzEB69RGMWnUSaYoUIeKZFT3YszzoMOip8lJ1-4bjft-LnuMDv_1xG6YVsv8bd2h8tqZe2yL3zkU2Cgb3MMto2cgPe0X18QZ201sCO_nPJq7_drGE9I0PKxTlZwqkuo5ZMQ6UHJvxAvBWAEuHP_Oiz-jbixGhXHCUKIhMtm7b_Y251rrvxfaefhjqLbaxg2U4BeIQFWFrCyA83D1jHA",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1MjgwNTM5MjUsImV4cCI6MTUyODA1NzUyNSwiaXNzIjoiaHR0cHM6Ly9wN2lkZW50aXR5c2VydmVyNC5henVyZXdlYnNpdGVzLm5ldCIsImF1ZCI6WyJodHRwczovL3A3aWRlbnRpdHlzZXJ2ZXI0LmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsImFnZ3JlZ2F0b3Jfc2VydmljZSIsIm1ldGFsIiwibml0cm8iXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTUyODA1MzkyNSwiaWRwIjoibG9jYWwiLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiMTIzNGFiY2QiLCJzY29wZSI6WyJhZ2dyZWdhdG9yX3NlcnZpY2UucmVhZF9vbmx5IiwibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.WuGY49tw8ZB1KUvYQyGAKPQHMpxqmi4Jmu0qQspLDV-QxBCitf2zGhMGt-RajUFajBYZy_2_mEA1ho3RsAQCJKNOWzN-1B0VhhGs1ajTGvNXhRIbbcCa0QwMBqeCWtOhAqj6-moIh0SK_6liCawwxL8-p_A5hHeEIly0qUZGoEdYXVjnSKMwUmBfnAZAWZqhqKMqTOAV1bGXLgD10OmcCkmzwvxc7A4HAvsmmt3_UnA-HNaViDwoDWYjgfzVVbDxPuhQPAmFrq5C_X3sy3FS58pknKhJBR-FO3_O3X3olbAwUugOaolAg2RINJxyEhT0AWkVgPMuarTmG8djbMYqpQ",
     "expires_in": 3600,
     "token_type": "Bearer",
-    "refresh_token": "7065534a01a8e5646e56422698f88bc2c163d6842850171b313428e2ae214c36"
+    "refresh_token": "0556d5f587e388ddab708d0fd440b3484069d8d78530e9d17bdaa7cd6055783b"
 }
  ```
- [jwt.io](https://jwt.io/)  
+ [Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1MjgwNTM5MjUsImV4cCI6MTUyODA1NzUyNSwiaXNzIjoiaHR0cHM6Ly9wN2lkZW50aXR5c2VydmVyNC5henVyZXdlYnNpdGVzLm5ldCIsImF1ZCI6WyJodHRwczovL3A3aWRlbnRpdHlzZXJ2ZXI0LmF6dXJld2Vic2l0ZXMubmV0L3Jlc291cmNlcyIsImFnZ3JlZ2F0b3Jfc2VydmljZSIsIm1ldGFsIiwibml0cm8iXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTUyODA1MzkyNSwiaWRwIjoibG9jYWwiLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiMTIzNGFiY2QiLCJzY29wZSI6WyJhZ2dyZWdhdG9yX3NlcnZpY2UucmVhZF9vbmx5IiwibWV0YWwiLCJuaXRybyIsIm9mZmxpbmVfYWNjZXNzIl0sImFtciI6WyJhcmJpdHJhcnlfcmVzb3VyY2Vfb3duZXIiXX0.WuGY49tw8ZB1KUvYQyGAKPQHMpxqmi4Jmu0qQspLDV-QxBCitf2zGhMGt-RajUFajBYZy_2_mEA1ho3RsAQCJKNOWzN-1B0VhhGs1ajTGvNXhRIbbcCa0QwMBqeCWtOhAqj6-moIh0SK_6liCawwxL8-p_A5hHeEIly0qUZGoEdYXVjnSKMwUmBfnAZAWZqhqKMqTOAV1bGXLgD10OmcCkmzwvxc7A4HAvsmmt3_UnA-HNaViDwoDWYjgfzVVbDxPuhQPAmFrq5C_X3sy3FS58pknKhJBR-FO3_O3X3olbAwUugOaolAg2RINJxyEhT0AWkVgPMuarTmG8djbMYqpQ)  
  ```
 {
-  "nbf": 1527266700,
-  "exp": 1527270300,
-  "iss": "https://localhost:44332",
+  "nbf": 1528053925,
+  "exp": 1528057525,
+  "iss": "https://p7identityserver4.azurewebsites.net",
   "aud": [
-    "https://localhost:44332/resources",
+    "https://p7identityserver4.azurewebsites.net/resources",
+    "aggregator_service",
     "metal",
     "nitro"
   ],
   "client_id": "arbitrary-resource-owner-client",
   "sub": "886bea3f-e025-4ab9-a811-e9b86f563668",
-  "auth_time": 1527266700,
+  "auth_time": 1528053925,
   "idp": "local",
   "role": [
     "application",
@@ -84,9 +85,9 @@ Produces...
     "dashboard",
     "licensing"
   ],
-  "seatId": "8c59ec41-54f3-460b-a04e-520fc5b9973d",
-  "piid": "2368d213-d06c-4c2a-a099-11c34adc3579",
+  "seatId": "1234abcd",
   "scope": [
+    "aggregator_service.read_only",
     "metal",
     "nitro",
     "offline_access"

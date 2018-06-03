@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
-using IdentityServer4.HostApp;
-using IdentityServer4.Hosting;
+using IdentityServer4.HostApp.Redis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -50,14 +49,42 @@ namespace Tests_ExtensionGrants
                 },
                 {
                     ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
+                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                 {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
             };
             var result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNullOrEmpty();
-            result.ExpiresIn.ShouldNotBeNull();
+            result.ErrorDescription.ShouldNotBeNullOrEmpty();
+            result.Error.ShouldNotBeNullOrEmpty();
+          
+        }
+
+        [TestMethod]
+        public async Task Mint_arbitrary_no_subject_with_offline_access_invalid_claims()
+        {
+            var client = new TokenClient(
+                _server.BaseAddress + "connect/token",
+                ClientId,
+                _server.CreateHandler());
+
+            Dictionary<string, string> paramaters = new Dictionary<string, string>()
+            {
+                {OidcConstants.TokenRequest.ClientId, ClientId},
+                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
+                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
+                {
+                    OidcConstants.TokenRequest.Scope,
+                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
+                },
+                {
+                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
+                    "{'client_id':['d'],'sub':['dog'],'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
+                },
+                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
+            };
+            var result = await client.RequestAsync(paramaters);
+            result.Error.ShouldNotBeNullOrEmpty();
+            result.ErrorDescription.ShouldNotBeNullOrEmpty();
         }
 
         [TestMethod]
@@ -76,7 +103,7 @@ namespace Tests_ExtensionGrants
                 {OidcConstants.TokenRequest.Scope, "nitro metal"},
                 {
                     ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
+                    "{  'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
                 },
                 {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
             };
@@ -86,215 +113,7 @@ namespace Tests_ExtensionGrants
             result.ExpiresIn.ShouldNotBeNull();
         }
 
-        [TestMethod]
-        public async Task Mint_arbitrary_no_subject_and_refresh()
-        {
-            var client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
-
-            Dictionary<string, string> paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            var result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result.RefreshToken}
-            };
-            result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-        }
-
-        [TestMethod]
-        public async Task Mint_arbitrary_no_subject_and_refresh_and_revoke()
-        {
-            var client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
-
-            Dictionary<string, string> paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            var result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result.RefreshToken}
-            };
-            result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            var revocationTokenClient = new TokenClient(
-                _server.BaseAddress + "connect/revocation",
-                ClientId,
-                ClientSecret,
-                _server.CreateHandler());
-            paramaters = new Dictionary<string, string>()
-            {
-                {"token_type_hint", OidcConstants.TokenTypes.RefreshToken},
-                {"token", result.RefreshToken}
-            };
-            await revocationTokenClient.RequestAsync(paramaters);
-
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result.RefreshToken}
-            };
-            result = await client.RequestAsync(paramaters);
-            result.Error.ShouldNotBeNullOrEmpty();
-            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
-        }
-        [TestMethod]
-        public async Task Mint_multi_arbitrary_no_subject_and_refresh_and_revoke()
-        {
-            var subject = "Ratt";
-            var tokenClient = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
-            var tokenClient2 = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId2,
-                _server.CreateHandler());
-            Dictionary<string, string> paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            Dictionary<string, string> paramaters2 = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId2},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret2},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} olp"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'sub':'Ratt','some-guid':'1234abcd','In':'Flames'}"
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            var result = await tokenClient.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            // mint a duplicate, this should be 2 refresh tokens.
-            var result2 = await tokenClient2.RequestAsync(paramaters2);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            // first refresh
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result.RefreshToken}
-            };
-            result = await tokenClient.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNull();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            paramaters2 = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId2},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result2.RefreshToken}
-            };
-            result2 = await tokenClient2.RequestAsync(paramaters2);
-            result2.AccessToken.ShouldNotBeNullOrEmpty();
-            result2.RefreshToken.ShouldNotBeNull();
-            result2.ExpiresIn.ShouldNotBeNull();
-
-            var revocationTokenClient = new TokenClient(
-                _server.BaseAddress + "connect/revocation",
-                ClientId,
-                ClientSecret,
-                _server.CreateHandler());
-            paramaters = new Dictionary<string, string>()
-            {
-                {"token_type_hint", OidcConstants.TokenTypes.RefreshToken},
-                {"token", result.RefreshToken}
-            };
-            await revocationTokenClient.RequestAsync(paramaters);
-
-            // try refreshing, these should now fail the refresh.
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result.RefreshToken}
-            };
-            result = await tokenClient.RequestAsync(paramaters);
-            result.Error.ShouldNotBeNullOrEmpty();
-            result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
-
-            paramaters2 = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId2},
-                {OidcConstants.TokenRequest.GrantType, OidcConstants.GrantTypes.RefreshToken},
-                {OidcConstants.TokenRequest.RefreshToken, result2.RefreshToken}
-            };
-            result2 = await tokenClient2.RequestAsync(paramaters);
-            result2.Error.ShouldNotBeNullOrEmpty();
-            result2.Error.ShouldBe(OidcConstants.TokenErrors.InvalidGrant);
-        }
+         
+ 
     }
 }
