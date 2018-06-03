@@ -19,18 +19,17 @@
                 <td>@nameof(Model.ApiResource.Enabled)</td>
                 <td>@Model.ApiResource.Enabled</td>
             </tr>
-            @if (Model.ApiResource.Scopes != null)
-            {
-                foreach (var item in Model.ApiResource.Scopes)
-                {
-                    <tr>
-                        <td>scope</td>
-                        <td>@item.Name</td>
-                    </tr>
-
-                }
-
-            }
+            <tr>
+                <td>scopes</td>
+                <td>
+                    <ul class="list-unstyled">
+                        @foreach (var item in Model.ApiResource.Scopes)
+                        {
+                        <li>@item.Name</li>
+                        }
+                    </ul>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

@@ -22,15 +22,38 @@
                     </tr>
                     <tr>
                         <td>@nameof(Model.ClientSecrets)</td>
-                        <td>@string.Join(" / ", secrets)</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                @foreach (var item in secrets)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </td>
+                     
                     </tr>
                     <tr>
                         <td>@nameof(Model.AllowedScopes)</td>
-                        <td>@string.Join(" / ", Model.AllowedScopes)</td>
+                        <td>
+                            <ul class="list-unstyled" >
+                                @foreach (var item in Model.AllowedScopes)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </td>
+                        
                     </tr>
                     <tr>
                         <td>@nameof(Model.AllowedGrantTypes)</td>
-                        <td>@string.Join(" / ", Model.AllowedGrantTypes)</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                @foreach (var item in Model.AllowedGrantTypes)
+                                {
+                                <li>@item</li>
+                                }
+                            </ul>
+                        </td>
                     </tr>
                     <tr>
                         <td>@nameof(Model.AccessTokenLifetime)</td>
