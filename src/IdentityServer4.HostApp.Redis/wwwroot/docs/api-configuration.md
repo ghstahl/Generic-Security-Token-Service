@@ -1,5 +1,7 @@
 # API Configuration 
 
+I am using [IdentityServer4](http://docs.identityserver.io/en/release/) as the core engine for this project.  I would have loved to let you pass in this configuration in the request, but I haven't found an elegant way to let that happen.  I beleve the following is an OK compromise where you need to register an api resource configuration on the NudiBranch service along with the clients.
+
 Typically one mints tokens that give access to resources.  The below example shows 2 ways to configure api resources.  The difference comes when you have scopes.  In the case of scopes, you tend to use scopes to indicate granular access.
 
 An apiResource is also a scope, so you can always request it directly.  
