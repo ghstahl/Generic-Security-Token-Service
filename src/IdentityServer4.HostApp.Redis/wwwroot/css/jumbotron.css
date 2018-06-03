@@ -1,9 +1,14 @@
 /* Move down content because we have a fixed navbar that is 3.5rem tall */
 body {
   padding-top: 3.5rem;
+  
 }
  
-
+.jumbotron {
+   
+    padding-top: 32px;
+    padding-bottom: 32px;
+}
 @media screen and (max-width: 768px) {
     .jumbotron-img {
         display: none;
