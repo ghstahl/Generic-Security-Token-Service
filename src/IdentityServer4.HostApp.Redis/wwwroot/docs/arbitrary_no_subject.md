@@ -13,7 +13,7 @@ grant_type | <b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_no_subject</b>
 client_id | <b>REQUIRED</b>.  The client identifier issued to the client during the registration process described by Section 2.2.
 client_secret | <b>REQUIRED</b>.  The client secret.  The client MAY omit the parameter if the client secret is an empty string.
 scope | <b>OPTIONAL</b>.  The scope of the access request as described by Section 3.3.  <b>offline_access is NOT allowed</b>.
-arbitrary_claims | <b>REQUIRED</b>.  This is a json string object of key/value pairs.  i.e. <em>arbitrary_claims:{"role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}</em></dd>
+arbitrary_claims | <b>REQUIRED</b>.  This is a json string object of key/array pairs.  i.e. <em>arbitrary_claims:{"role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}</em></dd>
 access_token_lifetime | <b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.
 
 ## Example  
