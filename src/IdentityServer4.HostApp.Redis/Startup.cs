@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
@@ -9,18 +10,25 @@ using GraphQL;
 using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Redis.Health;
+using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
+using IdentityServer4Extras.Stores;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
+using P7.Core;
 using P7.Core.Scheduler.Scheduling;
+using P7.GraphQLCore;
 using P7.GraphQLCore.Extensions;
 using P7.GraphQLCore.Stores;
 using P7IdentityServer4.Extensions;
@@ -133,9 +141,9 @@ namespace IdentityServer4.HostApp.Redis
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
-            services.AddSingleton<InMemoryGraphQLFieldAuthority>()
-                .As<InMemoryGraphQLFieldAuthority>()
-                .As<IGraphQLFieldAuthority>();
+
+            builder.Services.TryAddSingleton<IGraphQLFieldAuthority, InMemoryGraphQLFieldAuthority>();
+
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
 
@@ -144,13 +152,31 @@ namespace IdentityServer4.HostApp.Redis
             services.AddSingleton<IHostedService, SchedulerHostedService>();
             services.Configure<Options.RedisAppOptions>(Configuration.GetSection("appOptions:redis"));
             services.Configure<Options.KeyVaultAppOptions>(Configuration.GetSection("appOptions:keyVault"));
-
+            services.RegisterP7CoreConfigurationServices(Configuration);
+            services.RegisterGraphQLCoreConfigurationServices(Configuration);
 
             services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = Configuration["self:authority"];
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidAudiences = new List<string>()
+                        {
+                            $"{options.Authority}/Resouces"
+                        }
+                    };
+                });
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -181,6 +207,7 @@ namespace IdentityServer4.HostApp.Redis
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
 
             services.AddLogging();
             services.AddWebEncoders();
@@ -245,6 +272,7 @@ namespace IdentityServer4.HostApp.Redis
             app.UseStaticFiles();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");
+            app.UseAuthentication();
             app.UseMvc();
         }
         private void StartupLogger()
@@ -267,6 +295,7 @@ namespace IdentityServer4.HostApp.Redis
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.redis.json", optional: false, reloadOnChange: true)
                 .AddJsonFile("appsettings.keyVault.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.graphql.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ratelimiting.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.healthcheck.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)

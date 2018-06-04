@@ -57,10 +57,10 @@ namespace P7.GraphQLCore.Extensions
             services.TryAddTransient<Func<Type, GraphType>>(
                 x =>
                 {
-                    var context = x.GetService<IComponentContext>();
+                    var context = x.GetService<IServiceProvider>();
                     return t =>
                     {
-                        var res = context.Resolve(t);
+                        var res = context.GetService(t);
                         return (GraphType)res;
                     };
                 });

@@ -12,7 +12,7 @@ namespace GraphQLCore.ExtensionGrants.Extensions
         {
             services.AddTransient<IdentityModelType>();
             services.AddTransient<ClaimHandleType>();
-            services.AddTransient<IdentityQuery>().As<IQueryFieldRecordRegistration>();
+            services.AddTransient<IQueryFieldRecordRegistration, IdentityQuery>();
         }
     }
 }
