@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\P7.GraphQLCore.Standard\P7.GraphQLCore.Standard.csproj" />
+  </ItemGroup>
+
+</Project>
