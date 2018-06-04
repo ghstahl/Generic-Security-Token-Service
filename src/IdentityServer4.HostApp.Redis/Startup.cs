@@ -1,9 +1,12 @@
 using System;
 using System.IO;
+using System.Reflection;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using GraphQL;
+using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Redis.Health;
 using IdentityServer4Extras;
@@ -12,14 +15,18 @@ using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using P7.Core.Scheduler.Scheduling;
+using P7.GraphQLCore.Extensions;
+using P7.GraphQLCore.Stores;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 using Westwind.AspNetCore.Markdown;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
@@ -40,6 +47,16 @@ namespace IdentityServer4.HostApp.Redis
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    corsBuilder => corsBuilder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             var clients = Configuration.LoadClientsFromSettings();
             var apiResources = Configuration.LoadApiResourcesFromSettings();
 
@@ -116,6 +133,12 @@ namespace IdentityServer4.HostApp.Redis
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
+            services.AddSingleton<InMemoryGraphQLFieldAuthority>()
+                .As<InMemoryGraphQLFieldAuthority>()
+                .As<IGraphQLFieldAuthority>();
+            services.AddGraphQLCoreTypes();
+            services.AddGraphQLCoreExtensionGrantsTypes();
+
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
@@ -125,7 +148,39 @@ namespace IdentityServer4.HostApp.Redis
 
             services.AddMyHealthCheck(Configuration);
             services.AddMemoryCache();
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            // Register the Swagger generator, defining one or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    return apiDesc.HttpMethod != null;
+                });
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Nudibranch API",
+                    Description = "A simple example ASP.NET Core Web API",
+                    TermsOfService = "None",
+                    Contact = new Contact
+                    {
+                        Name = "Slammin Rammen",
+                        Email = "admin@supercorp.com",
+                        Url = "https://twitter.com/slamminrammen"
+                    },
+                    License = new License
+                    {
+                        Name = "Use under LICX",
+                        Url = "https://example.com/license"
+                    }
+                });
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
 
             services.AddLogging();
             services.AddWebEncoders();
@@ -162,6 +217,15 @@ namespace IdentityServer4.HostApp.Redis
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+
+            app.UseSwagger();
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseBrowserLink();
@@ -177,8 +241,10 @@ namespace IdentityServer4.HostApp.Redis
                 app.UseMarkdown();
             }
 
+
             app.UseStaticFiles();
             app.UseIdentityServer();
+            app.UseCors("CorsPolicy");
             app.UseMvc();
         }
         private void StartupLogger()

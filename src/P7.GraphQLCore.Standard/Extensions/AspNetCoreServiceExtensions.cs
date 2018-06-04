@@ -19,7 +19,7 @@ namespace P7.GraphQLCore.Extensions
 {
     public static class AspNetCoreServiceExtensions
     {
-        public static void AddGraphQlCoreTypes(this IServiceCollection services)
+        public static void AddGraphQLCoreTypes(this IServiceCollection services)
         {
             services.AddSingleton< IQueryFieldRecordRegistrationStore,QueryFieldRecordRegistrationStore>();
             services.AddSingleton<IMutationFieldRecordRegistrationStore, MutationFieldRecordRegistrationStore>();
