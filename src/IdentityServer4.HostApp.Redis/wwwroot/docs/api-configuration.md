@@ -15,7 +15,7 @@ aggregator_service
 aggregator_service.full_access
 aggregator_service.read_only
 ~~~ 
-When the scope is created the following data exists in the token;
+When the scope is requested, a token is created the following data;
 
 1. The audience always contains the name of the apiResource.  i.e. metal or aggregator_service
 2. The scope claim(s) contain the requested scope.  i.e. metal or aggregator_service.full_access
