@@ -6,9 +6,9 @@ namespace IdentityServer4.HostApp.Redis.Pages
     public class ClientsModel : PageModel
     {
         public string ClientId { get; private set; }
-        public async Task OnGetAsync(string id)
+        public async Task OnGetAsync(string clientId)
         {
-            ClientId = id;
+            ClientId = clientId;
         }
     }
 }

@@ -202,10 +202,13 @@ namespace IdentityServer4.HostApp.Redis
                         Url = "https://example.com/license"
                     }
                 });
+                // TODO: fix this by copying over the XML file
+                /*
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetEntryAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+                */
             });
 
 
