@@ -66,7 +66,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             if (!oneMustExistResult.Any())
             {
                 error = true;
-                los.AddRange(OneMustExitsArguments.Select(item => $"[on or the other] {item} is missing!"));
+                los.AddRange(OneMustExitsArguments.Select(item => $"[one or the other] {item} is missing!"));
             }
             var result = RequiredArbitraryArguments.Except(rr.Keys);
             if (result.Any())

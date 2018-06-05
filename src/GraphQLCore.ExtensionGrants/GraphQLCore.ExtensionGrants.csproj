@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
     <ProjectReference Include="..\P7.GraphQLCore.Standard\P7.GraphQLCore.Standard.csproj" />
   </ItemGroup>
 

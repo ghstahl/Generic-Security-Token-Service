@@ -13,6 +13,12 @@ namespace GraphQLCore.ExtensionGrants.Extensions
             services.AddTransient<IdentityModelType>();
             services.AddTransient<ClaimHandleType>();
             services.AddTransient<IQueryFieldRecordRegistration, IdentityQuery>();
+
+            
+            services.AddTransient<ArbitraryResourceOwnerInput>();
+            services.AddTransient<ArbitraryResourceOwnerResultType>();
+            services.AddTransient<IQueryFieldRecordRegistration, ArbitraryResourceOwnerQuery>();
+            
         }
     }
 }

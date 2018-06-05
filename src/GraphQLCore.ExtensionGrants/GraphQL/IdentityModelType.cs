@@ -4,7 +4,7 @@ using GraphQLCore.ExtensionGrants.Models;
 namespace GraphQLCore.ExtensionGrants.GraphQL
 {
 
-    public class IdentityModelType : ObjectGraphType<IdentityModel>
+    public class IdentityModelType : ObjectGraphType<GraphQLCore.ExtensionGrants.Models.IdentityModel>
     {
         public IdentityModelType()
         {

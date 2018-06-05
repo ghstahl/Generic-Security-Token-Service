@@ -9,11 +9,8 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
 {
     public class IdentityQuery : IQueryFieldRecordRegistration
     {
-
-
         public IdentityQuery()
         {
-
         }
 
         public void AddGraphTypeFields(QueryCore queryCore)
@@ -25,7 +22,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
                     try
                     {
                         var userContext = context.UserContext.As<GraphQLUserContext>();
-                        var result = new IdentityModel {Claims = new List<ClaimHandle>()};
+                        var result = new GraphQLCore.ExtensionGrants.Models.IdentityModel { Claims = new List<ClaimHandle>()};
                         foreach (var claim in userContext.HttpContextAccessor.HttpContext.User.Claims)
                         {
                             result.Claims.Add(new ClaimHandle()
