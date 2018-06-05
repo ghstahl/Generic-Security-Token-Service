@@ -5,32 +5,39 @@ using GraphQL.Types;
 using IdentityServer4Extras.Endpoints;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
-using Newtonsoft.Json;
 using P7.GraphQLCore;
 
 namespace GraphQLCore.ExtensionGrants.GraphQL.Query
 {
-    public class ArbitraryResourceOwnerQuery : IQueryFieldRecordRegistration
+    public class ArbitraryNoSubjectQuery : IQueryFieldRecordRegistration
     {
-        private const string GrantType = "arbitrary_resource_owner";
+        private const string GrantType = "arbitrary_no_subject";
+        /*
+            grant_type:arbitrary_no_subject
+            client_id:arbitrary-resource-owner-client
+            client_secret:secret
+            scope:nitro metal
+            arbitrary_claims:{ "role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
+            access_token_lifetime:3600
+         */
         private IEndpointHandlerExtra _endpointHandlerExtra;
-        public ArbitraryResourceOwnerQuery(IEndpointHandlerExtra endpointHandlerExtra)
+        public ArbitraryNoSubjectQuery(IEndpointHandlerExtra endpointHandlerExtra)
         {
             _endpointHandlerExtra = endpointHandlerExtra;
         }
 
         public void AddGraphTypeFields(QueryCore queryCore)
         {
-            queryCore.FieldAsync<ArbitraryResourceOwnerResultType>(name: GrantType,
+            queryCore.FieldAsync<ArbitraryNoSubjectResultType>(name: GrantType,
                 description: $"mints a custom {GrantType} token.",
-                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<ArbitraryResourceOwnerInput>> { Name = "input" }),
+                arguments: new QueryArguments(new QueryArgument<NonNullGraphType<ArbitraryNoSubjectInput>> { Name = "input" }),
                 resolve: async context =>
                 {
                     try
                     {
 
                         var userContext = context.UserContext.As<GraphQLUserContext>();
-                        var input = context.GetArgument<ArbitraryResourceOwnerInputHandle>("input");
+                        var input = context.GetArgument<ArbitraryNoSubjectInputHandle>("input");
 
                         var formValues = new Dictionary<string, StringValues>()
                         {
@@ -40,15 +47,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
                             {"scope", input.scope},
                             {"arbitrary_claims", input.arbitrary_claims}
                         };
-                        if (!string.IsNullOrWhiteSpace(input.subject))
-                        {
-                            formValues.Add("subject", input.subject);
-                        }
-                        if (!string.IsNullOrWhiteSpace(input.access_token))
-                        {
-                            formValues.Add("access_token", input.access_token);
-                        }
-
+                       
                         if (input.access_token_lifetime > 0)
                         {
                             formValues.Add("access_token_lifetime", input.access_token_lifetime.ToString());
@@ -63,11 +62,10 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
                             context.Errors.Add(new ExecutionError($"{processsedResult.TokenErrorResult.Response.Error}:{processsedResult.TokenErrorResult.Response.ErrorDescription}"));
                             return null;
                         }
-                        var result = new ArbitraryResourceOwnerResult
+                        var result = new ArbitraryNoSubjectResult
                         {
                             access_token = processsedResult.TokenResult.Response.AccessToken,
                             expires_in = processsedResult.TokenResult.Response.AccessTokenLifetime,
-                            refresh_token = processsedResult.TokenResult.Response.RefreshToken,
                             token_type = "bearer"
                         };
                         return result;

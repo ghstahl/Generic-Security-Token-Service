@@ -18,7 +18,10 @@ namespace GraphQLCore.ExtensionGrants.Extensions
             services.AddTransient<ArbitraryResourceOwnerInput>();
             services.AddTransient<ArbitraryResourceOwnerResultType>();
             services.AddTransient<IQueryFieldRecordRegistration, ArbitraryResourceOwnerQuery>();
-            
+
+            services.AddTransient<ArbitraryNoSubjectInput>();
+            services.AddTransient<ArbitraryNoSubjectResultType>();
+            services.AddTransient<IQueryFieldRecordRegistration, ArbitraryNoSubjectQuery>();
         }
     }
 }
