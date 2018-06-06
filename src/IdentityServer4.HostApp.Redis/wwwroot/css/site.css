@@ -15,15 +15,25 @@ body {
     position:relative;
     z-index:2;
 }
+.header-title-xs {
+    display: none;
 
+}
+ 
 @media screen and (max-width: 768px) {
     .jumbotron {
         padding-top:20px;
         padding-bottom:20px;
     }
-          .jumbotron-img {
-            display: none;
-        }
+    .jumbotron-img {
+        display: none;
+    }
+    .header-title {
+        display: none;
+    }
+    .header-title-xs {
+        display: inline;
+    }
 }
 
 @media all and (max-width: 720px) {
