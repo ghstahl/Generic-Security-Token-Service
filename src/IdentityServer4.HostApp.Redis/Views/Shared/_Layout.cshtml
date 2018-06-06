@@ -7,8 +7,9 @@
 
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap.4.1.1/css/bootstrap.css" />
-        <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="~/css/sticky-footer-navbar.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -20,7 +21,9 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-    <a asp-page="/Index" class="navbar-brand">The Fighting Nudibranch</a>
+    <a asp-page="/Index" class="navbar-brand header-title">The Fighting Nudibranch</a>
+    <a asp-page="/Index" class="navbar-brand header-title-xs">TFN</a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -34,7 +37,7 @@
                 <a asp-page="/ApiResources" class="nav-link">Api Resources</a>
             </li>
         </ul>
-             
+
     </div>
 </nav>
 

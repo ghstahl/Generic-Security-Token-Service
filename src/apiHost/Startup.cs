@@ -39,9 +39,17 @@ namespace apiHost
             services.AddMvcCore()
                 .AddAuthorization(options =>
                 {
-                    options.AddPolicy("Nitro", policy =>
+                    options.AddPolicy("aggregator_service", policy =>
                     {
-                        policy.RequireClaim("scope", "nitro");
+                        policy.RequireClaim("nag_aud", "aggregator_service");
+                    });
+                    options.AddPolicy("aggregator_service.read_only", policy =>
+                    {
+                        policy.RequireClaim("nag_scope", "aggregator_service.read_only");
+                    });
+                    options.AddPolicy("aggregator_service.full_access", policy =>
+                    {
+                        policy.RequireClaim("nag_scope", "aggregator_service.full_access");
                     });
                 })
                 .AddJsonFormatters();
@@ -62,16 +70,20 @@ namespace apiHost
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuer = true,
-                            ValidateAudience = true,
+                            ValidateAudience = false,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
                             ValidAudiences = new List<string>()
                             {
-                                "aggregator-service"
+                                "aggregator_service"
                             } 
                         };
                         options.Events = new JwtBearerEvents
                         {
+                            OnMessageReceived = context =>
+                            {
+                                return Task.CompletedTask;
+                            },
                             OnTokenValidated = context =>
                             {
                                 // get rid of the namespace on the claims.

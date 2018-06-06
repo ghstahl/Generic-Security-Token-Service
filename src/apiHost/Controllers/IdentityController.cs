@@ -14,11 +14,13 @@ namespace apiHost.Controllers
         public string Value { get; set; }
     }
     [Route("api/[controller]")]
+    [Authorize("aggregator_service")]
     public class IdentityController : Controller
     {
         // GET api/values
         [HttpGet]
         [Route("open")]
+        [Authorize("aggregator_service.read_only")]
         public async Task<IEnumerable<ClaimHandle>> GetOpenAsync()
         {
             if (Request.HttpContext.User != null)
@@ -30,9 +32,10 @@ namespace apiHost.Controllers
             }
             return null;
         }// GET api/values
+
         [HttpGet]
         [Route("closed")]
-        [Authorize("Nitro")]
+        [Authorize("aggregator_service.full_access")]
         public async Task<IEnumerable<ClaimHandle>> GetClosedAsync()
         {
             if (Request.HttpContext.User != null)
