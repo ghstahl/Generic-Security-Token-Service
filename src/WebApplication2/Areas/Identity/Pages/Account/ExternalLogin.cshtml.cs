@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +20,8 @@ namespace WebApplication2.Areas.Identity.Pages.Account
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<ExternalLoginModel> _logger;
-
+        private  string[] PossibleNameTypes = new[] { "DisplayName",ClaimTypes.Name,ClaimTypes.GivenName,ClaimTypes.Email};
+        
         public ExternalLoginModel(
             SignInManager<ApplicationUser> signInManager,
             UserManager<ApplicationUser> userManager,
@@ -61,6 +64,17 @@ namespace WebApplication2.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
+            string currentNameIdClaimValue = null;
+            if (User.Identity.IsAuthenticated)
+            {
+                // we will only create a new user if the user here is actually new.
+                var qName = from claim in User.Claims
+                    where claim.Type == ".nameIdentifier"
+                    select claim;
+                var nc = qName.FirstOrDefault();
+                currentNameIdClaimValue = nc?.Value;
+            }
+
             returnUrl = returnUrl ?? Url.Content("~/");
             if (remoteError != null)
             {
@@ -74,7 +88,33 @@ namespace WebApplication2.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
 
+
+            var queryNameId = from claim in info.Principal.Claims
+                where claim.Type == ClaimTypes.NameIdentifier
+                select claim;
+            var nameIdClaim = queryNameId.FirstOrDefault();
+
+            var query = from claim in info.Principal.Claims
+                where PossibleNameTypes.Contains(claim.Type)
+                        select claim;
+            var nameClaim = query.FirstOrDefault();
+            var displayName = nameIdClaim.Value;
+            if (nameClaim != null)
+            {
+                displayName = nameClaim.Value;
+            }
+           
+           
+
+            if (currentNameIdClaimValue == nameIdClaim.Value)
+            {
+
+                // this is a re login from the same user, so don't do anything;
+                return LocalRedirect(returnUrl);
+            }
+
             // Sign in the user with this external login provider if the user already has a login.
+            /*
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor : true);
             if (result.Succeeded)
             {
@@ -99,6 +139,34 @@ namespace WebApplication2.Areas.Identity.Pages.Account
                 }
                 return Page();
             }
+            */
+            // paranoid
+            var leftoverUser = await _userManager.FindByEmailAsync(displayName);
+            if (leftoverUser != null)
+            {
+                await _userManager.DeleteAsync(leftoverUser); // just using this inMemory userstore as a scratch holding pad
+            }
+            var user = new ApplicationUser { UserName = nameIdClaim.Value, Email = displayName };
+
+            var result = await _userManager.CreateAsync(user);
+
+            if (result.Succeeded)
+            {
+                var newUser = await _userManager.FindByIdAsync(user.Id);
+                var eClaims = new List<Claim>
+                {
+                    new Claim("custom-name", displayName),
+                };
+                // normalized id.
+                await _userManager.AddClaimsAsync(newUser, eClaims);
+
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                await _userManager.DeleteAsync(user); // just using this inMemory userstore as a scratch holding pad
+                _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                return LocalRedirect(returnUrl);
+            }
+            return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
         }
 
         public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
