@@ -17,7 +17,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="2.3.2" />
     <PackageReference Include="Microsoft.Azure.KeyVault.WebKey" Version="2.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.0" />
     <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="3.19.6" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.2.2" />
     <PackageReference Include="RSAKeyVaultProvider" Version="1.0.1" />

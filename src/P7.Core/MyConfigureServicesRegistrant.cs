@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using P7.Core.Settings;
-using P7.Core.Startup;
 
 namespace P7.Core
 {

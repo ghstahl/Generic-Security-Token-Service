@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using P7.Core.Settings;
-using P7.Core.Startup;
+
 using P7.GraphQLCore.Stores;
 
 
