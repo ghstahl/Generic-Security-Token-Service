@@ -1,38 +1,51 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using IdentityModel.Client;
 using Microsoft.Extensions.Configuration;
 
 namespace IdentityModelExtras
 {
     /*
-     "oauth2": {
-    "norton": {
-      "authority": "https://login-int.norton.com/sso/oidc1/token",
-      "callbackPath": "/signin-norton",
-      "additionalEndpointBaseAddresses": [
-        "https://login-int.norton.com/sso/idp/OIDC",
-        "https://login-int.norton.com/sso/oidc1"
+     "oauth2": [
+        {
+          "scheme": "norton",
+          "authority": "https://login-int.norton.com/sso/oidc1/token",
+          "callbackPath": "/signin-norton",
+          "additionalEndpointBaseAddresses": [
+            "https://login-int.norton.com/sso/idp/OIDC",
+            "https://login-int.norton.com/sso/oidc1"
+          ]
+        },  
+        {
+          "scheme": "google",
+          "authority": "https://accounts.google.com",
+          "callbackPath": "/signin-google",
+          "additionalEndpointBaseAddresses": []
+        }
       ]
-    },
-    "google": {
-      "authority": "https://accounts.google.com",
-      "callbackPath": "/signin-google",
-      "additionalEndpointBaseAddresses": [
+   */
 
-      ]
+    public class OAuth2SchemeRecord
+    {
+        public string Scheme { get; set; }
+        public string ClientId { get; set; }
+        public string Authority { get; set; }
+        public string CallbackPath { get; set; }
+        public List<string> AdditionalEndpointBaseAddresses { get; set; }
     }
-  }
 
-     */
     public class ConfiguredDiscoverCacheContainer : IDiscoveryCacheContainer
     {
         private IConfiguration _configuration;
         private DiscoveryCache _discoveryCache { get; set; }
         private string Scheme { get; set; }
-
+        private List<OAuth2SchemeRecord> OAuth2SchemeRecords { get; set; }
         public ConfiguredDiscoverCacheContainer(IConfiguration configuration, string scheme)
         {
             _configuration = configuration;
+            var section = configuration.GetSection("oauth2");
+            OAuth2SchemeRecords = new List<OAuth2SchemeRecord>();
+            section.Bind(OAuth2SchemeRecords);
             Scheme = scheme;
         }
         public  DiscoveryCache DiscoveryCache
@@ -41,9 +54,13 @@ namespace IdentityModelExtras
             {
                 if (_discoveryCache == null)
                 {
-                     var authority = _configuration[$"oauth2:{Scheme}:authority"];
-                    var additionalEndpointBaseAddresses = new List<string>();
-                    _configuration.GetSection($"oauth2:{Scheme}:additionalEndpointBaseAddresses").Bind(additionalEndpointBaseAddresses);
+                    var query = from item in OAuth2SchemeRecords
+                                where item.Scheme == Scheme
+                                select item;
+                    var record = query.FirstOrDefault();
+
+                    var authority = record.Authority;
+                    var additionalEndpointBaseAddresses = record.AdditionalEndpointBaseAddresses;
 
                     var discoveryClient = new DiscoveryClient(authority);
                     discoveryClient.Policy.ValidateEndpoints = false;

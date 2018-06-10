@@ -9,6 +9,18 @@ using System.Security.Claims;
 
 namespace QuickstartIdentityServer
 {
+    public class MultiFactorRecord
+    {
+        public string Question { get; set; }
+        public string Answer { get; set; }
+    }
+
+    public class ClientExtra : Client
+    {
+
+
+    }
+
     public class Config
     {
         // scopes define the resources in your system
@@ -33,35 +45,35 @@ namespace QuickstartIdentityServer
         public static IEnumerable<Client> GetClients()
         {
             // client credentials client
-            return new List<Client>
+            return new List<ClientExtra>
             {
-                new Client
+                new ClientExtra
                 {
                     ClientId = "client",
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
-                    ClientSecrets = 
+                    ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
                 },
 
                 // resource owner password grant client
-                new Client
+                new ClientExtra
                 {
                     ClientId = "ro.client",
                     AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                    ClientSecrets = 
+                    ClientSecrets =
                     {
                         new Secret("secret".Sha256())
                     },
-                    AllowedScopes = { "api1" }
+                    AllowedScopes = {"api1"}
                 },
 
                 // OpenID Connect implicit flow client (MVC)
-                new Client
+                new ClientExtra
                 {
                     ClientId = "mvc",
                     ClientName = "MVC Client",
@@ -69,22 +81,22 @@ namespace QuickstartIdentityServer
 
                     RedirectUris =
                     {
-                        "http://localhost:5002/signin-oidc",
-                      
+                        "https://localhost:44333/signin-oidc",
+
                     },
                     PostLogoutRedirectUris =
                     {
-                        "http://localhost:5002/signout-callback-oidc",
-                        
+                        "https://localhost:44333/signout-callback-oidc",
+
                     },
-                    
+
                     AllowedScopes =
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile
                     }
                 },
-                new Client
+                new ClientExtra
                 {
                     ClientId = "mvc2",
                     ClientName = "MVC2 Client",
@@ -127,7 +139,21 @@ namespace QuickstartIdentityServer
                     {
                         new Claim("name", "Alice"),
                         new Claim("website", "https://alice.com")
+                    },
+                    MultiFactorRecords =
+                    {
+                        new IdentityServer4.Test.MultiFactorRecord()
+                        {
+                            Question = "Favorite Place",
+                            Answer = "Jail"
+                        },
+                        new IdentityServer4.Test.MultiFactorRecord()
+                        {
+                            Question = "Favorite Food",
+                            Answer = "twinkies"
+                        }
                     }
+
                 },
                 new TestUser
                 {

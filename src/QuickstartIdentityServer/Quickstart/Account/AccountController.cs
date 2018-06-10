@@ -93,7 +93,19 @@ namespace IdentityServer4.Quickstart.UI
                 // we only have one option for logging in and it's an external provider
                 return await ExternalLogin(vm.ExternalLoginScheme, returnUrl);
             }
-
+            vm.MultiFactorRecords.AddRange(new List<MultiFactorRecord>()
+            {
+                new IdentityServer4.Test.MultiFactorRecord()
+                {
+                    Question = "Favorite Place"
+                   
+                },
+                new IdentityServer4.Test.MultiFactorRecord()
+                {
+                    Question = "Favorite Food",
+                    
+                }
+            });
             return View(vm);
         }
 
@@ -127,26 +139,16 @@ namespace IdentityServer4.Quickstart.UI
 
             if (ModelState.IsValid)
             {
+
                 // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
-                {
+//                if (_users.ValidateCredentials(model.Username, model.Password))
+  //              {
                     var user = _users.FindByUsername(model.Username);
                     await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username));
 
-                    // only set explicit expiration here if user chooses "remember me". 
-                    // otherwise we rely upon expiration configured in cookie middleware.
-                    AuthenticationProperties props = null;
-                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
-                    {
-                        props = new AuthenticationProperties
-                        {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                        };
-                    };
-
+    
                     // issue authentication cookie with subject ID and username
-                    await HttpContext.SignInAsync(user.SubjectId, user.Username, props);
+                    await HttpContext.SignInAsync(user.SubjectId, user.Username);
 
                     // make sure the returnUrl is still valid, and if so redirect back to authorize endpoint or a local page
                     // the IsLocalUrl check is only necessary if you want to support additional local pages, otherwise IsValidReturnUrl is more strict
@@ -156,7 +158,7 @@ namespace IdentityServer4.Quickstart.UI
                     }
 
                     return Redirect("~/");
-                }
+    //            }
 
                 await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials"));
 
@@ -356,7 +358,7 @@ namespace IdentityServer4.Quickstart.UI
         {
             var vm = await BuildLoginViewModelAsync(model.ReturnUrl);
             vm.Username = model.Username;
-            vm.RememberLogin = model.RememberLogin;
+          
             return vm;
         }
 

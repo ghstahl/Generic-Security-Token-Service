@@ -67,7 +67,17 @@ namespace WebApplication2
                 googleOptions.ClientId = Configuration["Authentication:Google:ClientId"];
                 googleOptions.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
             });
+            authenticationBuilder
+                .AddOpenIdConnect("oidc", options =>
+            {
+             //   options.SignInScheme = "Cookies";
 
+                options.Authority = "https://localhost:44330/";
+                options.RequireHttpsMetadata = false;
+
+                options.ClientId = "mvc";
+                options.SaveTokens = true;
+            });
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddCors(options =>

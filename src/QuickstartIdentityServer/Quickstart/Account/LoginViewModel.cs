@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using IdentityServer4.Test;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -18,5 +19,10 @@ namespace IdentityServer4.Quickstart.UI
 
         public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
         public string ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
+
+        private List<MultiFactorRecord> _multiFactorRecords;
+
+        public List<MultiFactorRecord> MultiFactorRecords =>
+            _multiFactorRecords = _multiFactorRecords ?? new List<MultiFactorRecord>();
     }
 }

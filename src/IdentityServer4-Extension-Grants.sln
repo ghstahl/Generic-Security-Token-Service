@@ -84,15 +84,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.HealthChecks", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GraphQL", "GraphQL", "{AC13432E-1FEE-453F-BF4E-4800912024C9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "P7.GraphQLCore.Standard", "P7.GraphQLCore.Standard\P7.GraphQLCore.Standard.csproj", "{AFE47EF2-A331-4372-B6D2-4AD903B4B800}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "P7.GraphQLCore.Standard", "P7.GraphQLCore.Standard\P7.GraphQLCore.Standard.csproj", "{AFE47EF2-A331-4372-B6D2-4AD903B4B800}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQLCore.ExtensionGrants", "GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj", "{EF50034A-0EBA-404C-B94E-02E243F1A249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphQLCore.ExtensionGrants", "GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj", "{EF50034A-0EBA-404C-B94E-02E243F1A249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GraphQLCoreController", "GraphQLCoreController\GraphQLCoreController.csproj", "{6CDF8EB3-5CCD-40D4-89BC-778CE86422FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GraphQLCoreController", "GraphQLCoreController\GraphQLCoreController.csproj", "{6CDF8EB3-5CCD-40D4-89BC-778CE86422FE}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Portals", "Portals", "{C2D30354-07B3-499D-85AC-31531F65C720}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApplication2", "WebApplication2\WebApplication2.csproj", "{394FDCD6-D42E-4D06-A93B-5D0831A665A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportPortal.IdentityProvider", "SupportPortal.IdentityProvider\SupportPortal.IdentityProvider.csproj", "{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.AspNetIdentity", "IdentityServer4.AspNetIdentity\IdentityServer4.AspNetIdentity.csproj", "{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCHost", "MVCHost\MVCHost.csproj", "{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SupportMultiFactor.IdentityProvider", "SupportMultiFactor.IdentityProvider\SupportMultiFactor.IdentityProvider.csproj", "{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -232,6 +240,22 @@ Global
 		{394FDCD6-D42E-4D06-A93B-5D0831A665A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{394FDCD6-D42E-4D06-A93B-5D0831A665A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{394FDCD6-D42E-4D06-A93B-5D0831A665A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,6 +285,10 @@ Global
 		{EF50034A-0EBA-404C-B94E-02E243F1A249} = {AC13432E-1FEE-453F-BF4E-4800912024C9}
 		{6CDF8EB3-5CCD-40D4-89BC-778CE86422FE} = {AC13432E-1FEE-453F-BF4E-4800912024C9}
 		{394FDCD6-D42E-4D06-A93B-5D0831A665A6} = {C2D30354-07B3-499D-85AC-31531F65C720}
+		{BC0B8ED4-8BD4-4C71-9D08-8FFD0B861BAD} = {C2D30354-07B3-499D-85AC-31531F65C720}
+		{E2EFF6C9-65DA-4DA9-A49C-11C108DC1850} = {C2D30354-07B3-499D-85AC-31531F65C720}
+		{3ABED25F-D4F8-4C91-AAB8-6E2B42F4D105} = {C2D30354-07B3-499D-85AC-31531F65C720}
+		{D5936F82-05FD-4BB7-BA84-A9D8E7CFD83F} = {C2D30354-07B3-499D-85AC-31531F65C720}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}
