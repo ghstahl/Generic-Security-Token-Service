@@ -81,7 +81,7 @@ namespace QuickstartIdentityServer
                     ClientId = "mvc",
                     ClientName = "MVC Client",
                     AllowedGrantTypes = GrantTypes.Implicit,
-
+                    RequireConsent = false,
                     RedirectUris =
                     {
                         "https://localhost:44333/signin-oidc",
@@ -104,7 +104,7 @@ namespace QuickstartIdentityServer
                     ClientId = "mvc2",
                     ClientName = "MVC2 Client",
                     AllowedGrantTypes = GrantTypes.Implicit,
-
+                    RequireConsent = false,
                     RedirectUris =
                     {
 
