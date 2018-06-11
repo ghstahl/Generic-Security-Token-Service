@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using IdentityServer4.Test;
+using QuickstartIdentityServer;
 
 namespace IdentityServer4.Quickstart.UI
 {

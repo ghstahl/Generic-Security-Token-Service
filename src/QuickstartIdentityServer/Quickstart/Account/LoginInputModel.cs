@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using IdentityServer4.Test;
+using QuickstartIdentityServer;
 
 namespace IdentityServer4.Quickstart.UI
 {

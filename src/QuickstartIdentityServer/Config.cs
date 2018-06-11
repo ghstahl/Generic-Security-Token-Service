@@ -16,11 +16,14 @@ namespace QuickstartIdentityServer
     }
 
     public class ClientExtra : Client
+    {}
+    public class TestUserExtra : TestUser
     {
+        private List<MultiFactorRecord> _multiFactorRecords;
 
-
+        public List<MultiFactorRecord> MultiFactorRecords =>
+            _multiFactorRecords = _multiFactorRecords ?? new List<MultiFactorRecord>();
     }
-
     public class Config
     {
         // scopes define the resources in your system
@@ -129,7 +132,7 @@ namespace QuickstartIdentityServer
         {
             return new List<TestUser>
             {
-                new TestUser
+                new TestUserExtra
                 {
                     SubjectId = "1",
                     Username = "alice",
@@ -142,12 +145,12 @@ namespace QuickstartIdentityServer
                     },
                     MultiFactorRecords =
                     {
-                        new IdentityServer4.Test.MultiFactorRecord()
+                        new MultiFactorRecord()
                         {
                             Question = "Favorite Place",
                             Answer = "Jail"
                         },
-                        new IdentityServer4.Test.MultiFactorRecord()
+                        new MultiFactorRecord()
                         {
                             Question = "Favorite Food",
                             Answer = "twinkies"
@@ -155,7 +158,7 @@ namespace QuickstartIdentityServer
                     }
 
                 },
-                new TestUser
+                new TestUserExtra
                 {
                     SubjectId = "2",
                     Username = "bob",

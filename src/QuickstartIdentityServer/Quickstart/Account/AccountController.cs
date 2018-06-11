@@ -19,6 +19,7 @@ using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using Microsoft.EntityFrameworkCore.Query.Expressions;
+using QuickstartIdentityServer;
 
 namespace IdentityServer4.Quickstart.UI
 {
@@ -95,12 +96,12 @@ namespace IdentityServer4.Quickstart.UI
             }
             vm.MultiFactorRecords.AddRange(new List<MultiFactorRecord>()
             {
-                new IdentityServer4.Test.MultiFactorRecord()
+                new MultiFactorRecord()
                 {
                     Question = "Favorite Place"
                    
                 },
-                new IdentityServer4.Test.MultiFactorRecord()
+                new MultiFactorRecord()
                 {
                     Question = "Favorite Food",
                     
