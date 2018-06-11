@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "Identity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiRefreshTokenSameSubjectSameClientIdWorkAround", "MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj", "{D4DEB8F3-25CF-4B59-98D0-8CE9F6410FED}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickstartIdentityServer", "QuickstartIdentityServer\QuickstartIdentityServer.csproj", "{1909C02C-9CE0-4759-9631-8AF5B4F9B43F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.SupportIDP", "IdentityServer4.SupportIDP\IdentityServer4.SupportIDP.csproj", "{1909C02C-9CE0-4759-9631-8AF5B4F9B43F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{8DE49F3D-036E-4993-AFA2-0ADB9306FB42}"
 EndProject
