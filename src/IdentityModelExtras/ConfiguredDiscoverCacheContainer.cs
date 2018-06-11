@@ -59,14 +59,13 @@ namespace IdentityModelExtras
                                 select item;
                     var record = query.FirstOrDefault();
 
-                    var authority = record.Authority;
-                    var additionalEndpointBaseAddresses = record.AdditionalEndpointBaseAddresses;
-
-                    var discoveryClient = new DiscoveryClient(authority);
-                    discoveryClient.Policy.ValidateEndpoints = false;
-                    foreach (var additionalEndpointBaseAddress in additionalEndpointBaseAddresses)
+                    var discoveryClient = new DiscoveryClient(record.Authority) {Policy = {ValidateEndpoints = false}};
+                    if (record.AdditionalEndpointBaseAddresses != null)
                     {
-                        discoveryClient.Policy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
+                        foreach (var additionalEndpointBaseAddress in record.AdditionalEndpointBaseAddresses)
+                        {
+                            discoveryClient.Policy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
+                        }
                     }
                     _discoveryCache = new DiscoveryCache(discoveryClient);
                 }
