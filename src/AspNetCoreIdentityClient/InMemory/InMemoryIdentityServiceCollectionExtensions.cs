@@ -33,9 +33,10 @@ namespace AspNetCoreIdentityClient.InMemory
             foreach (var record in oAuth2SchemeRecords)
             {
                 var scheme = record.Scheme;
-                authenticationBuilder.AddOpenIdConnect(scheme, options =>
+                authenticationBuilder.AddOpenIdConnect(scheme, scheme, options =>
                 {
                     options.Authority = record.Authority;
+                    options.CallbackPath = record.CallbackPath;
                     options.RequireHttpsMetadata = false;
 
                     options.ClientId = record.ClientId;
