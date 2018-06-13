@@ -67,6 +67,7 @@ namespace IdentityServer4.HostApp.Redis
 
             var clients = Configuration.LoadClientsFromSettings();
             var apiResources = Configuration.LoadApiResourcesFromSettings();
+            var identityResources = Configuration.LoadIdentityResourcesFromSettings();
 
             services.AddSingleton<OIDCDiscoverCacheContainer>();
 
@@ -74,7 +75,7 @@ namespace IdentityServer4.HostApp.Redis
             bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
             var builder = services
                 .AddIdentityServer()
-                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryIdentityResources(identityResources)
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
                 .AddTestUsers(Config.GetUsers())
@@ -301,6 +302,7 @@ namespace IdentityServer4.HostApp.Redis
                 .AddJsonFile("appsettings.graphql.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ratelimiting.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.healthcheck.json", optional: true)
+                .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.IdentityResources.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.ApiResources.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.Clients.json", optional: true)
                 .AddJsonFile($"appsettings.{_hostingEnvironment.EnvironmentName}.json", optional: true);

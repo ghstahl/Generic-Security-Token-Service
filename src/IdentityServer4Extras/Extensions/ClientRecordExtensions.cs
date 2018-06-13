@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4Extras.Models;
 using Microsoft.Extensions.Configuration;
@@ -7,6 +8,7 @@ namespace IdentityServer4Extras.Extensions
 {
     public static class ClientRecordExtensions
     {
+        
         public static List<Client> LoadClientsFromSettings(this IConfiguration configuration)
         {
             IConfigurationSection section = configuration.GetSection("clients");
@@ -19,6 +21,38 @@ namespace IdentityServer4Extras.Extensions
             var clients = clientRecords.ToClients();
             return clients;
         }
+
+        public static List<IdentityResource> LoadIdentityResourcesFromSettings(this IConfiguration configuration)
+        {
+            IConfigurationSection section = configuration.GetSection("identityResources");
+            var identityResources = new List<string>();
+            section.Bind(identityResources);
+            List<IdentityResource> result = new List<IdentityResource>();
+            foreach (var identityResource in identityResources)
+            {
+                switch (identityResource)
+                {
+                    case IdentityServerConstants.StandardScopes.OpenId:
+                        result.Add(new IdentityResources.OpenId());
+                        break;
+                    case IdentityServerConstants.StandardScopes.Profile:
+                        result.Add(new IdentityResources.Profile());
+                        break;
+                    case IdentityServerConstants.StandardScopes.Email:
+                        result.Add(new IdentityResources.Email());
+                        break;
+                    case IdentityServerConstants.StandardScopes.Phone:
+                        result.Add(new IdentityResources.Phone());
+                        break;
+                    case IdentityServerConstants.StandardScopes.Address:
+                        result.Add(new IdentityResources.Address());
+                        break;
+                }
+            }
+
+            return result;
+        }
+
         public static Client ToClient(this ClientRecord self)
         {
             List<Secret> secrets = new List<Secret>();
