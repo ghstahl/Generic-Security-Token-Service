@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
-    <ProjectReference Include="..\RefreshTokenSerializer\RefreshTokenSerializer.csproj" />
   </ItemGroup>
 
 </Project>

@@ -42,11 +42,41 @@ namespace ProfileServiceManager
                     return;
                 }
             }
+            else
+            {
+                pluginKey = "default";
+                if (_plugins.ContainsKey(pluginKey))
+                {
+                    var plugin = _plugins[pluginKey];
+                    await plugin.ProfileService.GetProfileDataAsync(context);
+                }
+            }
             throw new Exception($"{Constants.ClaimKey} is not present, or does not reference a plugin.");
         }
 
         public async Task IsActiveAsync(IsActiveContext context)
         {
+            var query = from item in context.Subject.Claims
+                where item.Type == Constants.ClaimKey
+                select item.Value;
+            var pluginKey = query.FirstOrDefault();
+            if (pluginKey != null)
+            {
+                if (_plugins.ContainsKey(pluginKey))
+                {
+                    var plugin = _plugins[pluginKey];
+                    await plugin.ProfileService.IsActiveAsync(context);
+                }
+            }
+            else
+            {
+                pluginKey = "default";
+                if (_plugins.ContainsKey(pluginKey))
+                {
+                    var plugin = _plugins[pluginKey];
+                    await plugin.ProfileService.IsActiveAsync(context);
+                }
+            }
         }
     }
 }
