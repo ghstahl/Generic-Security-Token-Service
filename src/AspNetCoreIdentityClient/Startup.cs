@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using AspNetCoreIdentityClient.Data;
 using AspNetCoreIdentityClient.InMemory;
 using AspNetCoreIdentityClient.Services;
+using IdentityModelExtras;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using P7.AspNetCore.Identity.InMemory;
 
@@ -36,7 +37,7 @@ namespace AspNetCoreIdentityClient
                 options.MinimumSameSitePolicy = SameSiteMode.None;
                 options.ConsentCookie.Name = $"{Configuration["applicationName"]}.AspNetCore.Consent";
             });
-            services.AddSingleton<OIDCDiscoverCacheContainer>();
+            services.AddSingleton<ConfiguredDiscoverCacheContainerFactory>();
 
             var inMemoryStore = new InMemoryStore<ApplicationUser, ApplicationRole>();
 

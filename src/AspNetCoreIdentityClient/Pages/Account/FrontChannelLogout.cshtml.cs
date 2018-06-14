@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreIdentityClient.Data;
+using IdentityModelExtras;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,15 +14,15 @@ namespace AspNetCoreIdentityClient.Pages.Account
     public class FrontChannelLogoutModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private OIDCDiscoverCacheContainer _discoverCacheContainer;
+        private ConfiguredDiscoverCacheContainerFactory _configuredDiscoverCacheContainerFactory;
         private readonly ILogger _logger;
         public FrontChannelLogoutModel(
             SignInManager<ApplicationUser> signInManager,
-            OIDCDiscoverCacheContainer discoverCacheContainer,
+            ConfiguredDiscoverCacheContainerFactory configuredDiscoverCacheContainerFactory,
             ILogger<FrontChannelLogoutModel> logger)
         {
             _signInManager = signInManager;
-            _discoverCacheContainer = discoverCacheContainer;
+            _configuredDiscoverCacheContainerFactory = configuredDiscoverCacheContainerFactory;
             _logger = logger;
         }
 
@@ -41,8 +42,8 @@ namespace AspNetCoreIdentityClient.Pages.Account
                 var idToken = query.FirstOrDefault();
                 IdToken = idToken.Value;
 
-
-                var discoveryCache = await _discoverCacheContainer.DiscoveryCache.GetAsync();
+                var discoverCacheContainer = _configuredDiscoverCacheContainerFactory.Get(info.LoginProvider);
+                var discoveryCache = await discoverCacheContainer.DiscoveryCache.GetAsync();
                 var endSession = discoveryCache.EndSessionEndpoint;
                 EndSessionUrl = $"{endSession}?id_token_hint={IdToken}&post_logout_redirect_uri={clientSignoutCallback}";
 
