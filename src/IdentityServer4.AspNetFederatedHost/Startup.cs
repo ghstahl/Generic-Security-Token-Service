@@ -67,6 +67,7 @@ namespace IdentityServer4.AspNetFederatedHost
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.ConsentCookie.Name = $"{Configuration["applicationName"]}.AspNetCore.Consent";
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -75,7 +76,9 @@ namespace IdentityServer4.AspNetFederatedHost
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-
+            services.ConfigureApplicationCookie(options => {
+                options.Cookie.Name = $"{Configuration["applicationName"]}.AspNetCore.Identity.Application";
+            });
             services.AddMemoryCache();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 

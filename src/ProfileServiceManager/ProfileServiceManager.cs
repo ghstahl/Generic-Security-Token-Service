@@ -49,6 +49,7 @@ namespace ProfileServiceManager
                 {
                     var plugin = _plugins[pluginKey];
                     await plugin.ProfileService.GetProfileDataAsync(context);
+                    return;
                 }
             }
             throw new Exception($"{Constants.ClaimKey} is not present, or does not reference a plugin.");
@@ -66,6 +67,7 @@ namespace ProfileServiceManager
                 {
                     var plugin = _plugins[pluginKey];
                     await plugin.ProfileService.IsActiveAsync(context);
+                    return;
                 }
             }
             else
@@ -75,8 +77,10 @@ namespace ProfileServiceManager
                 {
                     var plugin = _plugins[pluginKey];
                     await plugin.ProfileService.IsActiveAsync(context);
+                    return;
                 }
             }
+            throw new Exception($"{Constants.ClaimKey} is not present, or does not reference a plugin.");
         }
     }
 }

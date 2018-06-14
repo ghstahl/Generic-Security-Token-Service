@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Identity
+@using AspNetCoreIdentityClient.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a></li>
+        <li><a asp-page="/Account/FrontChannelLogout">Log out</a></li>
+    </ul>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+        <li><a asp-page="/Account/Register">Register</a></li>
+        <li><a asp-page="/Account/Login">Log in</a></li>
+    </ul>
+}

@@ -64,16 +64,26 @@ namespace IdentityServer4Extras.Extensions
             return new ClientExtra()
             {
                 ClientId = self.ClientId,
-                AllowedGrantTypes = self.AllowedGrantTypes,
-                AllowOfflineAccess = self.AllowOfflineAccess,
-                RefreshTokenUsage = (TokenUsage)self.RefreshTokenUsage,
-                ClientSecrets = secrets,
-                AllowedScopes = self.AllowedScopes,
-                RequireClientSecret = self.RequireClientSecret,
-                RequireRefreshClientSecret = self.RequireRefreshClientSecret,
-                AccessTokenLifetime = self.AccessTokenLifetime,
+
                 AbsoluteRefreshTokenLifetime = self.AbsoluteRefreshTokenLifetime,
-                ClientClaimsPrefix = self.ClientClaimsPrefix
+                AccessTokenLifetime = self.AccessTokenLifetime,
+                AllowedGrantTypes = self.AllowedGrantTypes,
+                AllowedScopes = self.AllowedScopes,
+                AllowOfflineAccess = self.AllowOfflineAccess,
+                AccessTokenType = (AccessTokenType)self.AccessTokenType,
+                ClientClaimsPrefix = self.ClientClaimsPrefix,
+                ClientSecrets = secrets,
+                Enabled = self.Enabled,
+                FrontChannelLogoutSessionRequired = self.FrontChannelLogoutSessionRequired,
+                FrontChannelLogoutUri = self.FrontChannelLogoutUri,
+                PostLogoutRedirectUris = self.PostLogoutRedirectUris,
+                RedirectUris = self.RedirectUris,
+                RefreshTokenUsage = (TokenUsage)self.RefreshTokenUsage,
+                RequireClientSecret = self.RequireClientSecret,
+                RequireConsent = self.RequireConsent,
+                RequireRefreshClientSecret = self.RequireRefreshClientSecret,
+                SlidingRefreshTokenLifetime = self.SlidingRefreshTokenLifetime,
+                
             };
         }
 
