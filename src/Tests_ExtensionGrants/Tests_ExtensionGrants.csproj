@@ -55,4 +55,10 @@
     <ProjectReference Include="..\IdentityServer4.HostApp.Redis\IdentityServer4.HostApp.Redis.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="appsettings.graphql.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
