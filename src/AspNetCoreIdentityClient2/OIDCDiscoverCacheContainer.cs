@@ -5,7 +5,8 @@ namespace AspNetCoreIdentityClient
 {
     public class OIDCDiscoverCacheContainer : ConfiguredDiscoverCacheContainer
     {
-        public OIDCDiscoverCacheContainer(IConfiguration configuration) : base(configuration, "oidc")
+        public OIDCDiscoverCacheContainer(IDefaultHttpClientFactory defaultHttpClientFactory, IConfiguration configuration) : 
+            base(defaultHttpClientFactory, configuration, "oidc")
         {
         }
     }
