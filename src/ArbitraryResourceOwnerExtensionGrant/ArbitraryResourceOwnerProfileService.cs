@@ -41,6 +41,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                             select new Claim(item.Key, c)).ToList();
 
                         context.IssuedClaims.AddRange(finalClaims);
+                        context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
                     }
                 }
             }
