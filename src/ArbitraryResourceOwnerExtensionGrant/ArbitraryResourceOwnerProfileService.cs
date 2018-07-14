@@ -49,14 +49,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
                         where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
                         select item).FirstOrDefault();
 
-                    var authTimeQueryClaim = (from item in context.Subject.Claims
-                        where item.Type == JwtClaimTypes.AuthenticationTime
-                        select item).FirstOrDefault();
-                    if (originAuthTimeClaim == null)
+                    if (originAuthTimeClaim != null)
                     {
-                        originAuthTimeClaim = new Claim($"origin_{JwtClaimTypes.AuthenticationTime}", authTimeQueryClaim.Value);
+                        context.IssuedClaims.Add(originAuthTimeClaim);
                     }
-                    context.IssuedClaims.Add(originAuthTimeClaim);
                 }
             }
         }

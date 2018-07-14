@@ -128,6 +128,16 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 originAuthTimeClaim = (from item in validateAccessToken.Claims
                                       where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
                     select item).FirstOrDefault();
+                if (originAuthTimeClaim == null)
+                {
+                    var authTimeClaim = (from item in validateAccessToken.Claims
+                        where item.Type == JwtClaimTypes.AuthenticationTime
+                        select item).FirstOrDefault();
+                    originAuthTimeClaim = new
+                        Claim($"origin_{JwtClaimTypes.AuthenticationTime}",
+                            authTimeClaim.Value);
+
+                }
 
             }
 
