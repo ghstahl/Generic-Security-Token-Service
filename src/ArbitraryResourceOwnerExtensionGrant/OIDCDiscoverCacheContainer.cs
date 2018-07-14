@@ -7,7 +7,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
 {
     public class OIDCDiscoverCacheContainer : ConfiguredDiscoverCacheContainer
     {
-        public OIDCDiscoverCacheContainer(IConfiguration configuration) : base(configuration, "self")
+        public OIDCDiscoverCacheContainer(
+            IDefaultHttpClientFactory defaultHttpClientFactory, IConfiguration configuration) : 
+            base(defaultHttpClientFactory, configuration, "self")
         {
         }
     }

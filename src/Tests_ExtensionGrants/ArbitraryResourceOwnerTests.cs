@@ -1,19 +1,29 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using ArbitraryOpenIdConnectTokenExtensionGrants;
 using IdentityModel;
 using IdentityModel.Client;
+using IdentityModelExtras;
 using IdentityServer4;
 using IdentityServer4.HostApp;
 using IdentityServer4.HostApp.Redis;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
 namespace Tests_ExtensionGrants
 {
+    public class TestDefaultHttpClientFactory : IDefaultHttpClientFactory
+    {
+        public static TestServer TestServer { get; set; }
+        public HttpMessageHandler HttpMessageHandler => TestServer.CreateHandler();
+        public HttpClient HttpClient => TestServer.CreateClient();
+    }
     [TestClass]
     public class ArbitraryResourceOwnerTests
     {
@@ -26,8 +36,35 @@ namespace Tests_ExtensionGrants
             // Arrange
             _server = new TestServer(new WebHostBuilder()
                 .UseEnvironment("UnitTest") // You can set the environment you want (development, staging, production)
+                .UseConfiguration(new ConfigurationBuilder()
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile("appsettings.UnitTest.json")
+                    .Build()
+                )
+                .ConfigureServices(services =>
+                {
+                    services.TryAddTransient<IDefaultHttpClientFactory, TestDefaultHttpClientFactory>();
+                })
                 .UseStartup<Startup>());
+            TestDefaultHttpClientFactory.TestServer = _server;
         }
+
+        [TestMethod]
+        public async Task Validate_Discovery_Endpoint()
+        {
+            using (HttpClient httpClient = _server.CreateClient())
+            {
+                var response = await httpClient.GetAsync($"https://p7identityserver4.azurewebsites.net/.well-known/openid-configuration");
+                response = await httpClient.GetAsync($"{_server.BaseAddress}.well-known/openid-configuration");
+
+                DiscoveryClient dc = new DiscoveryClient(_server.BaseAddress.AbsoluteUri, _server.CreateHandler());
+                var discoveryResonse = await dc.GetAsync();
+                discoveryResonse.ShouldNotBeNull();
+            }
+          
+
+        }
+
         [TestMethod]
         public async Task Mint_arbitrary_resource_owner_missing_subject_and_token()
         {

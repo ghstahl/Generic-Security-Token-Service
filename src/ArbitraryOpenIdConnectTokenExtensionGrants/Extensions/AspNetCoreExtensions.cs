@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using IdentityModelExtras;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using ProfileServiceManager;
 
 namespace ArbitraryOpenIdConnectTokenExtensionGrants.Extensions
@@ -12,6 +14,7 @@ namespace ArbitraryOpenIdConnectTokenExtensionGrants.Extensions
             services.AddTransient<ArbitraryOpenIdConnectIdentityTokenRequestValidator>();
             services.AddTransient<ProviderValidatorManager>();
             services.AddTransient<IProfileServicePlugin, ArbitraryOpenIdConnectIdentityTokenProfileService>();
+            services.TryAddTransient<IDefaultHttpClientFactory, NullDefaultHttpClientFactory>();
         }
     }
 }

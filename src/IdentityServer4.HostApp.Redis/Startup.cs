@@ -8,6 +8,7 @@ using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using GraphQL;
 using GraphQLCore.ExtensionGrants.Extensions;
+using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Redis.Health;
 using IdentityServer4.Stores;
@@ -140,6 +141,7 @@ namespace IdentityServer4.HostApp.Redis
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
+            services.AddIdentityModelExtrasTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
 

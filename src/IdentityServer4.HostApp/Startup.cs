@@ -8,6 +8,7 @@ using ArbitraryOpenIdConnectTokenExtensionGrants;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using IdentityModelExtras.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
@@ -69,6 +70,7 @@ namespace IdentityServer4.HostApp
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
             services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
+            services.AddIdentityModelExtrasTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
 

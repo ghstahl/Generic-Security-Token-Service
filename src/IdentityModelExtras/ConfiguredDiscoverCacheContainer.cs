@@ -37,11 +37,16 @@ namespace IdentityModelExtras
     public class ConfiguredDiscoverCacheContainer : IDiscoveryCacheContainer
     {
         private IConfiguration _configuration;
+        private IDefaultHttpClientFactory _defaultHttpClientFactory;
         private DiscoveryCache _discoveryCache { get; set; }
         private string Scheme { get; set; }
         private List<OAuth2SchemeRecord> OAuth2SchemeRecords { get; set; }
-        public ConfiguredDiscoverCacheContainer(IConfiguration configuration, string scheme)
+        public ConfiguredDiscoverCacheContainer(
+            IDefaultHttpClientFactory defaultHttpClientFactory, 
+            IConfiguration configuration, 
+            string scheme)
         {
+            _defaultHttpClientFactory = defaultHttpClientFactory;
             _configuration = configuration;
             var section = configuration.GetSection("oauth2");
             OAuth2SchemeRecords = new List<OAuth2SchemeRecord>();
@@ -59,15 +64,19 @@ namespace IdentityModelExtras
                                 select item;
                     var record = query.FirstOrDefault();
 
-                    var discoveryClient = new DiscoveryClient(record.Authority) {Policy = {ValidateEndpoints = false}};
-                    if (record.AdditionalEndpointBaseAddresses != null)
+                    DiscoveryPolicy discoveryPolicy = null;
+                    if (record.AdditionalEndpointBaseAddresses != null && record.AdditionalEndpointBaseAddresses.Any())
                     {
+                        discoveryPolicy = new DiscoveryPolicy();
                         foreach (var additionalEndpointBaseAddress in record.AdditionalEndpointBaseAddresses)
                         {
-                            discoveryClient.Policy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
+                            discoveryPolicy.AdditionalEndpointBaseAddresses.Add(additionalEndpointBaseAddress);
                         }
                     }
-                    _discoveryCache = new DiscoveryCache(discoveryClient);
+                    _discoveryCache = new DiscoveryCache(
+                        record.Authority, 
+                        _defaultHttpClientFactory.HttpClient,
+                        discoveryPolicy);
                 }
                 return _discoveryCache;
             }
@@ -77,11 +86,14 @@ namespace IdentityModelExtras
     public class ConfiguredDiscoverCacheContainerFactory
     {
         private IConfiguration _configuration;
+        private IDefaultHttpClientFactory _defaultHttpClientFactory;
         private Dictionary<string, ConfiguredDiscoverCacheContainer> OIDCDiscoverCacheContainers { get; set; }
         private List<OAuth2SchemeRecord> OAuth2SchemeRecords { get; set; }
 
-        public ConfiguredDiscoverCacheContainerFactory(IConfiguration configuration)
+        public ConfiguredDiscoverCacheContainerFactory(IDefaultHttpClientFactory defaultHttpClientFactory, 
+            IConfiguration configuration)
         {
+            _defaultHttpClientFactory = defaultHttpClientFactory;
             _configuration = configuration;
             var section = configuration.GetSection("oauth2");
             OAuth2SchemeRecords = new List<OAuth2SchemeRecord>();
@@ -89,7 +101,8 @@ namespace IdentityModelExtras
             OIDCDiscoverCacheContainers = new Dictionary<string, ConfiguredDiscoverCacheContainer>();
             foreach (var record in OAuth2SchemeRecords)
             {
-                OIDCDiscoverCacheContainers.Add(record.Scheme, new ConfiguredDiscoverCacheContainer(_configuration,record.Scheme));
+                OIDCDiscoverCacheContainers.Add(record.Scheme, 
+                    new ConfiguredDiscoverCacheContainer(_defaultHttpClientFactory,_configuration, record.Scheme));
             }
         }
 

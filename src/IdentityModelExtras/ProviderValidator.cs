@@ -19,7 +19,8 @@ namespace IdentityModelExtras
         private string _audience;
         public DiscoveryResponse _discoveryResponse;
         private IMemoryCache _cache;
-        public ProviderValidator(IDiscoveryCacheContainer discoverCacheContainer, 
+        public ProviderValidator(
+            IDiscoveryCacheContainer discoverCacheContainer, 
             IMemoryCache cache,string audience = null)
         {
             _discoverCacheContainer = discoverCacheContainer;
@@ -31,7 +32,8 @@ namespace IdentityModelExtras
         {
             if (_discoveryResponse == null)
             {
-                _discoveryResponse = await _discoverCacheContainer.DiscoveryCache.GetAsync();
+                var discoveryCache = _discoverCacheContainer.DiscoveryCache;
+                _discoveryResponse = await discoveryCache.GetAsync();
             }
             return _discoveryResponse;
         }
