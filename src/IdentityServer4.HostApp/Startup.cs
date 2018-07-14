@@ -79,29 +79,32 @@ namespace IdentityServer4.HostApp
 
             services.AddLogging();
             services.AddWebEncoders();
-
-            services.AddMarkdown(config =>
+            if (Convert.ToBoolean(Configuration["addMarkdown"]))
             {
-                config.AddMarkdownProcessingFolder("/docs/");
-                // Create custom MarkdigPipeline 
-                // using MarkDig; for extension methods
-                config.ConfigureMarkdigPipeline = pipeLineBuilder =>
+                services.AddMarkdown(config =>
                 {
-                    pipeLineBuilder.UseEmphasisExtras(Markdig.Extensions.EmphasisExtras.EmphasisExtraOptions.Default)
-                        .UsePipeTables()
-                        .UseGridTables()
-                        .UseAutoIdentifiers(AutoIdentifierOptions.GitHub) // Headers get id="name" 
-                        .UseAutoLinks() // URLs are parsed into anchors
-                        .UseAbbreviations()
-                        .UseYamlFrontMatter()
-                        .UseEmojiAndSmiley(true)
-                        .UseListExtras()
-                        .UseFigures()
-                        .UseTaskLists()
-                        .UseCustomContainers()
-                        .UseGenericAttributes();
-                };
-            });
+                    config.AddMarkdownProcessingFolder("/docs/");
+                    // Create custom MarkdigPipeline 
+                    // using MarkDig; for extension methods
+                    config.ConfigureMarkdigPipeline = pipeLineBuilder =>
+                    {
+                        pipeLineBuilder
+                            .UseEmphasisExtras(Markdig.Extensions.EmphasisExtras.EmphasisExtraOptions.Default)
+                            .UsePipeTables()
+                            .UseGridTables()
+                            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub) // Headers get id="name" 
+                            .UseAutoLinks() // URLs are parsed into anchors
+                            .UseAbbreviations()
+                            .UseYamlFrontMatter()
+                            .UseEmojiAndSmiley(true)
+                            .UseListExtras()
+                            .UseFigures()
+                            .UseTaskLists()
+                            .UseCustomContainers()
+                            .UseGenericAttributes();
+                    };
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,7 +120,10 @@ namespace IdentityServer4.HostApp
             {
                 app.UseExceptionHandler("/Error");
             }
-            app.UseMarkdown();
+            if (Convert.ToBoolean(Configuration["addMarkdown"]))
+            {
+                app.UseMarkdown();
+            }
             app.UseStaticFiles();
             app.UseIdentityServer();
             app.UseMvc();

@@ -53,7 +53,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4.HostApp.Redis\IdentityServer4.HostApp.Redis.csproj" />
+    <ProjectReference Include="..\IdentityServer4.HostApp\IdentityServer4.HostApp.csproj" />
   </ItemGroup>
 
   <ItemGroup>
