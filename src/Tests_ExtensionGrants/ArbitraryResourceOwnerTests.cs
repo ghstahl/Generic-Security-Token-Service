@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ArbitraryOpenIdConnectTokenExtensionGrants;
 using IdentityModel;
@@ -13,6 +16,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
 
@@ -126,6 +130,17 @@ namespace Tests_ExtensionGrants
             result.RefreshToken.ShouldNotBeNullOrEmpty();
             result.ExpiresIn.ShouldNotBeNull();
 
+            var jwtSecurityToken = new JwtSecurityTokenHandler()
+                .ReadToken(result.AccessToken) as JwtSecurityToken;
+            jwtSecurityToken.ShouldNotBeNull();
+
+            var authTimeQueryClaim = (from item in jwtSecurityToken.Claims
+                                      where item.Type == JwtClaimTypes.AuthenticationTime
+                select item).FirstOrDefault();
+            authTimeQueryClaim.ShouldNotBeNull();
+
+
+
             // remint, but pass in the access_token from above
             paramaters = new Dictionary<string, string>()
             {
@@ -151,6 +166,16 @@ namespace Tests_ExtensionGrants
             result.AccessToken.ShouldNotBeNullOrEmpty();
             result.RefreshToken.ShouldNotBeNullOrEmpty();
             result.ExpiresIn.ShouldNotBeNull();
+
+            jwtSecurityToken = new JwtSecurityTokenHandler()
+                .ReadToken(result.AccessToken) as JwtSecurityToken;
+            jwtSecurityToken.ShouldNotBeNull();
+
+            var originAuthTimeClaim = (from item in jwtSecurityToken.Claims
+                where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
+                select item).FirstOrDefault();
+            originAuthTimeClaim.ShouldNotBeNull();
+            originAuthTimeClaim.Value.ShouldBe(authTimeQueryClaim.Value);
         }
 
         [TestMethod]

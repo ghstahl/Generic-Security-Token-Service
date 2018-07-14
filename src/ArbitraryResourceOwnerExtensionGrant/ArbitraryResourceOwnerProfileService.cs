@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Newtonsoft.Json;
@@ -41,8 +42,21 @@ namespace ArbitraryResourceOwnerExtensionGrant
                             select new Claim(item.Key, c)).ToList();
 
                         context.IssuedClaims.AddRange(finalClaims);
-                        context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
                     }
+                    context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
+
+                    var originAuthTimeClaim = (from item in context.Subject.Claims
+                        where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
+                        select item).FirstOrDefault();
+
+                    var authTimeQueryClaim = (from item in context.Subject.Claims
+                        where item.Type == JwtClaimTypes.AuthenticationTime
+                        select item).FirstOrDefault();
+                    if (originAuthTimeClaim == null)
+                    {
+                        originAuthTimeClaim = new Claim($"origin_{JwtClaimTypes.AuthenticationTime}", authTimeQueryClaim.Value);
+                    }
+                    context.IssuedClaims.Add(originAuthTimeClaim);
                 }
             }
         }

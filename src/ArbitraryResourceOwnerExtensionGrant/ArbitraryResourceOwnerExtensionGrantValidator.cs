@@ -34,11 +34,11 @@ namespace ArbitraryResourceOwnerExtensionGrant
         private ISystemClock _clock;
         private IMemoryCache _cache;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
-        private PrincipalAugmenter _principalAugmenter;
-        private OIDCDiscoverCacheContainer _discoveryCacheContainer;
-        private ProviderValidator ProviderValidator { get; set; }
+        private PrincipalAugmenter _principalAugmenter; 
+        private ITokenValidator _tokenValidator;
 
         public ArbitraryResourceOwnerExtensionGrantValidator(
+            ITokenValidator tokenValidator,
             IdentityServerOptions options,
             IClientStore clientStore,
             IRawClientSecretValidator clientSecretValidator,
@@ -49,9 +49,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
             ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
-            PrincipalAugmenter principalAugmenter,
-            OIDCDiscoverCacheContainer discoveryCacheContainer)
+            PrincipalAugmenter principalAugmenter )
         {
+            _tokenValidator = tokenValidator;
             _logger = logger;
             _clock = clock;
             _cache = cache;
@@ -62,9 +62,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             _resourceStore = resourceStore;
             _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
-            _principalAugmenter = principalAugmenter;
-            _discoveryCacheContainer = discoveryCacheContainer;
-            ProviderValidator = new ProviderValidator(discoveryCacheContainer,_cache);
+            _principalAugmenter = principalAugmenter; 
 
         }
 
@@ -116,15 +114,21 @@ namespace ArbitraryResourceOwnerExtensionGrant
             var resource = await _resourceStore.GetAllResourcesAsync();
 
             var subject = "";
-
+            Claim originAuthTimeClaim = null;
             // if access_token exists, it wins.
             var accessToken = context.Request.Raw.Get("access_token");
             if (!string.IsNullOrWhiteSpace(accessToken))
             {
-                var pp = await ProviderValidator.ValidateToken(accessToken);
+                var validateAccessToken = await _tokenValidator.ValidateAccessTokenAsync(accessToken);
+                var queryClaims = from item in validateAccessToken.Claims
+                    where item.Type == JwtClaimTypes.Subject
+                                  select item.Value;
+                subject = queryClaims.FirstOrDefault();
 
-                subject = pp.GetSubjectOrNamedIdentifier();
-              
+                originAuthTimeClaim = (from item in validateAccessToken.Claims
+                                      where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
+                    select item).FirstOrDefault();
+
             }
 
             if (string.IsNullOrWhiteSpace(subject))
@@ -165,6 +169,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
             }
 
             userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
+            if (originAuthTimeClaim != null)
+            {
+                userClaimsFinal.Add(originAuthTimeClaim);
+            }
             context.Result = new GrantValidationResult(principal.GetSubjectId(), ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner, userClaimsFinal);
         }
         
