@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 
-namespace IdentityServer4.HostApp.Redis.Controllers
+namespace IdentityServer4.HostApp.Controllers
 {
     [Produces("application/json")]
     [Route("api/TokenEndpointExtra")]

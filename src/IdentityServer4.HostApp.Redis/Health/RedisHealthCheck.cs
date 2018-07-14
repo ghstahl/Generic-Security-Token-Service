@@ -3,14 +3,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Contrib.RedisStore;
 using IdentityServer4.Contrib.RedisStore.Cache;
-using IdentityServer4.HostApp.Redis.Options;
+using IdentityServer4.HostApp.Options;
 using IdentityServer4.Services;
 using Microsoft.Extensions.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 
-namespace IdentityServer4.HostApp.Redis.Health
+namespace IdentityServer4.HostApp.Health
 {
     public class RedisHealthCheck : IHealthCheck
     {

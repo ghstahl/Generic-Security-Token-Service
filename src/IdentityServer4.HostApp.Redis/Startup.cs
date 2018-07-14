@@ -10,7 +10,7 @@ using GraphQL;
 using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
-using IdentityServer4.HostApp.Redis.Health;
+using IdentityServer4.HostApp.Health;
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -39,7 +39,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using Westwind.AspNetCore.Markdown;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
-namespace IdentityServer4.HostApp.Redis
+namespace IdentityServer4.HostApp
 {
 
     public class Startup

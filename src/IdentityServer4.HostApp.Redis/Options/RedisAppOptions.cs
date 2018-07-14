@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace IdentityServer4.HostApp.Redis.Options
+namespace IdentityServer4.HostApp.Options
 {
     public class RedisAppOptions
     {

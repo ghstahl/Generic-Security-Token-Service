@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer4.HostApp.Redis.Pages
+namespace IdentityServer4.HostApp.Pages
 {
     public class ContactModel : PageModel
     {

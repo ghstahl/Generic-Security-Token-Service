@@ -1,4 +1,4 @@
-﻿namespace IdentityServer4.HostApp.Redis.Options
+﻿namespace IdentityServer4.HostApp.Options
 {
     public class KeyVaultAppOptions
     {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace IdentityServer4.HostApp.Redis.Health
+namespace IdentityServer4.HostApp.Health
 {
     public class HealthCheckGroup
     {

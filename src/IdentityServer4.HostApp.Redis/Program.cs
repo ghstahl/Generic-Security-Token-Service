@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityServer4.HostApp.Redis
+namespace IdentityServer4.HostApp
 {
     public class Program
     {

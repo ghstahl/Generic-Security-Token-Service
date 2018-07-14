@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer4.HostApp.Redis.Options;
+using IdentityServer4.HostApp.Options;
 using Microsoft.Extensions.HealthChecks;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using P7IdentityServer4;
 
-namespace IdentityServer4.HostApp.Redis.Health
+namespace IdentityServer4.HostApp.Health
 {
     public class KeyVaultHealthCheck : IHealthCheck
     {

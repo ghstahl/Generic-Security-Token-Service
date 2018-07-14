@@ -5,7 +5,7 @@ using IdentityServer4Extras;
 using IdentityServer4Extras.Stores;
 using Microsoft.AspNetCore.Mvc;
 
-namespace IdentityServer4.HostApp.Redis.ViewComponents
+namespace IdentityServer4.HostApp.ViewComponents
 {
     public class ClientViewComponent : ViewComponent
     {

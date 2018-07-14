@@ -10,7 +10,6 @@ using IdentityModel.Client;
 using IdentityModelExtras;
 using IdentityServer4;
 using IdentityServer4.HostApp;
-using IdentityServer4.HostApp.Redis;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;

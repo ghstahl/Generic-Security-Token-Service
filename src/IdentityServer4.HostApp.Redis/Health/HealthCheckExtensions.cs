@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.HealthChecks;
 
 
-namespace IdentityServer4.HostApp.Redis.Health
+namespace IdentityServer4.HostApp.Health
 {
     public static class HealthCheckExtensions
     {

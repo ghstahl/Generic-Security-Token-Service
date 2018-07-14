@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityServer4;
-using IdentityServer4.HostApp.Redis;
+using IdentityServer4.HostApp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
