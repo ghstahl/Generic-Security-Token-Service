@@ -7,10 +7,10 @@
 <div class="container-fluid">
     <div class="row">
         <div class="sidebar3 col-sm-3 ">
-            <vc:clients></vc:clients>
+            @await  Component.InvokeAsync("Clients")
         </div>
         <div class="main2 col-sm-8 ">
-            <vc:client id="@Model.ClientId"></vc:client>
+            @await Component.InvokeAsync("Client", new { id = Model.ClientId })
         </div>
     </div>
 </div>

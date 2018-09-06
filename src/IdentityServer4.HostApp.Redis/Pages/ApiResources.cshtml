@@ -8,10 +8,11 @@
 <div class="container-fluid">
     <div class="row">
         <div class="sidebar3 col-sm-3 ">
+            @await  Component.InvokeAsync("Apis")
             <vc:apis></vc:apis>
         </div>
         <div class="main2 col-sm-8 ">
-            <vc:api id="@Model.ClientId"></vc:api>
+            @await Component.InvokeAsync("Api", new { id = Model.ClientId })
         </div>
     </div>
 </div>
