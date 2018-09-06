@@ -5,6 +5,8 @@
   -->
 # IdentityServer4 Extension Grants
 ## An OAuth2 service that lets you create tokens for anything!  
+## SDKs
+[.NET Core 2.{latest}](https://www.microsoft.com/net/download)  
 
 ![Image of Yaktocat](/docs/The_Fighting_Nudibranch_WebApp.png)
 
