@@ -16,6 +16,9 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
+    <!-- cookiealert.css -->
+    <link rel="stylesheet" href="~/css/cookiealert.css" />
+
     @RenderSection("StyleHead", required: false)
 </head>
 <body>
@@ -39,12 +42,21 @@
 
         </div>
     </nav>
-
+ 
 <main role="main">
     @RenderBody()
 </main>
 
- 
+<!-- COOKIES -->
+<div class="alert text-center cookiealert" role="alert">
+    <b>Do you like cookies?</b> &#x1F36A; We use cookies to ensure you get the best experience on our website. <a href="http://cookiesandyou.com/" target="_blank">Learn more</a>
+
+    <button type="button" class="btn btn-primary btn-sm acceptcookies" aria-label="Close">
+        I agree
+    </button>
+</div>
+<!-- /COOKIES -->
+
 
 <footer class="footer">
     <div class="container">
@@ -75,6 +87,7 @@
     </script>
     <script src="~/js/site.min.js" asp-append-version="true"></script>
 </environment>
+<script src="~/js/cookiealert-standalone.js"></script>
 
 @RenderSection("Scripts", required: false)
 </body>
