@@ -113,7 +113,6 @@ namespace IdentityServer4.HostApp
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
             }
             else

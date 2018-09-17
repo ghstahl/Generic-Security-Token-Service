@@ -84,7 +84,7 @@ namespace AspNetCoreIdentityClient
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
+                
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }

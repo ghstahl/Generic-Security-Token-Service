@@ -86,7 +86,6 @@ namespace IdentityServer4.AspNetIdentityHost
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
