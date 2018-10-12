@@ -1,0 +1,23 @@
+@startuml
+
+
+== Get an Identity to Something ==
+Client -> SSO: Login
+Client <- SSO: id_token
+ 
+== BIND To A Service ==
+Client -> SomeService: Binding Token (i.e. id_token)
+SomeService -> SomeService: Validate Binding Token\n Engage Rules
+SomeService -> GSTS: Mint Custom Token
+GSTS -> GSTS: Validate ClientId/Secret
+GSTS -> SomeService: access_token, refresh_token, etc.
+Client <- SomeService: access_token, refresh_token, etc.
+
+== Access Resources ==
+note over SomeService,GSTS: GSTS is a known authority.
+Client -> SomeService: SomeApi bearer: access_token
+SomeService -> SomeService: Validate Bearer Token
+Client <- SomeService: resources
+ 
+
+@enduml

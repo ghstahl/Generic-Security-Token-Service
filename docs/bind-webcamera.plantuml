@@ -1,0 +1,24 @@
+@startuml
+
+
+== Get an Identity to Something ==
+WebCamera -> RegistrationService: Bind
+RegistrationService->RegistrationService: Lookup/Create WebCamera Identity
+WebCamera <- RegistrationService: id_token
+ 
+== BIND To A Service ==
+WebCamera -> SomeService: Binding Token (i.e. id_token)
+SomeService -> SomeService: Validate Binding Token\n Engage Rules
+SomeService -> GSTS: Mint Custom Token
+GSTS -> GSTS: Validate ClientId/Secret
+GSTS -> SomeService: access_token, refresh_token, etc.
+WebCamera <- SomeService: access_token, refresh_token, etc.
+
+== Access Resources ==
+note over SomeService,GSTS: GSTS is a known authority.
+WebCamera -> SomeService: SomeApi bearer: access_token
+SomeService -> SomeService: Validate Bearer Token
+WebCamera <- SomeService: resources
+ 
+
+@enduml
