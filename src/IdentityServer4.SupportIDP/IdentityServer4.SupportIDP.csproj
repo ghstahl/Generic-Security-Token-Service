@@ -13,8 +13,4 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4\IdentityServer4.csproj" />
-  </ItemGroup>
-
 </Project>
