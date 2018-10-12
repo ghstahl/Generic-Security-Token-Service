@@ -42,7 +42,35 @@ docs/bind-webcamera-sequence.png
 ![Image of Yaktocat](/docs/The_Fighting_Nudibranch_WebApp.png)
 
  ## Configuration
-[client-config](src/IdentityServer4.HostApp/Config.cs)
+[client-config](src/IdentityServer4.HostApp/Config.cs)  
+
+The [redis-config](src/IdentityServer4.HostApp.Redis/appsettings.redis.json) is currently configured out, and using the InMemoryPersistantGrant Store.  Change "useRedis": true, and setup your redis cache connection via secrets.json.
+```
+builder.AddInMemoryPersistedGrantStoreExtra();
+```
+### secrets.json
+```
+{
+  "appOptions": {
+    "redis": {
+      "redisConnectionString": "{{your app}}.redis.cache.windows.net:6380,password={{secret}},ssl=True,abortConnect=False"
+    },
+    "keyVault": {
+      "ClientId": "{{ClientId}}",
+      "ClientSecret": "{{ClientSecret}}"
+    }
+  },
+  "clients:nag-client:secrets:0": "glitter",
+  "clients:cct-client:secrets:0": "tinkerbell",
+
+
+  "TokenEndpointHealthTask": {
+    "clientId": "arbitrary-resource-owner-client",
+    "clientSecret": "secret",
+    "scheduleCron": "*/1 * * * *"
+  }
+}
+```
 
 ## Extension Grants  
 #### Extension Grant: [arbitrary_no_subject](docs/arbitrary_no_subject.md)  
