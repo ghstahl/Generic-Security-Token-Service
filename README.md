@@ -23,7 +23,7 @@ In short is a glorified JWT library, but this one requires something like a REDI
 
 The GSTS will mint tokens for registered clients and take on the burden of becomming the Authority for those tokens.  If the GSTS mints a refresh_token, it manages the lifetime of said refresh_token.  Hence the need for a REDIS cache.  
 
-So instead of a library, I know have a service that requires a DevOps team to manage it.  
+So instead of a library, I now have a service that requires a DevOps team to manage it.  
 
 The resource to what and whose rules are NOT what GSTS cares about.  The assumption is that that knowledge is known before a call the GSTS is made to mint a token to those resources.  
 
