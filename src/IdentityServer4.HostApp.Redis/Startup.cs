@@ -85,6 +85,7 @@ namespace IdentityServer4.HostApp
                 .AddArbitraryOwnerResourceExtensionGrant()
                 .AddArbitraryOpenIdConnectTokenExtensionGrant()
                 .AddArbitraryNoSubjectExtensionGrant();
+            // My Replacement Services.
             if (useRedis)
             {
                 var redisConnectionString = Configuration["appOptions:redis:redisConnectionString"];
@@ -101,6 +102,10 @@ namespace IdentityServer4.HostApp
                 builder.AddRedisOperationalStoreExtra();
                 services.AddRedisOperationalStoreExtraTypes();
 
+            }
+            else
+            {
+                builder.AddInMemoryPersistedGrantStoreExtra();
             }
 
             if (_hostingEnvironment.IsDevelopment())
