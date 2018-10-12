@@ -27,20 +27,21 @@ So instead of a library, I know have a service that requires a DevOps team to ma
 
 The resource to what and whose rules are NOT what GSTS cares about.  The assumption is that that knowledge is known before a call the GSTS is made to mint a token to those resources.  
 
-**GSTS doesn't get involved in your business!**  
+**GSTS doesn't get involved in your business!** 
 
- 
+# Example Usage  
+In this example the "SomeService" accepts an id_token as a binding input.  It can be anything as that decision is up to the "SomeService".  
+![Binding User using id_token](/docs/binding-sequence.png)
+
+In this example the "SomeService" accepts an id_token of a WebCamera as a binding input.  An id_token can be programatically generated.     
+![Binding WebCamera using id_token](/docs/bind-webcamera-sequence.png)
+docs/bind-webcamera-sequence.png
+
+
+# The App  
 ![Image of Yaktocat](/docs/The_Fighting_Nudibranch_WebApp.png)
 
-I wanted to use [IdentityServer4](https://github.com/IdentityServer/IdentityServer4) as a generic token managment service.
-I wanted this service to be without knowledge of any user database, let alone claims for users.  
-I wanted this service to manage the scopes that a given client is allowed.  
-I wanted this service to take care of the job of what its good at, token managment when tokens are in flight.  
-
-By the time I call this service to mint a token for me, I have already figured out the user and claims on my side.
-
-
-## Configuration
+ ## Configuration
 [client-config](src/IdentityServer4.HostApp/Config.cs)
 
 ## Extension Grants  
