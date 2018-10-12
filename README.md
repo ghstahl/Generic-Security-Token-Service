@@ -33,3 +33,5 @@ By the time I call this service to mint a token for me, I have already figured o
 
 ## Workarounds  
 [refresh_token_revocation_workaround](docs/refresh_token_revocation_workaround.md)  
+
+# [References](docs/references.md)  
