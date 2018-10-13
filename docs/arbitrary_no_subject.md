@@ -43,39 +43,48 @@ Headers:
     Content-Type:application/x-www-form-urlencoded
 
 Body:
-    grant_type:arbitrary_no_subject
-    client_id:arbitrary-resource-owner-client
-    client_secret:secret
-    scope:offline_access nitro metal
-    arbitrary_claims:{"sub":"Ratt","some-guid":"1234abcd","In":"Flames"}
-    access_token_lifetime:3600
+	grant_type:arbitrary_no_subject
+	client_id:arbitrary-resource-owner-client
+	client_secret:secret
+	scope:nitro metal
+	arbitrary_claims:{"role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
+	access_token_lifetime:3600
  ```
  ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImQxOTU1YjExZjAxZGQ5ZGI5ZmFhNTE3OGU0YWE2MjI2IiwidHlwIjoiSldUIn0.eyJuYmYiOjE1MjYwMTE2NzUsImV4cCI6MTUyODYwMzY3NSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDoyMTM1NCIsImF1ZCI6WyJodHRwOi8vbG9jYWxob3N0OjIxMzU0L3Jlc291cmNlcyIsIm1ldGFsIiwibml0cm8iXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6IlJhdHQiLCJzb21lLWd1aWQiOiIxMjM0YWJjZCIsIkluIjoiRmxhbWVzIiwic2NvcGUiOlsibWV0YWwiLCJuaXRybyJdfQ.ImY42UjAuDR2wrkRQgUsOizh81Rf-ncPer3-nmQWJdeW3xXySs7ZRWstveIyvQewmdrQnoaqJeDBBob1NWQiLe4fa6gQ791IexiPzUkRL7zjpAEZqNSCoKmB4vG3hraAmX7gbe8nK5GydEqdwVU5Ql5hwkUEUKMDr1VlruwxyRFregscsx8rd_9Mq-EyF8z2QCZTT41Bkq-g-cavAOjpeDWBqYFEzdW4qQ37TlgIN15yW9gURkpjw8Yfj6hIo11g2oSqGqKVaKN42Jo5-3ddzTkl4Abqitbs-rpRSgOKdzIOPWvIA3r0JKreuItIq73_8oIHMk8u7VSsFZaPguVnkQ",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDgwNzMsImV4cCI6MTU0MjA0MDA3MywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwicm9sZSI6WyJhcHBsaWNhdGlvbiIsImxpbWl0ZWQiXSwicXVlcnkiOlsiZGFzaGJvYXJkIiwibGljZW5zaW5nIl0sInNlYXRJZCI6IjhjNTllYzQxLTU0ZjMtNDYwYi1hMDRlLTUyMGZjNWI5OTczZCIsInBpaWQiOiIyMzY4ZDIxMy1kMDZjLTRjMmEtYTA5OS0xMWMzNGFkYzM1NzkiLCJudWRpYnJhbmNoX3dhdGVybWFyayI6IkRhZmZ5IER1Y2siLCJzY29wZSI6WyJtZXRhbCIsIm5pdHJvIl19.hT9zPGvvet150MCJ-XWhT8AgyFoFDfPCRjIPQOHj_2BQ4dPS9wg4fCmS-bxAwIN5mpVV8oWMVvUeAsJi6Okm9L-CNzctOWvDS0nRiGT_jnOCSjFuzpzNmgI1mxzzZ1DsZZgqiNA6bFyqCklI3AZsntiMVhwYAerb573rvrkunpSvDnrXeSAazIUCaAiTIddc6fNMpr7jxyd56plCA9LBzKY_6kv6Xn6NFqu4oxM2ixR_29izWbhYNFkhy0FEceM9W9QTPUkH1Eg3ogvdLE3o6-Y6h4-JruT_OK_IXWhQXhRmU08oYLPsfo_zLbT8820H2eZ1tcb48ROMKM0Z6hsgDw",
     "expires_in": 2592000,
-    "token_type": "Bearer",
-    "refresh_token": "d70394dea53d481146b4054bdfcbf8aa2f912c662f6e434fdce103238ddb71b5"
+    "token_type": "Bearer"
 }
 ```
-[jwt.io](https://jwt.io/)  
+[Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDgwNzMsImV4cCI6MTU0MjA0MDA3MywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwicm9sZSI6WyJhcHBsaWNhdGlvbiIsImxpbWl0ZWQiXSwicXVlcnkiOlsiZGFzaGJvYXJkIiwibGljZW5zaW5nIl0sInNlYXRJZCI6IjhjNTllYzQxLTU0ZjMtNDYwYi1hMDRlLTUyMGZjNWI5OTczZCIsInBpaWQiOiIyMzY4ZDIxMy1kMDZjLTRjMmEtYTA5OS0xMWMzNGFkYzM1NzkiLCJudWRpYnJhbmNoX3dhdGVybWFyayI6IkRhZmZ5IER1Y2siLCJzY29wZSI6WyJtZXRhbCIsIm5pdHJvIl19.hT9zPGvvet150MCJ-XWhT8AgyFoFDfPCRjIPQOHj_2BQ4dPS9wg4fCmS-bxAwIN5mpVV8oWMVvUeAsJi6Okm9L-CNzctOWvDS0nRiGT_jnOCSjFuzpzNmgI1mxzzZ1DsZZgqiNA6bFyqCklI3AZsntiMVhwYAerb573rvrkunpSvDnrXeSAazIUCaAiTIddc6fNMpr7jxyd56plCA9LBzKY_6kv6Xn6NFqu4oxM2ixR_29izWbhYNFkhy0FEceM9W9QTPUkH1Eg3ogvdLE3o6-Y6h4-JruT_OK_IXWhQXhRmU08oYLPsfo_zLbT8820H2eZ1tcb48ROMKM0Z6hsgDw)
+
 ```
 {
-  "nbf": 1526011675,
-  "exp": 1528603675,
-  "iss": "http://localhost:21354",
+  "nbf": 1539448073,
+  "exp": 1542040073,
+  "iss": "https://localhost:44332",
   "aud": [
-    "http://localhost:21354/resources",
+    "https://localhost:44332/resources",
     "metal",
     "nitro"
   ],
   "client_id": "arbitrary-resource-owner-client",
-  "sub": "Ratt",
-  "some-guid": "1234abcd",
-  "In": "Flames",
+  "role": [
+    "application",
+    "limited"
+  ],
+  "query": [
+    "dashboard",
+    "licensing"
+  ],
+  "seatId": "8c59ec41-54f3-460b-a04e-520fc5b9973d",
+  "piid": "2368d213-d06c-4c2a-a099-11c34adc3579",
+  "nudibranch_watermark": "Daffy Duck",
   "scope": [
     "metal",
     "nitro"
   ]
 }
 ```
+ 
