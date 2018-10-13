@@ -75,7 +75,6 @@ builder.AddInMemoryPersistedGrantStoreExtra();
 ## Extension Grants  
 #### Extension Grant: [arbitrary_no_subject](docs/arbitrary_no_subject.md)  
 #### Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md)  
-#### Extension Grant: [arbitrary_oidc_resource_owner](docs/arbitrary_oidc_resource_owner.md)  
 
 
 ## Workarounds  
