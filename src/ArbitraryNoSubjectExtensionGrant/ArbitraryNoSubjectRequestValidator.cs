@@ -28,6 +28,7 @@ namespace ArbitraryNoSubjectExtensionGrant
                                                                   (_notAllowedArbitraryClaims =
                                                                       new List<string>
                                                                       {
+                                                                          "nudibranch_watermark",
                                                                           "client_id",
                                                                           JwtClaimTypes.Subject,
                                                                           ClaimTypes.NameIdentifier

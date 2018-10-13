@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
+using IdentityServer4Extras;
 using Newtonsoft.Json;
 using ProfileServiceManager;
 
@@ -42,6 +43,11 @@ namespace ArbitraryResourceOwnerExtensionGrant
                             select new Claim(item.Key, c)).ToList();
 
                         context.IssuedClaims.AddRange(finalClaims);
+                        var clientExtra = context.Client as ClientExtra;
+                        if (!string.IsNullOrEmpty(clientExtra.Watermark))
+                        {
+                            context.IssuedClaims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
+                        }
                     }
                     context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
 

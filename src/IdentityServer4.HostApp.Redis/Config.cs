@@ -35,10 +35,10 @@ namespace IdentityServer4.HostApp
         public static IEnumerable<Client> GetClients()
         {
             // client credentials client
-            return new List<Client>
+            return new List<ClientExtra>
             {
                 // arbitrary resource owner grant client
-                new Client
+                new ClientExtra
                 {
                     ClientId = "arbitrary-resource-owner-client",
                     AllowedGrantTypes = new[]
@@ -65,6 +65,7 @@ namespace IdentityServer4.HostApp
                     ClientClaimsPrefix = null,
                     RedirectUris = { "http://localhost:5002/signin-oidc" },
                     PostLogoutRedirectUris = { "http://localhost:5002/signout-callback-oidc" },
+                    RequireRefreshClientSecret = false
                 }
             };
         }

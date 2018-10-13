@@ -23,5 +23,11 @@ namespace IdentityServer4Extras
             }
             set => _requireRefreshClientSecret = value;
         }
+
+
+        //
+        // Summary:
+        //     Watermark this automatically put in to give some hint to the end user of the token as who did it.
+        public string Watermark { get; set; }
     }
 }
