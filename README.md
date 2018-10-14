@@ -19,7 +19,9 @@ If you do a quick google search, a bunch pop up and each are custom and opiniona
 
 # What is GSTS?
 GSTS is basically a minting service.  Much like the US Mint, which mints money without regard of what that money is spent on.
-In short is a glorified JWT library, but this one requires something like a REDIS cache to manage refresh_tokens.  Like a good JWT library, it doesn't care why you are minting the token.  The GSTS does provide the means to know exactly who minted it so downstream decisions can be made.  Imagine 2 clients request the GSTS to mint a token with identical data.  Given the result, we can compare the 2 tokens and know that they are NOT the same.  There are claims that the GSTS puts in there to mark the token to a given client.
+In short is a glorified JWT library, but this one requires something like a REDIS cache to manage refresh_tokens.  Like a good JWT library, it doesn't care why you are minting the token.  
+
+The GSTS does provide the means to know exactly who minted it so downstream decisions can be made, by injecting a watermark claim (nudibranch_watermark).  Imagine 2 clients request the GSTS to mint a token with identical data.  Given the result, we can compare the 2 tokens and know that they are NOT the same.  There are claims that the GSTS puts in there to mark the token to a given client.  This is a configuration step where a give group may have many clients, which all share the same watermark.  The client_id is also in the access_token, however that isn't something you want to check for especially when a single group may have many.
 
 The GSTS will mint tokens for registered clients and take on the burden of becomming the Authority for those tokens.  If the GSTS mints a refresh_token, it manages the lifetime of said refresh_token.  Hence the need for a REDIS cache.  
 
@@ -45,9 +47,9 @@ docs/bind-webcamera-sequence.png
 [client-config](src/IdentityServer4.HostApp/Config.cs)  
 
 The [redis-config](src/IdentityServer4.HostApp.Redis/appsettings.redis.json) is currently configured out, and using the InMemoryPersistantGrant Store.  Change "useRedis": true, and setup your redis cache connection via secrets.json.
-```
-builder.AddInMemoryPersistedGrantStoreExtra();
-```
+
+The [keyvault-config](src/IdentityServer4.HostApp.Redis/appsettings.keyVault.json) is currently configured out.  It uses developer signing.
+
 ### secrets.json
 ```
 {
@@ -75,7 +77,6 @@ builder.AddInMemoryPersistedGrantStoreExtra();
 ## Extension Grants  
 #### Extension Grant: [arbitrary_no_subject](docs/arbitrary_no_subject.md)  
 #### Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md)  
-#### Extension Grant: [arbitrary_oidc_resource_owner](docs/arbitrary_oidc_resource_owner.md)  
 
 
 ## Workarounds  
