@@ -47,9 +47,9 @@ docs/bind-webcamera-sequence.png
 [client-config](src/IdentityServer4.HostApp/Config.cs)  
 
 The [redis-config](src/IdentityServer4.HostApp.Redis/appsettings.redis.json) is currently configured out, and using the InMemoryPersistantGrant Store.  Change "useRedis": true, and setup your redis cache connection via secrets.json.
-```
-builder.AddInMemoryPersistedGrantStoreExtra();
-```
+
+The [keyvault-config](src/IdentityServer4.HostApp.Redis/appsettings.keyVault.json) is currently configured out.  It uses developer signing.
+
 ### secrets.json
 ```
 {
