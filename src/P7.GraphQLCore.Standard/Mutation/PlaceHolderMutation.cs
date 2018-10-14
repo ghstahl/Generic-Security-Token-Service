@@ -9,7 +9,7 @@ namespace AuthHandler.GraphQL
     {
         public void AddGraphTypeFields(MutationCore mutationCore)
         {
-            mutationCore.FieldAsync<BooleanGraphType>(name: "__placeHolder",
+            mutationCore.FieldAsync<BooleanGraphType>(name: "_placeHolder",
                 description: "This is here so we have at least one mutation",
                 resolve: async context => true,
                 deprecationReason: null
