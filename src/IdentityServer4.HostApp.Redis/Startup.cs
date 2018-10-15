@@ -6,7 +6,6 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
-using GraphQL;
 using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
@@ -141,6 +140,7 @@ namespace IdentityServer4.HostApp
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
+            builder.AddDefaultRefreshTokenServiceExtra();
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();

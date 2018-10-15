@@ -23,6 +23,7 @@
     <PackageReference Include="FakeItEasy" Version="4.9.1" />
     <PackageReference Include="IdentityServer4.Contrib.RedisStore" Version="1.4.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.1.3" />
     <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.0" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.0.3" />
  

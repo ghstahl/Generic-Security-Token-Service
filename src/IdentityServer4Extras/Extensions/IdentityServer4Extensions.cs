@@ -1,5 +1,7 @@
-﻿using IdentityServer4.Stores;
+﻿using IdentityServer4.Services;
+using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using IdentityServer4Extras.Services;
 using IdentityServer4Extras.Stores;
 using IdentityServer4Extras.Validators;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,6 +32,14 @@ namespace IdentityServer4Extras.Extensions
             builder.Services.RemoveAll<IClientStore>();
             builder.Services.TryAddSingleton<IClientStoreExtra, InMemoryClientStoreExtra>();
             builder.Services.TryAddSingleton<IClientStore>(x => x.GetService<IClientStoreExtra>());
+            return builder;
+        }
+        public static IIdentityServerBuilder AddDefaultRefreshTokenServiceExtra(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<IRefreshTokenService>();
+            builder.Services.AddTransient<DefaultRefreshTokenService>();
+            builder.Services.AddTransient<IRefreshTokenService, DefaultRefreshTokenServiceExtra>();
             return builder;
         }
     }

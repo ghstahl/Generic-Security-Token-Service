@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Guidage.Tests
@@ -21,6 +22,20 @@ namespace Guidage.Tests
 
             var guidMin= ToGuid(valueMin);
             var guidMax = ToGuid(valueMax);
+        }
+        [TestMethod]
+        public void Test_RijndaelManaged_GenerateKey()
+        {
+            using (RijndaelManaged myRijndael = new RijndaelManaged())
+            {
+
+                myRijndael.GenerateKey();
+                myRijndael.GenerateIV();
+
+                string Key = System.Text.Encoding.UTF8.GetString(myRijndael.Key);
+                string IV = System.Text.Encoding.UTF8.GetString(myRijndael.IV);
+                
+            }
         }
     }
 }

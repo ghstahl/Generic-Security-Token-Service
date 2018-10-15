@@ -53,7 +53,7 @@ namespace IdentityServer4.Contrib.RedisStoreExtra
             var clientIds = await _clientStoreExtra.GetAllClientIdsAsync();
             foreach (var clientId in clientIds)
             {
-                _persistedGrantStoreImplementation.RemoveAllAsync(subjectId, clientId, type);
+                await _persistedGrantStoreImplementation.RemoveAllAsync(subjectId, clientId, type);
             }
         }
     }
