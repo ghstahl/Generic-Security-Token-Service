@@ -10,7 +10,8 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions
         public static IIdentityServerBuilder AddRefreshTokenRevokationGeneratorWorkAround(this IIdentityServerBuilder builder)
         {
             builder.Services.Remove<IRefreshTokenStore>();
-            builder.Services.TryAddTransient<IRefreshTokenStore, MyDefaultRefreshTokenStore>();
+            builder.Services.AddTransient<DefaultRefreshTokenStoreEnhancement>();
+            builder.Services.TryAddTransient<IRefreshTokenStore, ProxyDefaultRefreshTokenStoreEnhancement>();
 
             builder.Services.Remove<ITokenRevocationResponseGenerator>();
             builder.Services.TryAddTransient<ITokenRevocationResponseGenerator, MyTokenRevocationResponseGenerator>();

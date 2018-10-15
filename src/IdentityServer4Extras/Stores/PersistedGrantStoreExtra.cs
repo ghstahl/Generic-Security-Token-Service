@@ -13,40 +13,46 @@ namespace IdentityServer4Extras.Stores
     {
         private IClientStoreExtra _clientStoreExtra;
         private ILogger _logger;
-        private IPersistedGrantStore _persistedGrantStoreImplementation;
+        private IPersistedGrantStore _inMemoryPersistedGrantStore;
+        private IRefreshTokenKeyObfuscator _refreshTokenKeyObfuscator;
 
         public PersistedGrantStoreExtra(
             IClientStoreExtra clientStoreExtra,
+            InMemoryPersistedGrantStore inMemoryPersistedGrantStore,
+            IRefreshTokenKeyObfuscator refreshTokenKeyObfuscator,
             ILogger<PersistedGrantStoreExtra> logger )
         {
-            _logger = logger;
+           
             _clientStoreExtra = clientStoreExtra;
-            _persistedGrantStoreImplementation = new InMemoryPersistedGrantStore();
+            _inMemoryPersistedGrantStore = inMemoryPersistedGrantStore;
+            _refreshTokenKeyObfuscator = refreshTokenKeyObfuscator;
+            _logger = logger;
+           
         }
 
         public Task StoreAsync(PersistedGrant grant)
         {
-            return _persistedGrantStoreImplementation.StoreAsync(grant);
+            return _inMemoryPersistedGrantStore.StoreAsync(grant);
         }
 
         public Task<PersistedGrant> GetAsync(string key)
         {
-            return _persistedGrantStoreImplementation.GetAsync(key);
+            return _inMemoryPersistedGrantStore.GetAsync(key);
         }
 
         public Task<IEnumerable<PersistedGrant>> GetAllAsync(string subjectId)
         {
-            return _persistedGrantStoreImplementation.GetAllAsync(subjectId);
+            return _inMemoryPersistedGrantStore.GetAllAsync(subjectId);
         }
 
         public Task RemoveAsync(string key)
         {
-            return _persistedGrantStoreImplementation.RemoveAsync(key);
+            return _inMemoryPersistedGrantStore.RemoveAsync(key);
         }
 
         public Task RemoveAllAsync(string subjectId, string clientId)
         {
-            return _persistedGrantStoreImplementation.RemoveAllAsync(subjectId, clientId);
+            return _inMemoryPersistedGrantStore.RemoveAllAsync(subjectId, clientId);
         }
 
         public async Task RemoveAllAsync(string subjectId, string _, string type)
@@ -54,7 +60,7 @@ namespace IdentityServer4Extras.Stores
             var clientIds = await _clientStoreExtra.GetAllClientIdsAsync();
             foreach (var clientId in clientIds)
             {
-                _persistedGrantStoreImplementation.RemoveAllAsync(subjectId, clientId, type);
+                _inMemoryPersistedGrantStore.RemoveAllAsync(subjectId, clientId, type);
             }
         }
     }

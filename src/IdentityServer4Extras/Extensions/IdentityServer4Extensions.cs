@@ -24,6 +24,7 @@ namespace IdentityServer4Extras.Extensions
         public static IIdentityServerBuilder AddInMemoryPersistedGrantStoreExtra(this IIdentityServerBuilder builder)
         {
             builder.Services.RemoveAll<IPersistedGrantStore>();
+            builder.Services.TryAddSingleton<InMemoryPersistedGrantStore>();
             builder.Services.TryAddSingleton<IPersistedGrantStore, PersistedGrantStoreExtra>();
             return builder;
         }
@@ -34,12 +35,19 @@ namespace IdentityServer4Extras.Extensions
             builder.Services.TryAddSingleton<IClientStore>(x => x.GetService<IClientStoreExtra>());
             return builder;
         }
-        public static IIdentityServerBuilder AddDefaultRefreshTokenServiceExtra(
+
+        public static IIdentityServerBuilder AddNullRefreshTokenKeyObfuscator(
             this IIdentityServerBuilder builder)
         {
-            builder.Services.RemoveAll<IRefreshTokenService>();
-            builder.Services.AddTransient<DefaultRefreshTokenService>();
-            builder.Services.AddTransient<IRefreshTokenService, DefaultRefreshTokenServiceExtra>();
+            builder.Services.RemoveAll<IRefreshTokenKeyObfuscator>();
+            builder.Services.AddTransient<IRefreshTokenKeyObfuscator, NullRefreshTokenKeyObfuscator>();
+            return builder;
+        }
+        public static IIdentityServerBuilder AddProtectedRefreshTokenKeyObfuscator(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<IRefreshTokenKeyObfuscator>();
+            builder.Services.AddTransient<IRefreshTokenKeyObfuscator, ProtectedRefreshTokenKeyObfuscator>();
             return builder;
         }
     }

@@ -74,7 +74,7 @@ namespace IdentityServer4.HostApp
             bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
             bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
             var builder = services
-                .AddIdentityServer()
+                .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
                 .AddInMemoryIdentityResources(identityResources)
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
@@ -136,11 +136,9 @@ namespace IdentityServer4.HostApp
             }
 
             // my replacement services.
-
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
-            builder.AddDefaultRefreshTokenServiceExtra();
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
@@ -150,6 +148,7 @@ namespace IdentityServer4.HostApp
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
 
+            builder.AddProtectedRefreshTokenKeyObfuscator();
             builder.Services.TryAddSingleton<IGraphQLFieldAuthority, InMemoryGraphQLFieldAuthority>();
 
             services.AddGraphQLCoreTypes();
