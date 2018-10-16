@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="DataProtector\DataProtectorExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Autofac" Version="4.8.1" />
     <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.3.0" />
@@ -27,6 +31,10 @@
 
   <ItemGroup>
     <Folder Include="Startup\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\IdentityModel.All\IdentityModel.All.csproj" />
   </ItemGroup>
 
 </Project>
