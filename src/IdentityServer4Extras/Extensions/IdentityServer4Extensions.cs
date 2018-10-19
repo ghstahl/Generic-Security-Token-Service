@@ -1,4 +1,5 @@
-﻿using IdentityServer4.Services;
+﻿using IdentityServer4.ResponseHandling;
+using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras.Services;
@@ -48,6 +49,14 @@ namespace IdentityServer4Extras.Extensions
         {
             builder.Services.RemoveAll<IRefreshTokenKeyObfuscator>();
             builder.Services.AddTransient<IRefreshTokenKeyObfuscator, ProtectedRefreshTokenKeyObfuscator>();
+            return builder;
+        }
+
+        public static IIdentityServerBuilder SwapOutTokenResponseGenerator(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<ITokenResponseGenerator>();
+            builder.Services.TryAddTransient<ITokenResponseGenerator, TokenResponseGeneratorHook>();
             return builder;
         }
     }

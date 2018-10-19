@@ -49,7 +49,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                             context.IssuedClaims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
                         }
                     }
-                    context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
+                  //  context.IssuedClaims.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
 
                     var originAuthTimeClaim = (from item in context.Subject.Claims
                         where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"

@@ -46,6 +46,7 @@ namespace IdentityServer4.HostApp
                         ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner,
                         ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner,
                         ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject,
+                        ArbitraryIdentityExtensionGrant.Constants.ArbitraryIdentity,
                         GrantType.Implicit
                     },
                     AllowOfflineAccess = true,

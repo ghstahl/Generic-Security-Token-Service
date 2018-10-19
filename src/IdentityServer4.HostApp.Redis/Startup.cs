@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
@@ -82,7 +83,7 @@ namespace IdentityServer4.HostApp
                 .AddIdentityServer4Extras()
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
-                .AddArbitraryOpenIdConnectTokenExtensionGrant()
+                .AddArbitraryIdentityExtensionGrant()
                 .AddArbitraryNoSubjectExtensionGrant();
             // My Replacement Services.
             if (useRedis)
@@ -139,11 +140,11 @@ namespace IdentityServer4.HostApp
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
-
+            builder.SwapOutTokenResponseGenerator();
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
-            services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
+            services.AddArbitraryIdentityExtentionGrantTypes();
             services.AddIdentityModelExtrasTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();
