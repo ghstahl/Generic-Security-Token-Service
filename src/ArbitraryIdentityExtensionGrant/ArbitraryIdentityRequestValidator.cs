@@ -7,16 +7,38 @@ using IdentityModel;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
 
-namespace ArbitraryResourceOwnerExtensionGrant
+namespace ArbitraryIdentityExtensionGrant
 {
-    
-    public class ArbitraryResourceOwnerRequestValidator
+    static class RequestValidationExtensions
+    {
+        public static bool ValidateFormat<T>(this List<string> errorList, string name, string json)
+        {
+            bool error = false;
+            try
+            {
+
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    var values =
+                        JsonConvert.DeserializeObject<T>(json);
+                }
+
+            }
+            catch (Exception)
+            {
+                error = true;
+                errorList.Add($"{name} is malformed!");
+            }
+
+            return error;
+        }
+    }
+
+    public class ArbitraryIdentityRequestValidator
     {
  
-        private readonly ILogger<ArbitraryResourceOwnerRequestValidator> _logger;
+        private readonly ILogger _logger;
 
         private static List<string> _requiredArbitraryArguments;
         private static List<string> RequiredArbitraryArguments => _requiredArbitraryArguments ??
@@ -25,7 +47,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                       {
                                                                           "client_id",
                                                                           "client_secret",
-                                                                          "arbitrary_claims"
+                                                                          Constants.ArbitraryClaims
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
@@ -66,8 +88,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                           "access_token"
                                                                       });
 
-        public ArbitraryResourceOwnerRequestValidator(
-            ILogger<ArbitraryResourceOwnerRequestValidator> logger)
+        public ArbitraryIdentityRequestValidator(
+            ILogger<ArbitraryIdentityRequestValidator> logger)
         {
             _logger = logger;
         }
@@ -95,10 +117,15 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 los.AddRange(result.Select(item => $"{item} is missing!"));
 
             }
+            // make sure nothing is malformed
+            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryClaims]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAmrs]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAudiences]) || error;
 
-            try
+            // make sure nothing in here is DISALLOWED
+            if (!error)
             {
-                var arbitraryClaims = raw["arbitrary_claims"];
+                var arbitraryClaims = raw[Constants.ArbitraryClaims];
                 if (!string.IsNullOrWhiteSpace(arbitraryClaims))
                 {
                     var values =
@@ -116,17 +143,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
                         {
                             los.Add($"The arbitrary claim: '{invalidClaim}' is not allowed.");
                         }
-
                     }
                 }
+            }
 
-            }
-            catch (Exception _)
-            {
-                error = true;
-                los.Add($"arbitrary_claims is malformed!");
-            }
- 
             if (error)
             {
                 context.Result.IsError = true;
@@ -134,4 +154,6 @@ namespace ArbitraryResourceOwnerExtensionGrant
             }
         }
     }
+
+
 }

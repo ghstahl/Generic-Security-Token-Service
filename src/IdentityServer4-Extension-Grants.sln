@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityServer4Source", "Id
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArbitraryResourceOwnerExtensionGrant", "ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj", "{79E28880-9ADE-4863-893E-8D7B1A9C58AB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArbitraryOpenIdConnectTokenExtensionGrants", "ArbitraryOpenIdConnectTokenExtensionGrants\ArbitraryOpenIdConnectTokenExtensionGrants.csproj", "{1108D8F1-83EF-491F-BB06-2B996EC354AB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ProfileServiceManager", "ProfileServiceManager\ProfileServiceManager.csproj", "{8AA3D31A-58B8-4EC5-8B96-EEA39BD9280E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Hosts", "Hosts", "{2A08CE43-F1C7-4557-BA6A-E72277B9C483}"
@@ -96,7 +94,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2.2.0", "2.2.0", "{8BE80AAE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "IdentityServer4\2.2.0\IdentityServer4\IdentityServer4.csproj", "{CD226B99-8B8D-41E5-A807-ACB29019A532}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArbitraryIdentityExtensionGrant", "ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj", "{15F6CF10-1F60-4A1A-8C26-B4F3835604C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArbitraryIdentityExtensionGrant", "ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj", "{15F6CF10-1F60-4A1A-8C26-B4F3835604C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,10 +114,6 @@ Global
 		{79E28880-9ADE-4863-893E-8D7B1A9C58AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79E28880-9ADE-4863-893E-8D7B1A9C58AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79E28880-9ADE-4863-893E-8D7B1A9C58AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1108D8F1-83EF-491F-BB06-2B996EC354AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1108D8F1-83EF-491F-BB06-2B996EC354AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1108D8F1-83EF-491F-BB06-2B996EC354AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1108D8F1-83EF-491F-BB06-2B996EC354AB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8AA3D31A-58B8-4EC5-8B96-EEA39BD9280E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8AA3D31A-58B8-4EC5-8B96-EEA39BD9280E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AA3D31A-58B8-4EC5-8B96-EEA39BD9280E}.Release|Any CPU.ActiveCfg = Release|Any CPU

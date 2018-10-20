@@ -9,6 +9,7 @@ namespace ProfileServiceManager.Extensions
         {
             //  services.AddTransient<{Some Type}>();
             services.AddTransient<ProfileServiceManager>();
+            services.AddTransient<IProfileServicePlugin, DefaultProfileServicePlugin>();
         }
     }
 }

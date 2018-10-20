@@ -14,6 +14,7 @@ namespace ProfileServiceManager.Extensions
             builder.Services.RemoveAll<IProfileService>();
             builder
                 .AddProfileService<ProfileServiceManager>();
+            builder.Services.AddTransient<IProfileServicePlugin, DefaultProfileServicePlugin>();
             return builder;
         }
     }

@@ -41,7 +41,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" />
-    <ProjectReference Include="..\ArbitraryOpenIdConnectTokenExtensionGrants\ArbitraryOpenIdConnectTokenExtensionGrants.csproj" />
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\AspNetCore.HealthChecks\AspNetCore.HealthChecks.csproj" />
     <ProjectReference Include="..\GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj" />

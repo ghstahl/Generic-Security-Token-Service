@@ -44,7 +44,7 @@ namespace ProfileServiceManager
             }
             else
             {
-                pluginKey = "default";
+                pluginKey = "default_profile_service";
                 if (_plugins.ContainsKey(pluginKey))
                 {
                     var plugin = _plugins[pluginKey];
@@ -72,7 +72,7 @@ namespace ProfileServiceManager
             }
             else
             {
-                pluginKey = "default";
+                pluginKey = "default_profile_service";
                 if (_plugins.ContainsKey(pluginKey))
                 {
                     var plugin = _plugins[pluginKey];
