@@ -81,6 +81,7 @@ The [keyvault-config](src/IdentityServer4.HostApp.Redis/appsettings.keyVault.jso
 ## Extension Grants  
 #### Extension Grant: [arbitrary_no_subject](docs/arbitrary_no_subject.md)  
 #### Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md)  
+#### Extension Grant: [arbitrary_identity](docs/arbitrary_identity.md)  
 
 
 ## Workarounds  
