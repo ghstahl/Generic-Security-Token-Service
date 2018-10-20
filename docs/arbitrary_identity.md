@@ -1,4 +1,4 @@
-# Extension Grant: arbitrary_identity
+# Extension Grant: arbitrary_identity [WORK IN PROGRESS]
 ## Access Token Request  
 
    The client makes a request to the token endpoint by adding the
