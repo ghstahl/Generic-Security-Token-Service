@@ -7,41 +7,41 @@
    request entity-body:
 
 <dl>
-  <dt>grant_type</dt>
+  <dt><h3>grant_type</h3></dt>
   <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".</dd>
 
-  <dt>subject</dt>
+  <dt><h3>subject</h3></dt>
   <dd><b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.</dd>
   
-  <dt>access_token</dt>
+  <dt>access_token</h3></dt>
   <dd><b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.</dd>
 
-<dt>client_id</dt>
+  <dt><h3>client_id</h3></dt>
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
          the registration process described by Section 2.2.</dd>
   
-  <dt>client_secret</dt>
+  <dt><h3>client_secret</h3></dt>
   <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
          parameter if the client secret is an empty string.</dd>
  
-  <dt>scope</dt>
+  <dt><h3>scope</h3></dt>
   <dd><b>REQUIRED</b>.  The scope of the access request as described by
          Section 3.3.       
 	<b>i.e. <em>scope:offline_access a b c d e</em></b></dd>
 	
-  <dt>arbitrary_claims</dt>
+  <dt><h3>arbitrary_claims</h3></dt>
   <dd><b>REQUIRED</b>.  This is a json string object of key/array pairs.  
 	<b>i.e. <em>arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}</em></b></dd>
 
-  <dt>arbitrary_amrs</dt>
+  <dt><h3>arbitrary_amrs</h3></dt>
   <dd><b>OPTIONAL</b>.  This is a json array of strings.  
 	<b>i.e. <em>arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]</em></b></dd>
 	
-  <dt>arbitrary_audiences</dt>
+  <dt><h3>arbitrary_audiences</h3></dt>
   <dd><b>OPTIONAL</b>.  This is a json array of strings.  
 	<b>i.e. <em>arbitrary_audiences:["cat","dog"]</em></b></dd>
 	
-  <dt>access_token_lifetime</dt>
+  <dt><h3>access_token_lifetime</h3></dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
 </dl>  
 
