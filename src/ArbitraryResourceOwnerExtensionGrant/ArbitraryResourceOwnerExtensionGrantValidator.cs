@@ -156,23 +156,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
             _principalAugmenter.AugmentPrincipal(principal);
             var userClaimsFinal = new List<Claim>()
             {
-                new Claim(ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims, 
-                    raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryClaims])
+                
             };
-            if (!string.IsNullOrEmpty(raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAmrs]))
-            {
-                userClaimsFinal.Add(
-                    new Claim(
-                        ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAmrs,
-                        raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAmrs]));
-            }
-            if (!string.IsNullOrEmpty(raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAudiences]))
-            {
-                userClaimsFinal.Add(
-                    new Claim(
-                        ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAudiences,
-                        raw[ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryAudiences]));
-            }
+           
+           
             // optional stuff;
             var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))

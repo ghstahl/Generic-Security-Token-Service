@@ -99,25 +99,6 @@ namespace ArbitraryNoSubjectExtensionGrant
             }
 
             _validatedRequest.GrantType = grantType;
-            var resource = await _resourceStore.GetAllResourcesAsync();
-
-            var arbitraryClaims =
-                JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(raw[Constants.ArbitraryClaims]);
-            
-            var finalClaims = (
-                from item in arbitraryClaims
-                from c in item.Value
-                select new Claim(item.Key, c)).ToList();
-
-            foreach (var item in finalClaims)
-            {
-                context.Request.ClientClaims.Add(item);
-            }
-            var clientExtra = context.Request.Client as ClientExtra;
-            if (!string.IsNullOrEmpty(clientExtra.Watermark))
-            {
-                context.Request.ClientClaims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
-            }
             context.Result = new GrantValidationResult();
         }
         private void LogError(string message = null, params object[] values)

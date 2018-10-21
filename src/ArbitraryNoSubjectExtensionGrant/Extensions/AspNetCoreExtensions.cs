@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using IdentityServer4Extras.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ArbitraryNoSubjectExtensionGrant.Extensions
 {
@@ -7,6 +8,7 @@ namespace ArbitraryNoSubjectExtensionGrant.Extensions
         public static void AddArbitraryNoSubjectExtentionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryNoSubjectRequestValidator>();
+            services.AddTransient<ITokenServiceHookPlugin, TokenServiceHookPlugin>();
         }
     }
 }
