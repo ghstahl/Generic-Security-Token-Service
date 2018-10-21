@@ -32,6 +32,14 @@
   <dt>arbitrary_claims</dt>
   <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
 	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
+
+  <dt>arbitrary_amrs</dt>
+  <dd><b>OPTIONAL</b>.  This is a json array of strings.  
+	i.e. <em>arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]</em></dd>
+	
+  <dt>arbitrary_audiences</dt>
+  <dd><b>OPTIONAL</b>.  This is a json array of strings.  
+	i.e. <em>arbitrary_audiences:["cat","dog"]</em></dd>
 	
   <dt>access_token_lifetime</dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
