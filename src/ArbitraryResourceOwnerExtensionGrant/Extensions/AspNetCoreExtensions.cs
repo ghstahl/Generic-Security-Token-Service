@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using IdentityServer4Extras.Services;
+using Microsoft.Extensions.DependencyInjection;
 using ProfileServiceManager;
 
 namespace ArbitraryResourceOwnerExtensionGrant.Extensions
@@ -8,8 +9,8 @@ namespace ArbitraryResourceOwnerExtensionGrant.Extensions
         public static void AddArbitraryResourceOwnerExtentionGrantTypes(this IServiceCollection services)
         {
             services.AddTransient<ArbitraryResourceOwnerRequestValidator>();
-            services.AddTransient<IProfileServicePlugin, ArbitraryResourceOwnerProfileService>();
             services.AddSingleton<OIDCDiscoverCacheContainer>();
+            services.AddTransient<ITokenServiceHookPlugin, TokenServiceHookPlugin>();
         }
     }
 }

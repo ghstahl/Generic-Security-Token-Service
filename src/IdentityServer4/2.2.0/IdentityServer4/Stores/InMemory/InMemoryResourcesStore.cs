@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using P7.Core.Utils;
 
 namespace IdentityServer4.Stores
 {
@@ -55,6 +56,7 @@ namespace IdentityServer4.Stores
         /// <returns></returns>
         public Task<ApiResource> FindApiResourceAsync(string name)
         {
+            Guard.ArgumentNotNull(nameof(name), name);
             var api = from a in _apiResources
                       where a.Name == name
                       select a;
@@ -69,7 +71,7 @@ namespace IdentityServer4.Stores
         /// <exception cref="System.ArgumentNullException">names</exception>
         public Task<IEnumerable<IdentityResource>> FindIdentityResourcesByScopeAsync(IEnumerable<string> names)
         {
-            if (names == null) throw new ArgumentNullException(nameof(names));
+            Guard.ArgumentNotNull(nameof(names), names);
 
             var identity = from i in _identityResources
                            where names.Contains(i.Name)
@@ -86,13 +88,16 @@ namespace IdentityServer4.Stores
         /// <exception cref="System.ArgumentNullException">names</exception>
         public Task<IEnumerable<ApiResource>> FindApiResourcesByScopeAsync(IEnumerable<string> names)
         {
-            if (names == null) throw new ArgumentNullException(nameof(names));
-
+            Guard.ArgumentNotNull(nameof(names), names);
+            /*
             var api = from a in _apiResources
                       let scopes = (from s in a.Scopes where names.Contains(s.Name) select s)
                       where scopes.Any()
                       select a;
-
+            */
+            var api = from name in names
+                let c = new ApiResource(name)
+                select c;
             return Task.FromResult(api);
         }
     }

@@ -140,6 +140,9 @@ namespace IdentityServer4.HostApp
             builder.AddNoSecretRefreshClientSecretValidator();
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
             builder.SwapOutTokenResponseGenerator();
+            builder.SwapOutDefaultTokenService();
+            builder.SwapOutScopeValidator();
+
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();

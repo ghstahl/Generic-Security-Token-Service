@@ -8,5 +8,7 @@
         public const string ArbitraryClaims = "arbitrary_claims";
         public const string Subject = "subject";
         public const string ArbitraryResourceOwnerProfileService = "arbitrary_resource_owner_profile_service";
+        public const string ArbitraryAmrs = "arbitrary_amrs";
+        public const string ArbitraryAudiences = "arbitrary_audiences";
     }
 }

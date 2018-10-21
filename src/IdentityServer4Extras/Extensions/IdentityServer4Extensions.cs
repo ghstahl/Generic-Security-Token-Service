@@ -59,5 +59,23 @@ namespace IdentityServer4Extras.Extensions
             builder.Services.TryAddTransient<ITokenResponseGenerator, TokenResponseGeneratorHook>();
             return builder;
         }
+
+        public static IIdentityServerBuilder SwapOutDefaultTokenService(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<ITokenService>();
+            builder.Services.TryAddTransient<DefaultTokenService>();
+            builder.Services.TryAddTransient<ITokenService, DefaultTokenServiceHook>();
+            return builder;
+        }
+
+        public static IIdentityServerBuilder SwapOutScopeValidator(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<ScopeValidator>();
+            builder.Services.TryAddTransient<ScopeValidator, MyScopeValidator>();
+            return builder;
+        }
     }
 }
+ 

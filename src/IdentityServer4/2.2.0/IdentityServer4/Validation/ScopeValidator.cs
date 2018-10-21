@@ -195,7 +195,7 @@ namespace IdentityServer4.Validation
         /// <param name="client">The client.</param>
         /// <param name="requestedScopes">The requested scopes.</param>
         /// <returns></returns>
-        public async Task<bool> AreScopesAllowedAsync(Client client, IEnumerable<string> requestedScopes)
+        public virtual async Task<bool> AreScopesAllowedAsync(Client client, IEnumerable<string> requestedScopes)
         {
             if (requestedScopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess))
             {

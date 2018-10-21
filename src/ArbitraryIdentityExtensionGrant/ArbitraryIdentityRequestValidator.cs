@@ -55,7 +55,6 @@ namespace ArbitraryIdentityExtensionGrant
                                                                      new List<string>
                                                                      {
                                                                          "nudibranch_watermark",
-                                                                         "client_id",
                                                                          ClaimTypes.NameIdentifier,
                                                                          ClaimTypes.AuthenticationMethod,
                                                                          JwtClaimTypes.AccessTokenHash,

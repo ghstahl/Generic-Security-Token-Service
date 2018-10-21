@@ -12,7 +12,31 @@ using Newtonsoft.Json.Schema;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
-    
+    static class RequestValidationExtensions
+    {
+        public static bool ValidateFormat<T>(this List<string> errorList, string name, string json)
+        {
+            bool error = false;
+            try
+            {
+
+                if (!string.IsNullOrWhiteSpace(json))
+                {
+                    var values =
+                        JsonConvert.DeserializeObject<T>(json);
+                }
+
+            }
+            catch (Exception)
+            {
+                error = true;
+                errorList.Add($"{name} is malformed!");
+            }
+
+            return error;
+        }
+    }
+
     public class ArbitraryResourceOwnerRequestValidator
     {
  
@@ -33,7 +57,6 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                      new List<string>
                                                                      {
                                                                          "nudibranch_watermark",
-                                                                         "client_id",
                                                                          ClaimTypes.NameIdentifier,
                                                                          ClaimTypes.AuthenticationMethod,
                                                                          JwtClaimTypes.AccessTokenHash,
@@ -96,9 +119,15 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
             }
 
-            try
+            // make sure nothing is malformed
+            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryClaims]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAmrs]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAudiences]) || error;
+
+            if (!error)
             {
-                var arbitraryClaims = raw["arbitrary_claims"];
+
+                var arbitraryClaims = raw[Constants.ArbitraryClaims];
                 if (!string.IsNullOrWhiteSpace(arbitraryClaims))
                 {
                     var values =
@@ -119,14 +148,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
                     }
                 }
+            }
 
-            }
-            catch (Exception _)
-            {
-                error = true;
-                los.Add($"arbitrary_claims is malformed!");
-            }
- 
             if (error)
             {
                 context.Result.IsError = true;
