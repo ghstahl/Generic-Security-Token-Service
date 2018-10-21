@@ -30,7 +30,7 @@
 	<b>i.e. <em>scope:offline_access a b c d e</em></b></dd>
 	
   <dt>arbitrary_claims</dt>
-  <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
+  <dd><b>REQUIRED</b>.  This is a json string object of key/array pairs.  
 	<b>i.e. <em>arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}</em></b></dd>
 
   <dt>arbitrary_amrs</dt>
