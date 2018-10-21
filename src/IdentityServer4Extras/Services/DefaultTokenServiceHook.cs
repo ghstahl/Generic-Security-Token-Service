@@ -8,30 +8,11 @@ using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace IdentityServer4Extras.Services
 {
-    public class MyScopeValidator : ScopeValidator
-    {
-        public MyScopeValidator(IResourceStore store, ILogger<MyScopeValidator> logger) : base(store, logger)
-        {
-        }
-        public override async Task<bool> AreScopesAllowedAsync(Client client, IEnumerable<string> requestedScopes)
-        {
-            return true;
-//            return await base.AreScopesAllowedAsync(client, requestedScopes);
-        }
-   
-    }
-    public interface ITokenServiceHookPlugin
-    {
-        Task<(bool, Token)> OnPostCreateAccessTokenAsync(TokenCreationRequest request, Token token);
-        Task<(bool, Token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token);
-    }
     public class DefaultTokenServiceHook : ITokenService
     {
         private DefaultTokenService _delegate;
