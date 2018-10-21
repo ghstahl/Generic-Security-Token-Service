@@ -2,7 +2,7 @@
 
 namespace GraphQLCore.ExtensionGrants.GraphQL
 {
-    public class ArbitraryResourceOwnerInput : InputObjectGraphType
+    public class ArbitraryIdentityInput : InputObjectGraphType
     {
         /*
             client_id:arbitrary-resource-owner-client
@@ -12,15 +12,14 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
             subject:886bea3f-e025-4ab9-a811-e9b86f563668
             access_token_lifetime:3600
          */
-        public ArbitraryResourceOwnerInput()
+        public ArbitraryIdentityInput()
         {
-            Name = "arbitrary_resource_owner";
+            Name = "arbitrary_identity";
             Field<NonNullGraphType<StringGraphType>>("client_id");
             Field<NonNullGraphType<StringGraphType>>("client_secret");
             Field<StringGraphType>("scope");
             Field<NonNullGraphType<StringGraphType>>("arbitrary_claims");
             Field<StringGraphType>("subject");
-            Field<StringGraphType>("access_token");
             Field<StringGraphType>("arbitrary_amrs");
             Field<StringGraphType>("arbitrary_audiences");
             Field<IntGraphType>("access_token_lifetime");
