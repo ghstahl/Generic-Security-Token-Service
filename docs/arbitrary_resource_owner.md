@@ -52,59 +52,67 @@ I use [Postman](https://www.getpostman.com/)
 POST http://localhost:21354/connect/token
 
 Headers:
-    Content-Type:application/x-www-form-urlencoded
+    	Content-Type:application/x-www-form-urlencoded
 
 Body:
 	grant_type:arbitrary_resource_owner
 	client_id:arbitrary-resource-owner-client
 	client_secret:secret
-	scope:offline_access metal nitro
+	scope:offline_access a b c d e
 	arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
 	subject:886bea3f-e025-4ab9-a811-e9b86f563668
 	access_token_lifetime:3600
+	arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]
+	arbitrary_audiences:["cat","dog"]
 ```
 or ...  
 ```
 POST http://localhost:21354/connect/token
 
 Headers:
-    Content-Type:application/x-www-form-urlencoded
+    	Content-Type:application/x-www-form-urlencoded
 
 Body:
 
-grant_type:arbitrary_resource_owner
-client_id:arbitrary-resource-owner-client
-client_secret:secret
-scope:offline_access metal nitro
-arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
-access_token_lifetime:3600
-access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDcyMjMsImV4cCI6MTUzOTQ1MDgyMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTM5NDQ3MjIwLCJpZHAiOiJsb2NhbCIsInRvcCI6IlRvcERvZyIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwicHJvZmlsZV9zZXJ2aWNlX2tleSI6ImFyYml0cmFyeV9yZXNvdXJjZV9vd25lcl9wcm9maWxlX3NlcnZpY2UiLCJzY29wZSI6WyJtZXRhbCIsIm5pdHJvIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciJdfQ.D1WtL9lOjjqYmTGLf-YO83rKXVagTvcWPA3_GMP9Bg2op_WYZc9aq7FRtKQA_zJpGw0qoWnUe-ISPKGdHVSFSX5n8OQRH4rkzprrOvRhjcx6617eBOLHx09aUNKgI2GNmykeoQTwrSNOp06yLJUOp1qgHKNPh3HBfSDUzcdqBDgul42aizfDyLcAscqgSmIcvRg1gwfJau0ApVbmbgSRKgILNRvwb_93l2rjTnDSSN7WbtBBz_F0zbEy5mKgH1p7_pvAyZQVpTsnKaYfwBMck0tgOKwpzeiLs2oRGkt3ZzPsGlnt6YSAXtJQE_xP4U8DTD9ebnlzqeJzXWsgv43Alg
- 
+	grant_type:arbitrary_resource_owner
+	client_id:arbitrary-resource-owner-client
+	client_secret:secret
+	scope:offline_access a b c d e
+	arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
+	access_token_lifetime:3600
+	access_token:eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDAxNDMwMjEsImV4cCI6MTU0MDE0NjYyMSwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTU0MDE0MzAyMSwiaWRwIjoibG9jYWwiLCJ0b3AiOiJUb3BEb2ciLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiOGM1OWVjNDEtNTRmMy00NjBiLWEwNGUtNTIwZmM1Yjk5NzNkIiwicGlpZCI6IjIzNjhkMjEzLWQwNmMtNGMyYS1hMDk5LTExYzM0YWRjMzU3OSIsInNjb3BlIjpbImEiLCJiIiwiYyIsImQiLCJlIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciIsImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl19.vfxPtfec-VYxlJOb5Gc0t7NrEVC_6XFB5oBPosPRKS_QrTmsOXB7OB4-gUEAY-Hm1Z8H5kWa20MjZay5CdCuqRKdvNx6KVrEV1i2zp22_vHK9YYWJrKsQNrjj2DPsY6kSLTUgIysM8IeB27kgBTu6a6nRUor7kshxsr4kmluYXG9GyAIgjntOGWwdq5Hzi_KtrgOSJ1M6qsx6iGQpk_3e5jU3bOW9oUy_ENAW310NEWqfVNHupTfNvr_fcPpRCIyNvto5s_q71TgrRXwrGaWYnVgTR-QZYH7k1srRwjJ_dsls1wWG2abWDzW2TtjP95QOXHMPwgMHiwRlx2hzgj5FA
+	arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]
+	arbitrary_audiences:["cat","dog"]
 ```
 Produces...  
 
 ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDczNzIsImV4cCI6MTUzOTQ1MDk3MiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTM5NDQ3MzcyLCJpZHAiOiJsb2NhbCIsInRvcCI6IlRvcERvZyIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwicHJvZmlsZV9zZXJ2aWNlX2tleSI6ImFyYml0cmFyeV9yZXNvdXJjZV9vd25lcl9wcm9maWxlX3NlcnZpY2UiLCJvcmlnaW5fYXV0aF90aW1lIjoiMTUzOTQ0NzIyMCIsInNjb3BlIjpbIm1ldGFsIiwibml0cm8iLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsiYXJiaXRyYXJ5X3Jlc291cmNlX293bmVyIl19.Ewn3OhlhnvHnViNHKxi-lYefUHZge2SHNZNzn_qaceQPk_ZRZjEe0iNeQwYlh3ynb1Oy3FpDTKwUWiONiQlFM8Fdh2va13yTN-Yk3Wa-FHwGbUinAL17LLFLLmrXSPe8yng7SEJaol9FLkHFXZdCcaeSf_W_wp-cp4IFVB-eUjPNSXrWawO2c1BID6XeapZ_S6i_i9pAve9ZQiUq5ToR7CsYwRUFHILpC5mJ_MtcKB9ATM7QXNzjb-Wn3ir6NZrdBqmskcuZmTUp_HnkeiT40BM3pGrrPawO7TbOeJ2YQKyRycbDQKPw0Yg3flZl-susqWOpDLz01IRjPs7NwnImmw",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDAxNDMwOTYsImV4cCI6MTU0MDE0NjY5NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTU0MDE0MzA5NiwiaWRwIjoibG9jYWwiLCJ0b3AiOiJUb3BEb2ciLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiOGM1OWVjNDEtNTRmMy00NjBiLWEwNGUtNTIwZmM1Yjk5NzNkIiwicGlpZCI6IjIzNjhkMjEzLWQwNmMtNGMyYS1hMDk5LTExYzM0YWRjMzU3OSIsInNjb3BlIjpbImEiLCJiIiwiYyIsImQiLCJlIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciIsImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl19.jYzwMsxfMPG_7BJFE-jzOZpfUh-rdDK9hVgfoLkSJ9-QdKjG_IE6Q91iN0_t35xwBj9rVfF6855v7m7ckjmz890cOlzSBUiun1p9MC3qsGpiZjz6XY9_kwpvOPU-j59V1GFb8WjkDB1cLd1mtON4yLnrBhbTqLCUPAo8RR5PAQ3iVZv2l5xgtJ6OczDEgWZrBmJPAmkVVGcF4yWVxevAAaKTwPv01fuACp5HfvkeBkGe7LOJ8jPUyq1Ao-XaQIeu2npOVveU4OkpGmtG-uLhDjl_Y_uyWwERF_VjME8UsTORoRjOrbVIuKZMrrL-WK5sz6Jn6tfR2ar4nX9i-Dw6SA",
     "expires_in": 3600,
     "token_type": "Bearer",
-    "refresh_token": "f1dd44c7b882a12d29cab648fad49f06e876b3bc60269b7841f8f9fa04afe226"
+    "refresh_token": "CfDJ8KCYS6ITMUNMj7yhU7AYnmyp2yrlV_FgO0KPb49Wrf0ki3yEhRIScTYy2QqfInYkV6w7faMDC3p74LYSxyVF0eGXNxhr8VHisupb-5f5XPNLkGUyNM6flKRMpEvKqmn_FUFtmzf8MmJpBowdbXeK9s7fEEnTK26eF7LpSPpf9fUkHxDbg8FEThiF_TSFWqBEtugntOKcedmlcj6OOxRTqi4"
 }
  ```
- [Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDczNzIsImV4cCI6MTUzOTQ1MDk3MiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTM5NDQ3MzcyLCJpZHAiOiJsb2NhbCIsInRvcCI6IlRvcERvZyIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwicHJvZmlsZV9zZXJ2aWNlX2tleSI6ImFyYml0cmFyeV9yZXNvdXJjZV9vd25lcl9wcm9maWxlX3NlcnZpY2UiLCJvcmlnaW5fYXV0aF90aW1lIjoiMTUzOTQ0NzIyMCIsInNjb3BlIjpbIm1ldGFsIiwibml0cm8iLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsiYXJiaXRyYXJ5X3Jlc291cmNlX293bmVyIl19.Ewn3OhlhnvHnViNHKxi-lYefUHZge2SHNZNzn_qaceQPk_ZRZjEe0iNeQwYlh3ynb1Oy3FpDTKwUWiONiQlFM8Fdh2va13yTN-Yk3Wa-FHwGbUinAL17LLFLLmrXSPe8yng7SEJaol9FLkHFXZdCcaeSf_W_wp-cp4IFVB-eUjPNSXrWawO2c1BID6XeapZ_S6i_i9pAve9ZQiUq5ToR7CsYwRUFHILpC5mJ_MtcKB9ATM7QXNzjb-Wn3ir6NZrdBqmskcuZmTUp_HnkeiT40BM3pGrrPawO7TbOeJ2YQKyRycbDQKPw0Yg3flZl-susqWOpDLz01IRjPs7NwnImmw)  
+ [Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDAxNDMwOTYsImV4cCI6MTU0MDE0NjY5NiwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInN1YiI6Ijg4NmJlYTNmLWUwMjUtNGFiOS1hODExLWU5Yjg2ZjU2MzY2OCIsImF1dGhfdGltZSI6MTU0MDE0MzA5NiwiaWRwIjoibG9jYWwiLCJ0b3AiOiJUb3BEb2ciLCJyb2xlIjpbImFwcGxpY2F0aW9uIiwibGltaXRlZCJdLCJxdWVyeSI6WyJkYXNoYm9hcmQiLCJsaWNlbnNpbmciXSwic2VhdElkIjoiOGM1OWVjNDEtNTRmMy00NjBiLWEwNGUtNTIwZmM1Yjk5NzNkIiwicGlpZCI6IjIzNjhkMjEzLWQwNmMtNGMyYS1hMDk5LTExYzM0YWRjMzU3OSIsInNjb3BlIjpbImEiLCJiIiwiYyIsImQiLCJlIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciIsImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl19.jYzwMsxfMPG_7BJFE-jzOZpfUh-rdDK9hVgfoLkSJ9-QdKjG_IE6Q91iN0_t35xwBj9rVfF6855v7m7ckjmz890cOlzSBUiun1p9MC3qsGpiZjz6XY9_kwpvOPU-j59V1GFb8WjkDB1cLd1mtON4yLnrBhbTqLCUPAo8RR5PAQ3iVZv2l5xgtJ6OczDEgWZrBmJPAmkVVGcF4yWVxevAAaKTwPv01fuACp5HfvkeBkGe7LOJ8jPUyq1Ao-XaQIeu2npOVveU4OkpGmtG-uLhDjl_Y_uyWwERF_VjME8UsTORoRjOrbVIuKZMrrL-WK5sz6Jn6tfR2ar4nX9i-Dw6SA)  
  ```
 {
-  "nbf": 1539447372,
-  "exp": 1539450972,
+  "nbf": 1540143096,
+  "exp": 1540146696,
   "iss": "https://localhost:44332",
   "aud": [
     "https://localhost:44332/resources",
-    "metal",
-    "nitro"
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "cat",
+    "dog"
   ],
   "client_id": "arbitrary-resource-owner-client",
   "sub": "886bea3f-e025-4ab9-a811-e9b86f563668",
-  "auth_time": 1539447372,
+  "auth_time": 1540143096,
   "idp": "local",
   "top": "TopDog",
   "role": [
@@ -117,16 +125,19 @@ Produces...
   ],
   "seatId": "8c59ec41-54f3-460b-a04e-520fc5b9973d",
   "piid": "2368d213-d06c-4c2a-a099-11c34adc3579",
-  "nudibranch_watermark": "Daffy Duck",
-  "profile_service_key": "arbitrary_resource_owner_profile_service",
-  "origin_auth_time": "1539447220",
   "scope": [
-    "metal",
-    "nitro",
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
     "offline_access"
   ],
   "amr": [
-    "arbitrary_resource_owner"
+    "arbitrary_resource_owner",
+    "agent:username:agent0@supporttech.com",
+    "agent:challenge:fullSSN",
+    "agent:challenge:homeZip"
   ]
 }
  ```
