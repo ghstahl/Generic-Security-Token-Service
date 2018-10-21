@@ -18,6 +18,8 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
             Field<NonNullGraphType<StringGraphType>>("client_secret");
             Field<StringGraphType>("scope");
             Field<NonNullGraphType<StringGraphType>>("arbitrary_claims");
+            Field<StringGraphType>("arbitrary_amrs");
+            Field<StringGraphType>("arbitrary_audiences");
             Field<IntGraphType>("access_token_lifetime");
         }
     }

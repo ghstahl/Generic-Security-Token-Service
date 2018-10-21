@@ -17,6 +17,8 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
         public string arbitrary_claims { get; set; }
         public string scope { get; set; }
         public int access_token_lifetime { get; set; }
+        public string arbitrary_amrs { get; set; }
+        public string arbitrary_audiences { get; set; }
 
         public int CompareTo(object obj)
         {
@@ -39,6 +41,8 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
                 other.client_secret != this.client_secret ||
                 other.arbitrary_claims != this.arbitrary_claims ||
                 other.scope != this.scope ||
+                other.arbitrary_amrs != this.arbitrary_amrs ||
+                other.arbitrary_audiences != this.arbitrary_audiences ||
                 other.access_token_lifetime != this.access_token_lifetime
             )
             {

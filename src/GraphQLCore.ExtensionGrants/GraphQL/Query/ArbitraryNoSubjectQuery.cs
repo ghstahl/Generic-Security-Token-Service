@@ -47,7 +47,14 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
                             {"scope", input.scope},
                             {"arbitrary_claims", input.arbitrary_claims}
                         };
-                       
+                        if (!string.IsNullOrWhiteSpace(input.arbitrary_amrs))
+                        {
+                            formValues.Add("arbitrary_amrs", input.arbitrary_amrs);
+                        }
+                        if (!string.IsNullOrWhiteSpace(input.arbitrary_audiences))
+                        {
+                            formValues.Add("arbitrary_audiences", input.arbitrary_audiences);
+                        }
                         if (input.access_token_lifetime > 0)
                         {
                             formValues.Add("access_token_lifetime", input.access_token_lifetime.ToString());
