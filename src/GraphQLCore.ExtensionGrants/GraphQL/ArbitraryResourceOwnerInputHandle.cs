@@ -19,8 +19,10 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
     public string subject { get; set; }
     public string access_token { get; set; }
     public int access_token_lifetime { get; set; }
+    public string arbitrary_amrs { get; set; }
+    public string arbitrary_audiences { get; set; }
 
-    public int CompareTo(object obj)
+        public int CompareTo(object obj)
     {
         if (Equals(obj))
             return 0;
@@ -43,6 +45,8 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
             other.scope != this.scope ||
             other.subject != this.subject ||
             other.access_token != this.access_token ||
+            other.arbitrary_amrs != this.arbitrary_amrs ||
+            other.arbitrary_audiences != this.arbitrary_audiences ||
             other.access_token_lifetime != this.access_token_lifetime
         )
         {
