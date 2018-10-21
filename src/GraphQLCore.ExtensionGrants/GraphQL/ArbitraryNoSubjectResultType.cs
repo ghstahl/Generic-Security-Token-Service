@@ -6,7 +6,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL
     {
         public ArbitraryNoSubjectResultType()
         {
-            Name = "arbitraryResourceOwnerResult";
+            Name = "arbitraryNoSubjectResult";
             Field(x => x.access_token).Description("The access_token.");
             Field(x => x.expires_in).Description("Expired in seconds.");
             Field(x => x.token_type).Description("The type of token.");
