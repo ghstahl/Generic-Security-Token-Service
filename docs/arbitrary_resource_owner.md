@@ -23,11 +23,12 @@
   <dt>client_secret</dt>
   <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
          parameter if the client secret is an empty string.</dd>
-  
+ 
   <dt>scope</dt>
-  <dd><b>OPTIONAL</b>.  The scope of the access request as described by
-         Section 3.3.</dd>
-	 
+  <dd><b>REQUIRED</b>.  The scope of the access request as described by
+         Section 3.3.       
+	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
+	
   <dt>arbitrary_claims</dt>
   <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
 	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
