@@ -10,35 +10,35 @@ This is really the only grant_type you will need...
    request entity-body:
 
 <dl>
-  <dt>grant_type</dt>
+  <dt><h2>grant_type</h2></dt>
   <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_no_subject</b>".</dd>
   
-  <dt>client_id</dt>
+  <dt><h2>client_id</h2></dt>
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
          the registration process described by Section 2.2.</dd>
   
-  <dt>client_secret</dt>
+  <dt><h2>client_secret</h2></dt>
   <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
          parameter if the client secret is an empty string.</dd>
   
-  <dt>scope</dt>
+  <dt><h2>scope</h2></dt>
   <dd><b>REQUIRED</b>.  The scope of the access request as described by
          Section 3.3.       
 	<b>i.e. <em>scope:a b c d e</em></b></dd>
 	 
-  <dt>arbitrary_claims</dt>
+  <dt><h2>arbitrary_claims</h2></dt>
   <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
 	<b>i.e. <em>arbitrary_claims:{"sub":"Ratt","some-guid":"1234abcd","In":"Flames"}</em></b></dd>
 
-  <dt>arbitrary_amrs</dt>
+  <dt><h2>arbitrary_amrs</h2></dt>
   <dd><b>OPTIONAL</b>.  This is a json array of strings.  
 	<b>i.e. <em>arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]</em></b></dd>
 	
-  <dt>arbitrary_audiences</dt>
+  <dt><h2>arbitrary_audiences</h2></dt>
   <dd><b>OPTIONAL</b>.  This is a json array of strings.  
 	<b>i.e. <em>arbitrary_audiences:["cat","dog"]</em></b></dd>
 	
-  <dt>access_token_lifetime</dt>
+  <dt><h2>access_token_lifetime</h2></dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
 </dl>  
 
