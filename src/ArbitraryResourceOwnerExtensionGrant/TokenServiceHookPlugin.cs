@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Models;
+using IdentityServer4Extras;
 using IdentityServer4Extras.Services;
 using Newtonsoft.Json;
 
@@ -62,7 +63,11 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     token.Claims.Add(claim);
                 }
             }
-
+            var clientExtra = request.ValidatedRequest.Client as ClientExtra;
+            if (!string.IsNullOrEmpty(clientExtra.Watermark))
+            {
+                token.Claims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
+            }
             return (true, token);
         }
 
