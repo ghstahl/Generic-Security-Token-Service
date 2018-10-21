@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using ArbitraryOpenIdConnectTokenExtensionGrants;
 using IdentityModel;
 using IdentityModel.Client;
 using IdentityModelExtras;

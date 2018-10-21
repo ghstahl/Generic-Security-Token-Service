@@ -4,8 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
-using ArbitraryOpenIdConnectTokenExtensionGrants;
-using ArbitraryOpenIdConnectTokenExtensionGrants.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using IdentityModelExtras.Extensions;
@@ -57,7 +55,6 @@ namespace IdentityServer4.HostApp
                 .AddIdentityServer4Extras()
                 .AddProfileServiceManager()
                 .AddArbitraryOwnerResourceExtensionGrant()
-                .AddArbitraryOpenIdConnectTokenExtensionGrant()
                 .AddArbitraryNoSubjectExtensionGrant();
 
             // My Replacement Services.
@@ -69,7 +66,6 @@ namespace IdentityServer4.HostApp
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
             services.AddArbitraryResourceOwnerExtentionGrantTypes();
-            services.AddArbitraryOpenIdConnectTokenExtensionGrantTypes();
             services.AddIdentityModelExtrasTypes();
             services.AddIdentityServer4ExtraTypes();
             services.AddRefreshTokenRevokationGeneratorWorkAroundTypes();

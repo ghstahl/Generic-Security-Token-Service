@@ -44,7 +44,6 @@ namespace IdentityServer4.HostApp
                     AllowedGrantTypes = new[]
                     { 
                         ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner,
-                        ArbitraryOpenIdConnectTokenExtensionGrants.Constants.ArbitraryOIDCResourceOwner,
                         ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryNoSubject,
                         GrantType.Implicit
                     },
