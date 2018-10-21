@@ -20,7 +20,7 @@
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
          the registration process described by Section 2.2.</dd>
   
-  <dt>client_secret</h2></dt>
+  <dt><h2>client_secret</h2></dt>
   <dd><b>REQUIRED</b>.  The client secret.  The client MAY omit the
          parameter if the client secret is an empty string.</dd>
   
