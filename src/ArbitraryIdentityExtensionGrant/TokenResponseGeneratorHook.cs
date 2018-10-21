@@ -88,53 +88,6 @@ namespace ArbitraryIdentityExtensionGrant
             };
 
             var idToken = await TokenService.CreateIdentityTokenAsync(tokenRequest);
-
-            var arbitraryClaims = request.ValidatedRequest.Raw[Constants.ArbitraryClaims];
-            if (!string.IsNullOrWhiteSpace(arbitraryClaims))
-            {
-                var values =
-                    JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(arbitraryClaims);
-                var finalClaims = 
-                    from item in values
-                    from c in item.Value
-                    select new Claim(item.Key, c);
-                foreach (var claim in finalClaims)
-                {
-                    idToken.Claims.Add(claim);
-                }
-            }
-
-            var amr = request.ValidatedRequest.Raw[Constants.ArbitraryAmrs];
-            if (!string.IsNullOrWhiteSpace(amr))
-            {
-                var values =
-                    JsonConvert.DeserializeObject<List<string>>(amr);
-                var finalClaims = from item in values
-                    select new Claim(JwtClaimTypes.AuthenticationMethod, item);
-
-                foreach (var claim in finalClaims)
-                {
-                    idToken.Claims.Add(claim);
-                }
-            }
-            var audiences = request.ValidatedRequest.Raw[Constants.ArbitraryAudiences];
-            if (!string.IsNullOrWhiteSpace(audiences))
-            {
-                var values =
-                    JsonConvert.DeserializeObject<List<string>>(audiences);
-                var finalClaims = from item in values
-                    select new Claim(JwtClaimTypes.Audience, item);
-
-                foreach (var claim in finalClaims)
-                {
-                    idToken.Claims.Add(claim);
-                }
-            }
-            var clientExtra = request.ValidatedRequest.Client as ClientExtra;
-            if (!string.IsNullOrEmpty(clientExtra.Watermark))
-            {
-                idToken.Claims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
-            }
             var jwt = await TokenService.CreateSecurityTokenAsync(idToken);
             response.IdentityToken = jwt;
             return response;

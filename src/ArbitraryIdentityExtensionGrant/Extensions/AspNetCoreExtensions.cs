@@ -11,6 +11,7 @@ namespace ArbitraryIdentityExtensionGrant.Extensions
             services.AddTransient<ArbitraryIdentityRequestValidator>();
         //    services.AddTransient<IProfileServicePlugin, ArbitraryIdentityProfileService>();
             services.AddTransient<ITokenResponseGeneratorHook, TokenResponseGeneratorHook>();
+            services.AddTransient<ITokenServiceHookPlugin, TokenServiceHookPlugin>();
         }
     }
 }

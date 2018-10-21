@@ -36,7 +36,6 @@ namespace IdentityServer4Extras.Services
                 bool proccessed;
                 Token newToken;
                 (proccessed, newToken) = await tokenServiceHookPlugin.OnPostCreateIdentityTokenAsync(request, token);
-                (proccessed, newToken) = await tokenServiceHookPlugin.OnPostCreateIdentityTokenAsync(request, token);
                 if (proccessed)
                 {
                     token = newToken;
