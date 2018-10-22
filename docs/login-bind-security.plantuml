@@ -1,0 +1,32 @@
+@startuml
+
+title Client-APIService-GTS end to end,\nwhere binding directly from that app is not wanted
+
+group Login/Bind Securely
+Client_App -> Some_SiginService:Login
+group Login to IDP
+Some_SiginService -> Federated_IDP:Login
+Some_SiginService <- Federated_IDP:id_token
+end
+group Bind to Service
+Some_SiginService -> API_Service:Bind(id_token)
+API_Service -> API_Service: validate id_token
+API_Service -> Generic_STS: mint access_token
+API_Service <- Generic_STS: access_token,etc
+Some_SiginService <- API_Service:access_token,etc
+end
+Client_App <- Some_SiginService:id_token, access_token, refresh_token
+end
+group Make some API calls
+Client_App -> API_Service:SomeApi:bearer:access_token
+API_Service -> API_Service: validate access_token
+Client_App <- API_Service: return data 
+end
+group Make some API calls
+Client_App -> Generic_STS:refresh (refresh_token)
+Client_App <- Generic_STS: access_token,etc
+Client_App -> API_Service:SomeApi:bearer:access_token
+API_Service -> API_Service: validate access_token
+Client_App <- API_Service: return data
+end
+@enduml
