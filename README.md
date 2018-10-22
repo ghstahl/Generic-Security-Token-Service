@@ -11,7 +11,7 @@ Well, it depends who you ask.  There is even a draft [OAuth Working Group](https
 
 Furthermore it optionally asks that I pass in a resource that I want access to.  Here it leaves open the question: Resource to what and whose rules determine what tokens if any you will get?  In my opinion this is a play to have the STS know business rules that it has no business knowing.   
 
-Business rules, in my experience, are distributed!  
+Business rules, in my experience, are distributed and private!  
 
 Amazon's AWS has one as well.   The [AWS Security Token Service](https://docs.aws.amazon.com/STS/latest/APIReference/Welcome.html).  Right off the bat it flately states the following;  
 
