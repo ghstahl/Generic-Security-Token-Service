@@ -21,11 +21,9 @@ Client_App -> API_Service:SomeApi:bearer:access_token
 API_Service -> API_Service: validate access_token
 Client_App <- API_Service: return data 
 end
-group Make some API calls
+group Refresh
 Client_App -> Generic_STS:refresh (refresh_token)
-Client_App <- Generic_STS: access_token,etc
-Client_App -> API_Service:SomeApi:bearer:access_token
-API_Service -> API_Service: validate access_token
-Client_App <- API_Service: return data
+Client_App <- Generic_STS: access_token, refresh_token
+
 end
 @enduml
