@@ -1,24 +1,30 @@
 @startuml
 
+title Client-APIService-GTS end to end,\nwhere binding directly from that app is not wanted
 
-== Get an Identity to Something ==
-WebCamera -> RegistrationService: Bind
-RegistrationService->RegistrationService: Lookup/Create WebCamera Identity
-WebCamera <- RegistrationService: id_token
- 
-== BIND To A Service ==
-WebCamera -> SomeService: Binding Token (i.e. id_token)
-SomeService -> SomeService: Validate Binding Token\n Engage Rules
-SomeService -> GSTS: Mint Custom Token
-GSTS -> GSTS: Validate ClientId/Secret
-GSTS -> SomeService: access_token, refresh_token, etc.
-WebCamera <- SomeService: access_token, refresh_token, etc.
-
-== Access Resources ==
-note over SomeService,GSTS: GSTS is a known authority.
-WebCamera -> SomeService: SomeApi bearer: access_token
-SomeService -> SomeService: Validate Bearer Token
-WebCamera <- SomeService: resources
- 
-
+group Register/Bind Securely
+Web_Camera -> Some_SiginService:Register/Bind
+group Register to iot_service
+Some_SiginService -> iot_identityService:Register/login
+Some_SiginService <- iot_identityService:id_token
+end
+group Bind to Service
+Some_SiginService -> API_Service:Bind(id_token)
+API_Service -> API_Service: validate id_token
+API_Service -> Generic_STS: mint access_token
+API_Service <- Generic_STS: id_token, access_token, refresh_token,etc
+Some_SiginService <- API_Service:access_token,etc
+end
+Web_Camera <- Some_SiginService:id_token, access_token, refresh_token
+end
+group Make some API calls
+Web_Camera -> API_Service:SomeApi:bearer:access_token
+API_Service -> API_Service: validate access_token
+Web_Camera <- API_Service: return data 
+end
+group Refresh
+Web_Camera -> Generic_STS:refresh (refresh_token)
+Web_Camera <- Generic_STS: access_token, refresh_token
+Web_Camera -> API_Service:SomeApi:bearer:access_token
+end
 @enduml
