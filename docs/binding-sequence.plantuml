@@ -1,23 +1,31 @@
 @startuml
 
+title Client-APIService-GTS end to end,\nid_token in the wild
 
-== Get an Identity to Something ==
-Client -> SSO: Login
-Client <- SSO: id_token
- 
-== BIND To A Service ==
-Client -> SomeService: Binding Token (i.e. id_token)
-SomeService -> SomeService: Validate Binding Token\n Engage Rules
-SomeService -> GSTS: Mint Custom Token
-GSTS -> GSTS: Validate ClientId/Secret
-GSTS -> SomeService: access_token, refresh_token, etc.
-Client <- SomeService: access_token, refresh_token, etc.
+group Login/Bind Securely
 
-== Access Resources ==
-note over SomeService,GSTS: GSTS is a known authority.
-Client -> SomeService: SomeApi bearer: access_token
-SomeService -> SomeService: Validate Bearer Token
-Client <- SomeService: resources
- 
+group Login to IDP
+Client_App -> Federated_IDP:Login
+Client_App <- Federated_IDP:id_token
+end
+group Bind to Service
+Client_App -> API_Service:Bind(id_token)
+API_Service -> API_Service: validate id_token
+API_Service -> Generic_STS: mint access_token
+API_Service <- Generic_STS: access_token,etc
+Client_App <- API_Service:id_token, access_token, refresh_token
+end
 
+group Make some API calls
+Client_App -> API_Service:SomeApi:bearer:access_token
+API_Service -> API_Service: validate access_token
+Client_App <- API_Service: return data 
+end
+group Make some API calls
+Client_App -> Generic_STS:refresh (refresh_token)
+Client_App <- Generic_STS: access_token,etc
+Client_App -> API_Service:SomeApi:bearer:access_token
+API_Service -> API_Service: validate access_token
+Client_App <- API_Service: return data
+end
 @enduml
