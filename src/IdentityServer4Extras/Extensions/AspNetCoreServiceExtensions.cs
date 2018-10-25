@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Stores;
 using IdentityServer4Extras.Endpoints;
+using IdentityServer4Extras.Services;
 using IdentityServer4Extras.Stores;
 using IdentityServer4Extras.Validation;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace IdentityServer4Extras.Extensions
             services.AddTransient<PrincipalAugmenter>();
             services.AddTransient<IEndpointHandlerExtra, TokenEndpointExtra>();
             services.AddTransient<ISecretParserExtra, PostBodySecretParserExtra>();
+            services.TryAddSingleton<ITokenRevocationEventHandler, NullTokenRevocationEventHandler>();
         }
     }
 }
