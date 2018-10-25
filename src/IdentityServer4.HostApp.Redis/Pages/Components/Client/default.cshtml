@@ -32,18 +32,22 @@
                     </td>
 
                 </tr>
-                <tr>
-                    <td>@nameof(Model.AllowedScopes)</td>
-                    <td>
-                        <ul class="list-unstyled">
-                            @foreach (var item in Model.AllowedScopes)
-                            {
-                                <li>@item</li>
-                            }
-                        </ul>
-                    </td>
+                @if (Model.AllowedScopes != null)
+                {
+                    <tr>
+                        <td>@nameof(Model.AllowedScopes)</td>
+                        <td>
+                            <ul class="list-unstyled">
+                                @foreach (var item in Model.AllowedScopes)
+                                {
+                                    <li>@item</li>
+                                }
+                            </ul>
+                        </td>
 
-                </tr>
+                    </tr>
+
+                }
                 <tr>
                     <td>@nameof(Model.AllowedGrantTypes)</td>
                     <td>
