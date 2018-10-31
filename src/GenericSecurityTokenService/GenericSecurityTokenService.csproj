@@ -1,12 +1,14 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
     <AzureFunctionsVersion>v2</AzureFunctionsVersion>
+    <UserSecretsId>0148a207-0054-440d-ab04-f68a2af4435c</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="appsettings.ApiResources.json" />
     <None Remove="appsettings.Clients.json" />
     <None Remove="appsettings.IdentityResources.json" />
+    <None Remove="appsettings.keyVault.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="appsettings.ApiResources.json">
@@ -21,8 +23,15 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="appsettings.keyVault.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="2.1.1" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.23" />
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +40,7 @@
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
     <ProjectReference Include="..\ProfileServiceManager\ProfileServiceManager.csproj" />
   </ItemGroup>

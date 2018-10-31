@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -11,12 +12,15 @@ using IdentityModelExtras.Extensions;
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
+using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 
 namespace GenericSecurityTokenService.Modules
@@ -77,6 +81,15 @@ namespace GenericSecurityTokenService.Modules
         }
     }
 
+    public class MyHostingEnvironment : IHostingEnvironment
+    {
+        public string EnvironmentName { get; set; }
+        public string ApplicationName { get; set; }
+        public string WebRootPath { get; set; }
+        public IFileProvider WebRootFileProvider { get; set; }
+        public string ContentRootPath { get; set; }
+        public IFileProvider ContentRootFileProvider { get; set; }
+    }
 
      
  
@@ -93,13 +106,35 @@ namespace GenericSecurityTokenService.Modules
         /// <inheritdoc />
         public override void Load(IServiceCollection services)
         {
-            var config = new ConfigurationBuilder()
+            var configurationBuilderEnvironment = new ConfigurationBuilder()
+                .SetBasePath(_basePath)
+                .AddEnvironmentVariables();
+            var configEnvironment = configurationBuilderEnvironment.Build();
+            var environmentName = configEnvironment["ASPNETCORE_ENVIRONMENT"];
+            IHostingEnvironment hostingEnvironment = new MyHostingEnvironment()
+            {
+                ApplicationName = "GenericSecurityTokenService",
+                EnvironmentName = environmentName
+            };
+            services.AddSingleton<IHostingEnvironment>(hostingEnvironment);
+
+            var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(_basePath)
                 .AddJsonFile("config.json")
                 .AddJsonFile($"appsettings.IdentityResources.json")
                 .AddJsonFile($"appsettings.ApiResources.json")
-                .AddJsonFile($"appsettings.Clients.json")
-                .Build();
+                .AddJsonFile($"appsettings.keyVault.json")
+                .AddJsonFile($"appsettings.Clients.json");
+            if (hostingEnvironment.IsDevelopment())
+            {
+                configurationBuilder.AddUserSecrets<CoreAppModule>();
+            }
+            configurationBuilder.AddEnvironmentVariables();
+            var config = configurationBuilder.Build();
+
+            bool useRedis = Convert.ToBoolean(config["appOptions:redis:useRedis"]);
+            bool useKeyVault = Convert.ToBoolean(config["appOptions:keyVault:useKeyVault"]);
+
             services.AddSingleton<HttpClient>();
             services.AddSingleton<IHelloFunction, CoreHelloFunction>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
@@ -121,7 +156,18 @@ namespace GenericSecurityTokenService.Modules
                 .AddArbitraryNoSubjectExtensionGrant();
 
             builder.AddInMemoryPersistedGrantStoreExtra();
-            builder.AddDeveloperSigningCredential();
+
+            if (useKeyVault)
+            {
+                builder.AddKeyVaultTokenCreateService();
+                services.AddKeyVaultTokenCreateServiceTypes();
+                services.AddKeyVaultTokenCreateServiceConfiguration(config);
+            }
+            else
+            {
+                builder.AddDeveloperSigningCredential();
+            }
+
 
             // my replacement services.
             builder.AddRefreshTokenRevokationGeneratorWorkAround();

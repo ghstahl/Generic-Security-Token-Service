@@ -62,6 +62,9 @@ namespace P7IdentityServer4
             if (cachedData == null)
             {
                 await RefreshCacheData();
+                cachedData = await _cachedData.GetAsync(CacheValidationKey);
+                // TODO: need to look into this more. We can't do our scheduler scheme for this.
+                // Probably should be an entry in REDIS with a timeout for refresh.
             }
             return cachedData;
         }
