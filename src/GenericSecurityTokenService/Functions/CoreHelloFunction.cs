@@ -1,9 +1,19 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Web;
 using GenericSecurityTokenService.Functions.FunctionOptions;
+using GenericSecurityTokenService.Modules;
+using IdentityServer4;
+using IdentityServer4.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -15,28 +25,44 @@ namespace GenericSecurityTokenService.Functions
     /// </summary>
     public class CoreHelloFunction : IHelloFunction
     {
-       
-        private readonly HttpClient _httpClient;
+        private IEndpointRouter _endpointRouter;
+        private IServiceProvider _serviceProvider;
+        private IMyContextAccessor _myContextAccessor;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public CoreHelloFunction(HttpClient httpClient)
+        public CoreHelloFunction(
+            IHttpContextAccessor httpContextAccessor,
+            HttpClient httpClient,
+            IMyContextAccessor myContextAccessor,
+            IServiceProvider serviceProvider,
+            IEndpointRouter endpointRouter)
         {
-            this._httpClient = httpClient;
+            _httpContextAccessor = httpContextAccessor;
+            _myContextAccessor = myContextAccessor;
+            _serviceProvider = serviceProvider;
+            _endpointRouter = endpointRouter;
         }
         public ILogger Log { get; set; }
-        public async Task<ActionResult> InvokeAsync<TInput>(TInput input, FunctionOptionsBase options)
+        public async Task<ActionResult> InvokeAsync()
         {
+
+            var endpointHandler = _endpointRouter.Find(_httpContextAccessor.HttpContext);
+            if (endpointHandler != null)
+            {
+                var endpointResult = await endpointHandler.ProcessAsync(_httpContextAccessor.HttpContext);
+                var endpointResult2 = endpointResult as IEndpointResult2;
+                var json = "";
+                //await result.BuildResponseAsync(httpContext);
+                await endpointResult.ExecuteAsync(_httpContextAccessor.HttpContext);
+                _httpContextAccessor.HttpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+                StreamReader rdr = new StreamReader(_httpContextAccessor.HttpContext.Response.Body, Encoding.UTF8);
+                json = rdr.ReadToEnd();
+                var result = new JsonResult(endpointResult2.Value);
+                return result;
+            }
             Log.LogInformation("C# HTTP trigger function processed a request.");
-            var option = options as DefaultHttpTriggerOptions;
-
-            string name = option.HttpRequest.Query["name"];
-
-            string requestBody = await new StreamReader(option.HttpRequest.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
-
-            var res = name != null
-                ? (ActionResult)new OkObjectResult($"Hello, {name}")
-                : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
+          
+            var res = new BadRequestObjectResult("Please pass a name on the query string or in the request body");
             return res;
         }
     }

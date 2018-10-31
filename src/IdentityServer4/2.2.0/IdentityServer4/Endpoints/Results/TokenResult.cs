@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenResult : IEndpointResult
+    internal class TokenResult : IEndpointResult, IEndpointResult2
     {
         public TokenResponse Response { get; set; }
 
@@ -56,6 +56,36 @@ namespace IdentityServer4.Endpoints.Results
             public int expires_in { get; set; }
             public string token_type { get; set; }
             public string refresh_token { get; set; }
+        }
+
+        public Task<string> BuildResponseAsync(HttpContext context)
+        {
+            var dto = new ResultDto
+            {
+                id_token = Response.IdentityToken,
+                access_token = Response.AccessToken,
+                refresh_token = Response.RefreshToken,
+                expires_in = Response.AccessTokenLifetime,
+                token_type = OidcConstants.TokenResponse.BearerTokenType
+            };
+            var json = ObjectSerializer.ToString(ObjectSerializer.ToJObject(dto));
+            return Task.FromResult(json);
+        }
+
+        public object Value
+        {
+            get
+            {
+                var dto = new ResultDto
+                {
+                    id_token = Response.IdentityToken,
+                    access_token = Response.AccessToken,
+                    refresh_token = Response.RefreshToken,
+                    expires_in = Response.AccessTokenLifetime,
+                    token_type = OidcConstants.TokenResponse.BearerTokenType
+                };
+                return dto;
+            }
         }
     }
 }

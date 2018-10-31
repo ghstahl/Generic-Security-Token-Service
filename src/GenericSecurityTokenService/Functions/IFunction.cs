@@ -19,11 +19,6 @@ namespace GenericSecurityTokenService.Functions
         /// <summary>
         /// Invokes the function.
         /// </summary>
-        /// <typeparam name="TInput">Type of input.</typeparam>
-        /// <typeparam name="TOutput">Type of output.</typeparam>
-        /// <param name="input">Input instance.</param>
-        /// <param name="options"><see cref="FunctionOptionsBase"/> instance.</param>
-        /// <returns>Returns output instance.</returns>
-        Task<ActionResult> InvokeAsync<TInput>(TInput input, FunctionOptionsBase options);
+        Task<ActionResult> InvokeAsync();
     }
 }

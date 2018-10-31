@@ -1,4 +1,5 @@
-﻿using Microsoft.Azure.WebJobs.Host;
+﻿using System;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 
 namespace GenericSecurityTokenService.Functions
@@ -16,5 +17,6 @@ namespace GenericSecurityTokenService.Functions
         /// <param name="name">Instance name.</param>
         /// <returns>Returns the function instance.</returns>
         TFunction Create<TFunction>(ILogger log, string name = null) where TFunction : IFunction;
+        IServiceProvider ServiceProvider { get; }
     }
 }

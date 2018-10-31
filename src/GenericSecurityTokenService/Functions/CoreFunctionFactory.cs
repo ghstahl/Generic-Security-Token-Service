@@ -14,6 +14,8 @@ namespace GenericSecurityTokenService.Functions
     {
         private readonly IServiceProvider _container;
 
+        public IServiceProvider ServiceProvider => _container;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreFunctionFactory"/> class.
         /// </summary>
@@ -35,5 +37,6 @@ namespace GenericSecurityTokenService.Functions
 
             return function;
         }
+
     }
 }

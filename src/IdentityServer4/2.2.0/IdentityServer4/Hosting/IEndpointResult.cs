@@ -19,4 +19,16 @@ namespace IdentityServer4.Hosting
         /// <returns></returns>
         Task ExecuteAsync(HttpContext context);
     }
+    /// <summary>
+    /// Endpoint result
+    /// </summary>
+    public interface IEndpointResult2
+    {
+        /// <summary>
+        /// Executes the result.
+        /// </summary>
+        /// <param name="context">The HTTP context.</param>
+        /// <returns></returns>
+        object Value { get; }
+    }
 }

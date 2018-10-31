@@ -15,7 +15,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for the jwks document
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class JsonWebKeysResult : IEndpointResult
+    public class JsonWebKeysResult : IEndpointResult, IEndpointResult2
     {
         /// <summary>
         /// Gets the web keys.
@@ -58,5 +58,7 @@ namespace IdentityServer4.Endpoints.Results
 
             return context.Response.WriteJsonAsync(new { keys = WebKeys });
         }
+
+        public object Value => new {keys = WebKeys};
     }
 }

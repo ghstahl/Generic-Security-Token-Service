@@ -14,7 +14,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for a discovery document
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class DiscoveryDocumentResult : IEndpointResult
+    public class DiscoveryDocumentResult : IEndpointResult, IEndpointResult2
     {
         /// <summary>
         /// Gets the entries.
@@ -58,5 +58,7 @@ namespace IdentityServer4.Endpoints.Results
 
             return context.Response.WriteJsonAsync(ObjectSerializer.ToJObject(Entries));
         }
+ 
+        public object Value => Entries;
     }
 }
