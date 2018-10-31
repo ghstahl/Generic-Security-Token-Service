@@ -57,9 +57,9 @@ namespace GenericSecurityTokenService
             EstablishContextAccessor(context);
 
             var factory = GetFactory(context);
-            var result = await factory.Create<IAuthorityFunction>(log).InvokeAsync()
-                .ConfigureAwait(false);
-
+            var functionHandler = factory.Create<IAuthorityFunction>();
+            var result = await functionHandler.InvokeAsync();
+            
             return result;
         }
     }

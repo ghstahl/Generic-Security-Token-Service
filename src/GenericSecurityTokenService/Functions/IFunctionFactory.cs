@@ -13,10 +13,8 @@ namespace GenericSecurityTokenService.Functions
         /// Creates a function instance from the IoC container.
         /// </summary>
         /// <typeparam name="TFunction">Type of function.</typeparam>
-        /// <param name="log"><see cref="ILogger"/> instance.</param>
-        /// <param name="name">Instance name.</param>
         /// <returns>Returns the function instance.</returns>
-        TFunction Create<TFunction>(ILogger log, string name = null) where TFunction : IFunction;
+        TFunction Create<TFunction>() where TFunction : IFunction;
         IServiceProvider ServiceProvider { get; }
     }
 }

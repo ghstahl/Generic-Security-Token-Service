@@ -136,7 +136,7 @@ namespace GenericSecurityTokenService.Modules
             bool useKeyVault = Convert.ToBoolean(config["appOptions:keyVault:useKeyVault"]);
 
             services.AddSingleton<HttpClient>();
-            services.AddSingleton<IHelloFunction, CoreHelloFunction>();
+            services.AddSingleton<IAuthorityFunction, CoreAuthorityFunction>();
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddTransient<ILoggerFactory, LoggerFactory>();
 

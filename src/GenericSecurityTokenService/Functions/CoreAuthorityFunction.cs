@@ -10,7 +10,9 @@ using System.Web;
 using GenericSecurityTokenService.Functions.FunctionOptions;
 using GenericSecurityTokenService.Modules;
 using IdentityServer4;
+using IdentityServer4.Events;
 using IdentityServer4.Hosting;
+using IdentityServer4.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
@@ -23,47 +25,80 @@ namespace GenericSecurityTokenService.Functions
     /// <summary>
     /// This represents the function entity for hello.
     /// </summary>
-    public class CoreHelloFunction : IHelloFunction
+    public class CoreAuthorityFunction : IAuthorityFunction
     {
         private IEndpointRouter _endpointRouter;
         private IServiceProvider _serviceProvider;
         private IMyContextAccessor _myContextAccessor;
         private IHttpContextAccessor _httpContextAccessor;
+        private IEventService _events;
+        private ILogger _logger;
 
-        public CoreHelloFunction(
+        public CoreAuthorityFunction(
             IHttpContextAccessor httpContextAccessor,
-            HttpClient httpClient,
             IMyContextAccessor myContextAccessor,
             IServiceProvider serviceProvider,
-            IEndpointRouter endpointRouter)
+            IEventService events,
+            IEndpointRouter endpointRouter,
+            ILogger<CoreAuthorityFunction> logger)
         {
             _httpContextAccessor = httpContextAccessor;
             _myContextAccessor = myContextAccessor;
             _serviceProvider = serviceProvider;
+            _events = events;
             _endpointRouter = endpointRouter;
+            _logger = logger;
         }
-        public ILogger Log { get; set; }
+
         public async Task<ActionResult> InvokeAsync()
         {
-
-            var endpointHandler = _endpointRouter.Find(_httpContextAccessor.HttpContext);
-            if (endpointHandler != null)
+            ActionResult result = null;
+            try
             {
-                var endpointResult = await endpointHandler.ProcessAsync(_httpContextAccessor.HttpContext);
-                var endpointResult2 = endpointResult as IEndpointResult2;
-                var json = "";
-                //await result.BuildResponseAsync(httpContext);
-                await endpointResult.ExecuteAsync(_httpContextAccessor.HttpContext);
-                _httpContextAccessor.HttpContext.Response.Body.Seek(0, SeekOrigin.Begin);
-                StreamReader rdr = new StreamReader(_httpContextAccessor.HttpContext.Response.Body, Encoding.UTF8);
-                json = rdr.ReadToEnd();
-                var result = new JsonResult(endpointResult2.Value);
-                return result;
+                _logger.LogInformation("C# HTTP trigger Authority function processed a request.");
+                var context = _httpContextAccessor.HttpContext;
+                var endpointHandler = _endpointRouter.Find(_httpContextAccessor.HttpContext);
+                if (endpointHandler != null)
+                {
+                    _logger.LogInformation("Invoking IdentityServer endpoint: {endpointType} for {url}",
+                        endpointHandler.GetType().FullName, context.Request.Path.ToString());
+
+                    _logger.LogInformation(
+                        $"Found IdentityServer endpoint {_httpContextAccessor.HttpContext.Request.Path}.");
+                    var endpointResult = await endpointHandler.ProcessAsync(_httpContextAccessor.HttpContext);
+                    var endpointResult2 = endpointResult as IEndpointResult2;
+
+                    if (endpointResult2 != null)
+                    {
+                        /*
+                        * More effective if we get the object value directly from the endpointResult.
+                        * Need to ask IdentityServer to expose that inner value.
+                        * I did it temporarily by modifying the IdentityServer4 code by added the IEndpointResult2
+                        * interface to the endpoint results.
+                        */
+                        _logger.LogTrace("Invoking result: {type}", endpointResult2.GetType().FullName);
+                        result = new JsonResult(endpointResult2.Value);
+                    }
+
+                    /*
+                        var json = "";
+
+                        await endpointResult.ExecuteAsync(_httpContextAccessor.HttpContext);
+
+                        _httpContextAccessor.HttpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+                        StreamReader rdr = new StreamReader(_httpContextAccessor.HttpContext.Response.Body, Encoding.UTF8);
+                        json = rdr.ReadToEnd();
+                    */
+                }
             }
-            Log.LogInformation("C# HTTP trigger function processed a request.");
-          
-            var res = new BadRequestObjectResult("Please pass a name on the query string or in the request body");
-            return res;
+            catch (Exception ex)
+            {
+                await _events.RaiseAsync(new UnhandledExceptionEvent(ex));
+                _logger.LogCritical(ex, "Unhandled exception: {exception}", ex.Message);
+                throw;
+            }
+
+            return result ?? (result = new NotFoundResult());
         }
     }
 }

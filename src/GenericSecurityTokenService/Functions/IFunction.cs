@@ -12,11 +12,6 @@ namespace GenericSecurityTokenService.Functions
     public interface IFunction
     {
         /// <summary>
-        /// Gets or sets the <see cref="TraceWriter"/> instance.
-        /// </summary>
-        ILogger Log { get; set; }
-
-        /// <summary>
         /// Invokes the function.
         /// </summary>
         Task<ActionResult> InvokeAsync();

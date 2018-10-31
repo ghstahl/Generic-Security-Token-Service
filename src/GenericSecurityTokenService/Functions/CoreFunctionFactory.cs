@@ -28,15 +28,12 @@ namespace GenericSecurityTokenService.Functions
         }
 
         /// <inheritdoc />
-        public TFunction Create<TFunction>(ILogger log, string name = null)
+        public TFunction Create<TFunction>()
             where TFunction : IFunction
         {
             // Resolve the function instance directly from the container.
             var function = this._container.GetService<TFunction>();
-            function.Log = log;
-
             return function;
         }
-
     }
 }
