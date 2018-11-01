@@ -1,7 +1,7 @@
 ﻿using System;
-using GenericSecurityTokenService.Modules;
+using FunctionsCore.Modules;
 
-namespace GenericSecurityTokenService.Containers
+namespace FunctionsCore.Containers
 {
     /// <summary>
     /// This provides interfaces to the <see cref="ContainerBuilder"/> class.
@@ -11,8 +11,8 @@ namespace GenericSecurityTokenService.Containers
         /// <summary>
         /// Registers a dependency collection module.
         /// </summary>
-        /// <param name="module"><see cref="IModule"/> instance.</param>
-        /// <returns>Returns <see cref="IContainerBuilder"/> instance.</returns>
+        /// <param name="module"><see cref="IContainerBuilder"/> instance.</param>
+        /// <returns>Returns <see cref="IModule"/> instance.</returns>
         IContainerBuilder RegisterModule(IModule module = null);
 
         /// <summary>

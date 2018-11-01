@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace GenericSecurityTokenService.Security
+namespace FunctionsCore.Security
 {
     public interface ITokenValidator
     {

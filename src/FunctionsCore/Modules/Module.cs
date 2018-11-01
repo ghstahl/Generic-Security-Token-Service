@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     /// <summary>
     /// This represents the entity containing a list of dependencies.

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
-namespace GenericSecurityTokenService.Functions
+
+namespace FunctionsCore.Functions
 {
     /// <summary>
     /// This provides interfaces to functions.

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace GenericSecurityTokenService.Extensions
+namespace FunctionsCore.Extensions
 {
     /// <summary>
     /// This represents the extension entity for <see cref="ConfigurationBinder"/> class.

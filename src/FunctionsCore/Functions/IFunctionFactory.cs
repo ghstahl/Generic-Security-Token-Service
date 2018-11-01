@@ -1,8 +1,6 @@
 ﻿using System;
-using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Extensions.Logging;
 
-namespace GenericSecurityTokenService.Functions
+namespace FunctionsCore.Functions
 {
     /// <summary>
     /// This provides interfaces to the <see cref="CoreFunctionFactory"/> instance.

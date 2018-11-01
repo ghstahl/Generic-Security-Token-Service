@@ -1,8 +1,8 @@
 ﻿using System;
-using GenericSecurityTokenService.Modules;
+using FunctionsCore.Modules;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericSecurityTokenService.Containers
+namespace FunctionsCore.Containers
 {
     /// <summary>
     /// This represents the builder entity for IoC container.

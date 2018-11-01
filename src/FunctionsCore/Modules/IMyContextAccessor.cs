@@ -1,4 +1,4 @@
-﻿namespace GenericSecurityTokenService.Modules
+﻿namespace FunctionsCore.Modules
 {
     public interface IMyContextAccessor
     {

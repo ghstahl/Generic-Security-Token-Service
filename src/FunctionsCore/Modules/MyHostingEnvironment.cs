@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.FileProviders;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     public class MyHostingEnvironment : IHostingEnvironment
     {

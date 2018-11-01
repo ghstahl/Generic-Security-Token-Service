@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     /// <summary>
     /// This provides interfaces to the <see cref="Module"/> class.

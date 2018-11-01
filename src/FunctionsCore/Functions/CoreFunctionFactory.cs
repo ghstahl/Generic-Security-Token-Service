@@ -1,11 +1,9 @@
 ﻿using System;
-using GenericSecurityTokenService.Containers;
-using GenericSecurityTokenService.Modules;
-using Microsoft.Azure.WebJobs.Host;
+using FunctionsCore.Containers;
+using FunctionsCore.Modules;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
-namespace GenericSecurityTokenService.Functions
+namespace FunctionsCore.Functions
 {
     /// <summary>
     /// This represents the factory entity for functions.

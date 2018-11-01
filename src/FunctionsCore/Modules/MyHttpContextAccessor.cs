@@ -2,7 +2,7 @@
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     public interface IFunctionHttpContextAccessor : IHttpContextAccessor
     {

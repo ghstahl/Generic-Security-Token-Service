@@ -1,4 +1,7 @@
-﻿namespace GenericSecurityTokenService.Functions
+﻿using FunctionsCore;
+using FunctionsCore.Functions;
+
+namespace GenericSecurityTokenService.Functions
 {
     /// <summary>
     /// This provides interfaces to the <see cref="CoreAuthorityFunction"/> class.

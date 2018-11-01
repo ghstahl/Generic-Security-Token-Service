@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     public class MyContext
     {

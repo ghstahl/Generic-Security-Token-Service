@@ -39,6 +39,7 @@
     <ProjectReference Include="..\ArbitraryIdentityExtensionGrant\ArbitraryIdentityExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" />
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
+    <ProjectReference Include="..\FunctionsCore\FunctionsCore.csproj" />
     <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />

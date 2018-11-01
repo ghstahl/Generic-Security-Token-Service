@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using FunctionsCore.Modules;
 using GenericSecurityTokenService.Modules;
 using IdentityServer4;
 using IdentityServer4.Events;

@@ -1,6 +1,6 @@
 ﻿using System.Threading;
 
-namespace GenericSecurityTokenService.Modules
+namespace FunctionsCore.Modules
 {
     public class MyContextAccessor : IMyContextAccessor
     {

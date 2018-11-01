@@ -1,12 +1,15 @@
 using System;
 using System.Net.Http;
-using GenericSecurityTokenService.Functions;
 using GenericSecurityTokenService.Modules;
-using GenericSecurityTokenService.Security;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using System.Threading.Tasks;
+using FunctionsCore;
+using FunctionsCore.Functions;
+using FunctionsCore.Modules;
+using FunctionsCore.Security;
+
 
 namespace GenericSecurityTokenService
 {

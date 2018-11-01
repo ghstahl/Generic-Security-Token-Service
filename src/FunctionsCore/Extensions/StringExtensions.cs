@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace GenericSecurityTokenService.Extensions
+namespace FunctionsCore.Extensions
 {
     public static class StringExtensions
     {

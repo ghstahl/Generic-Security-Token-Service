@@ -1,7 +1,6 @@
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using GenericSecurityTokenService.Extensions;
 using GenericSecurityTokenService.Functions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;

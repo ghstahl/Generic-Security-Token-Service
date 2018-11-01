@@ -5,8 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using GenericSecurityTokenService.Modules;
-using GenericSecurityTokenService.Security;
+using FunctionsCore.Modules;
+
 using IdentityServer4.Endpoints.Results;
 
 namespace GenericSecurityTokenService.Functions
@@ -14,7 +14,6 @@ namespace GenericSecurityTokenService.Functions
     public class CoreIdentityFunction : IIdentityFunction
     {
         private IFunctionHttpContextAccessor _httpContextAccessor;
-        private ITokenValidator _tokenValidator;
 
         public CoreIdentityFunction(IFunctionHttpContextAccessor httpContextAccessor)
         {

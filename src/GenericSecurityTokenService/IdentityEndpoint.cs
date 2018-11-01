@@ -3,10 +3,10 @@ using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using GenericSecurityTokenService.Extensions;
+
 using GenericSecurityTokenService.Functions;
 using GenericSecurityTokenService.Modules;
-using GenericSecurityTokenService.Security;
+
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
