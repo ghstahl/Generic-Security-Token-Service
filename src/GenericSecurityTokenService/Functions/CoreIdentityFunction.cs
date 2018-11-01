@@ -25,6 +25,7 @@ namespace GenericSecurityTokenService.Functions
             if (_httpContextAccessor.HttpContext.User == null)
             {
                 _httpContextAccessor.HttpResponseMessage.StatusCode = (HttpStatusCode.Unauthorized);
+                return;
             }
 
             // Authentication boilerplate code end

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using GraphQL.Http;
@@ -12,6 +13,7 @@ namespace P7.GraphQLCore
         public GraphQLDocumentWriter(IGraphQLJsonDocumentWriterOptions options) : base(options)
         {
         }
+
 
         public string Write(object value)
         {

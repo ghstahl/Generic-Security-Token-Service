@@ -5,9 +5,11 @@ using System.Net.Http;
 using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using FunctionGraphQL.Functions;
 using FunctionsCore.Modules;
 using FunctionsCore.Security;
 using GenericSecurityTokenService.Functions;
+using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
@@ -16,9 +18,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
+using P7.GraphQLCore.Extensions;
+using P7.GraphQLCore.Stores;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
 
@@ -55,6 +60,7 @@ namespace GenericSecurityTokenService.Modules
                 .AddJsonFile($"appsettings.IdentityResources.json")
                 .AddJsonFile($"appsettings.ApiResources.json")
                 .AddJsonFile($"appsettings.keyVault.json")
+                .AddJsonFile($"appsettings.graphql.json")
                 .AddJsonFile($"appsettings.Clients.json");
             if (hostingEnvironment.IsDevelopment())
             {
@@ -72,7 +78,9 @@ namespace GenericSecurityTokenService.Modules
 
             services.AddSingleton<IAuthorityFunction, CoreAuthorityFunction>();
             services.AddSingleton<IIdentityFunction, CoreIdentityFunction>();
-         
+            services.AddSingleton<IGraphQLFunction, CoreGraphQLFunction>();
+
+
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddTransient<ILoggerFactory, LoggerFactory>();
 
@@ -136,6 +144,10 @@ namespace GenericSecurityTokenService.Modules
             services.AddSingleton<IHttpContextAccessor>(s => s.GetService<IFunctionHttpContextAccessor>());
             services.AddSingleton<IMyContextAccessor, MyContextAccessor>();
             services.AddSingleton<ITokenValidator, TokenValidator>();
+
+            builder.Services.TryAddSingleton<IGraphQLFieldAuthority, InMemoryGraphQLFieldAuthority>();
+            services.AddGraphQLCoreTypes();
+            services.AddGraphQLCoreExtensionGrantsTypes();
         }
     }
 }
