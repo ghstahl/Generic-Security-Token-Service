@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,17 +61,12 @@ namespace IdentityServer4.Endpoints.Results
             public string token_type { get; set; }
             public string refresh_token { get; set; }
         }
-
-        public async Task<ActionResult> BuildActionResultAsync()
+ 
+        public async Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
-            var dto = new ResultDto
-            {
-                id_token = Response.IdentityToken,
-                access_token = Response.AccessToken,
-                refresh_token = Response.RefreshToken,
-                expires_in = Response.AccessTokenLifetime,
-                token_type = OidcConstants.TokenResponse.BearerTokenType
-            };
+            var headers = httpResponseMessage.Headers;
+            headers.SetNoCache();
+
             var expando = new ExpandoObject();
             dynamic expandoDynamic = expando as dynamic;
             expandoDynamic.id_token = Response.IdentityToken;
@@ -84,13 +80,7 @@ namespace IdentityServer4.Endpoints.Results
                 IDictionary<string, object> dictionary_object = expando;
                 dictionary_object.AddDictionary(Response.Custom);
             }
-
-            var result = new JsonResult(dto)
-            {
-               // SetNoCache = true
-            };
-          
-            return result;
+            httpResponseMessage.Content = new JsonContent(expandoDynamic);
         }
     }
 }

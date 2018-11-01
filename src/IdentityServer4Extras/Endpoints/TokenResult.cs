@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using IdentityModel;
@@ -58,9 +59,12 @@ namespace IdentityServer4Extras.Endpoints
             public string token_type { get; set; }
             public string refresh_token { get; set; }
         }
-
-        public async Task<ActionResult> BuildActionResultAsync()
+ 
+        public async Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
+            var headers = httpResponseMessage.Headers;
+            headers.SetNoCache();
+
             var expando = new ExpandoObject();
             dynamic expandoDynamic = expando as dynamic;
             expandoDynamic.id_token = Response.IdentityToken;
@@ -74,12 +78,7 @@ namespace IdentityServer4Extras.Endpoints
                 IDictionary<string, object> dictionary_object = expando;
                 dictionary_object.AddDictionary(Response.Custom);
             }
-            var inner = new JsonResult(expandoDynamic);
-            var result = new CustomActionResult<JsonResult>(inner)
-            {
-                SetNoCache = true
-            };
-            return result;
+            httpResponseMessage.Content = new JsonContent(expandoDynamic);
         }
     }
 }

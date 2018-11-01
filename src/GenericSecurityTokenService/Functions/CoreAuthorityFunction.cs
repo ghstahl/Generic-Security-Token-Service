@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -22,7 +23,7 @@ using Newtonsoft.Json;
 namespace GenericSecurityTokenService.Functions
 {
     /// <summary>
-    /// This represents the function entity for hello.
+    /// This represents the function entity for CoreAuthorityFunction.
     /// </summary>
     public class CoreAuthorityFunction : IAuthorityFunction
     {
@@ -49,7 +50,7 @@ namespace GenericSecurityTokenService.Functions
             _logger = logger;
         }
 
-        public async Task<ActionResult> InvokeAsync()
+        public async Task InvokeAsync(HttpResponseMessage httpResponseMessage)
         {
             ActionResult result = null;
             try
@@ -76,7 +77,9 @@ namespace GenericSecurityTokenService.Functions
                         * interface to the endpoint results.
                         */
                         _logger.LogTrace("Invoking result: {type}", endpointResult2.GetType().FullName);
-                        result = await endpointResult2.BuildActionResultAsync();
+                        await endpointResult2.ExecuteAsync(httpResponseMessage);
+                        
+
                     }
 
                     /*
@@ -96,8 +99,12 @@ namespace GenericSecurityTokenService.Functions
                 _logger.LogCritical(ex, "Unhandled exception: {exception}", ex.Message);
                 throw;
             }
-           
-            return result ?? (result = new NotFoundResult());
+
+            httpResponseMessage.StatusCode = HttpStatusCode.NotFound;
         }
+
+       
     }
+
+     
 }

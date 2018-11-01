@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System;
+using System.Net.Http;
 using IdentityServer4.Extensions;
 using IdentityServer4.Configuration;
 using Microsoft.AspNetCore.Mvc;
@@ -88,6 +89,11 @@ namespace IdentityServer4.Endpoints.Results
         }
 
         public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
             throw new NotImplementedException();
         }

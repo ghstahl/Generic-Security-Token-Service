@@ -6,6 +6,7 @@ using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,19 +60,17 @@ namespace IdentityServer4.Endpoints.Results
 
             return context.Response.WriteJsonAsync(ObjectSerializer.ToJObject(Entries));
         }
-        public async Task<ActionResult> BuildActionResultAsync()
+        
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
-            int? setCache = null;
+            var headers = httpResponseMessage.Headers;
             if (MaxAge.HasValue && MaxAge.Value >= 0)
             {
-                setCache = MaxAge.Value;
+                headers.SetCache(MaxAge.Value);
             }
 
-            var result = new CustomActionResult<JsonResult>(new JsonResult(Entries))
-            {
-                SetCache = setCache
-            };
-            return result;
+            httpResponseMessage.Content = new JsonContent(Entries);
+            return Task.CompletedTask;
         }
     }
 }

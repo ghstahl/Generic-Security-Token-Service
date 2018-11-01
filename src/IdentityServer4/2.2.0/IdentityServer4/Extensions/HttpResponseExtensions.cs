@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Net.Http.Headers;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
@@ -27,6 +28,21 @@ namespace Microsoft.AspNetCore.Http
             await response.WriteAsync(json);
         }
 
+        public static void SetCache(this HttpResponseHeaders responseHeaders, int maxAge)
+        {
+            if (maxAge == 0)
+            {
+                responseHeaders.SetNoCache();
+            }
+            else if (maxAge > 0)
+            {
+                if (!responseHeaders.Contains("Cache-Control"))
+                {
+                    responseHeaders.Add("Cache-Control", $"max-age={maxAge}");
+                }
+            }
+        }
+
         public static void SetCache(this HttpResponse response, int maxAge)
         {
             if (maxAge == 0)
@@ -41,7 +57,7 @@ namespace Microsoft.AspNetCore.Http
                 }
             }
         }
-
+        
         public static void SetNoCache(this HttpResponse response)
         {
             if (!response.Headers.ContainsKey("Cache-Control"))
@@ -53,7 +69,17 @@ namespace Microsoft.AspNetCore.Http
                 response.Headers.Add("Pragma", "no-cache");
             }
         }
-
+        public static void SetNoCache(this HttpResponseHeaders responseHeaders)
+        {
+            if (!responseHeaders.Contains("Cache-Control"))
+            {
+                responseHeaders.Add("Cache-Control", "no-store, no-cache, max-age=0");
+            }
+            if (!responseHeaders.Contains("Pragma"))
+            {
+                responseHeaders.Add("Pragma", "no-cache");
+            }
+        }
         public static async Task WriteHtmlAsync(this HttpResponse response, string html)
         {
             response.ContentType = "text/html; charset=UTF-8";

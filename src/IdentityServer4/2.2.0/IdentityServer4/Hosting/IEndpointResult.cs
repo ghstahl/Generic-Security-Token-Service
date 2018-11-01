@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Net.Http;
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,10 +15,11 @@ namespace IdentityServer4.Hosting
     public interface IEndpointResult2
     {
         /// <summary>
-        /// Builds an ActionResult
+        /// Executes the result.
         /// </summary>
+        /// <param name="httpResponseMessage">The HttpResponseMessage.</param>
         /// <returns></returns>
-        Task<ActionResult> BuildActionResultAsync();
+        Task ExecuteAsync(HttpResponseMessage httpResponseMessage);
     }
     /// <summary>
     /// Endpoint result

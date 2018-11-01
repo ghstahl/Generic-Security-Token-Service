@@ -7,6 +7,7 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,6 +64,12 @@ namespace IdentityServer4.Endpoints.Results
         {
             var result = new JsonResult(new { keys = WebKeys });
             return result;
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
+        {
+            httpResponseMessage.Content = new JsonContent(new { keys = WebKeys });
+            return Task.CompletedTask;
         }
     }
 }

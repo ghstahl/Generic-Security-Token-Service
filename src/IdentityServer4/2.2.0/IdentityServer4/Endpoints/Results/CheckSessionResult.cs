@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -352,6 +353,11 @@ if (typeof define == 'function' && define.amd) define([], function() { return Sh
 ";
 
         public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
             throw new System.NotImplementedException();
         }

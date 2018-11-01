@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net;
+using System.Net.Http;
 using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using IdentityModel;
@@ -54,27 +56,24 @@ namespace IdentityServer4Extras.Endpoints
             public string error { get; set; }
             public string error_description { get; set; }
         }
-
-        public async Task<ActionResult> BuildActionResultAsync()
+ 
+        public async Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
+            var headers = httpResponseMessage.Headers;
+            httpResponseMessage.StatusCode = HttpStatusCode.BadRequest;
+            headers.SetNoCache();
+
             var expando = new ExpandoObject();
             dynamic expandoDynamic = expando as dynamic;
             expandoDynamic.error = Response.Error;
             expandoDynamic.error_description = Response.ErrorDescription;
-
-            
+ 
             if (!Response.Custom.IsNullOrEmpty())
             {
                 IDictionary<string, object> dictionary_object = expando;
                 dictionary_object.AddDictionary(Response.Custom);
             }
-            var inner = new JsonResult(expandoDynamic);
-
-            var result = new CustomActionResult<JsonResult>(inner)
-            {
-                SetNoCache = true
-            };
-            return result;
+            httpResponseMessage.Content = new JsonContent(expandoDynamic);
         }
     }
 }

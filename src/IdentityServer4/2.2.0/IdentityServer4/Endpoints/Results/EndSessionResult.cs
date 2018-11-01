@@ -12,6 +12,7 @@ using IdentityServer4.Models;
 using IdentityServer4.Stores;
 using IdentityServer4.Extensions;
 using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -97,6 +98,11 @@ namespace IdentityServer4.Endpoints.Results
         }
 
         public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
             throw new NotImplementedException();
         }

@@ -3,6 +3,9 @@
 
 
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using Microsoft.Extensions.Primitives;
@@ -46,33 +49,37 @@ namespace IdentityServer4.Endpoints.Results
 
             return Task.CompletedTask;
         }
-
-        public async Task<ActionResult> BuildActionResultAsync()
+ 
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
-           
-            int? statusCode = null;
+            var headers = httpResponseMessage.Headers;
+            httpResponseMessage.StatusCode = HttpStatusCode.Unauthorized;
+            headers.SetNoCache();
+
             if (Constants.ProtectedResourceErrorStatusCodes.ContainsKey(Error))
             {
-                statusCode = Constants.ProtectedResourceErrorStatusCodes[Error];
+                httpResponseMessage.StatusCode = (HttpStatusCode)Constants.ProtectedResourceErrorStatusCodes[Error];
             }
-            Dictionary<string, string> headers = new Dictionary<string,string>();
+
             var errorString = string.Format($"error=\"{Error}\"");
+        
             if (ErrorDescription.IsMissing())
             {
-                headers.Add("WwwAuthentication", new StringValues(new[] { "Bearer", errorString }));
+                foreach (var sv in new StringValues(new[] { "Bearer", errorString }))
+                {
+                    headers.WwwAuthenticate.Add(new AuthenticationHeaderValue(sv));
+                }
             }
             else
             {
                 var errorDescriptionString = string.Format($"error_description=\"{ErrorDescription}\"");
-                headers.Add("WwwAuthentication", new StringValues(new[] { "Bearer", errorString, errorDescriptionString }));
+                foreach (var sv in new StringValues(new[] { "Bearer", errorString, errorDescriptionString }))
+                {
+                    headers.WwwAuthenticate.Add(new AuthenticationHeaderValue(sv));
+                }
             }
-            var result = new CustomActionResult<ActionResult>(null)
-            {
-                StatusCode = statusCode,
-                SetNoCache = true,
-                Headers = headers
-            };
-            return result;
+
+            return Task.CompletedTask;
         }
     }
 }

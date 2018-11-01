@@ -5,6 +5,7 @@
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
@@ -43,17 +44,12 @@ namespace IdentityServer4.Endpoints.Results
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             return context.Response.WriteJsonAsync(new { error = Error });
         }
-
-        public async Task<ActionResult> BuildActionResultAsync()
+ 
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
-            var inner = new JsonResult(new { error = Error });
-
-            var result = new CustomActionResult<JsonResult>(inner)
-            {
-                StatusCode = (int)HttpStatusCode.BadRequest,
-              
-            };
-            return result;
+            httpResponseMessage.StatusCode = HttpStatusCode.BadRequest;
+            httpResponseMessage.Content = new JsonContent(new { error = Error });
+            return Task.CompletedTask;
         }
     }
 }

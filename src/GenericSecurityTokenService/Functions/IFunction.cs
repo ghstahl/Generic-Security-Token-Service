@@ -13,6 +13,6 @@ namespace GenericSecurityTokenService.Functions
         /// <summary>
         /// Invokes the function.
         /// </summary>
-        Task<ActionResult> InvokeAsync();
+        Task InvokeAsync(System.Net.Http.HttpResponseMessage httpResponseMessage);
     }
 }

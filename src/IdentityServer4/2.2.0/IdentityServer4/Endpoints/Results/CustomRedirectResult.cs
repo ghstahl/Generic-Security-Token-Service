@@ -3,6 +3,7 @@
 
 
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using IdentityServer4.Validation;
@@ -84,6 +85,11 @@ namespace IdentityServer4.Endpoints.Results
         }
 
         public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
             throw new NotImplementedException();
         }

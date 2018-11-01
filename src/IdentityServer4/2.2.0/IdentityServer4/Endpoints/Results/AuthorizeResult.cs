@@ -10,6 +10,7 @@ using IdentityModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Net.Http;
 using IdentityServer4.Services;
 using IdentityServer4.Configuration;
 using IdentityServer4.Stores;
@@ -202,6 +203,11 @@ namespace IdentityServer4.Endpoints.Results
         }
 
         public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
         {
             throw new NotImplementedException();
         }

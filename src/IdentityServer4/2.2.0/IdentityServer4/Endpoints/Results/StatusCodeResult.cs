@@ -4,6 +4,7 @@
 
 using System.Threading.Tasks;
 using System.Net;
+using System.Net.Http;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,12 @@ namespace IdentityServer4.Endpoints.Results
         {
             var result = new Microsoft.AspNetCore.Mvc.StatusCodeResult(StatusCode);
             return result;
+        }
+
+        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
+        {
+            httpResponseMessage.StatusCode = (HttpStatusCode)StatusCode;
+            return Task.CompletedTask;
         }
     }
 }

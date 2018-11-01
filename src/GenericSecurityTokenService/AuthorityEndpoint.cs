@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using GenericSecurityTokenService.Extensions;
@@ -47,7 +48,7 @@ namespace GenericSecurityTokenService
             myContextAccessor.MyContext.Dictionary["tt"] = Guid.NewGuid().ToString();
         }
         [FunctionName("authority")]
-        public static async Task<IActionResult> Run(
+        public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "authority/{*all}")]
             HttpRequestMessage reqMessage,
             HttpRequest req,
@@ -59,8 +60,10 @@ namespace GenericSecurityTokenService
           
             var factory = GetFactory(context);
             var functionHandler = factory.Create<IAuthorityFunction>();
-            var result = await functionHandler.InvokeAsync();
-            return result;
+            var httpResponseMessage = reqMessage.CreateResponse();
+            await functionHandler.InvokeAsync(httpResponseMessage);
+
+            return httpResponseMessage;
         }
     }
 }
