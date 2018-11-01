@@ -1,10 +1,12 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using GenericSecurityTokenService.Extensions;
 using GenericSecurityTokenService.Functions;
 using GenericSecurityTokenService.Modules;
+using GenericSecurityTokenService.Security;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
@@ -16,7 +18,7 @@ using ExecutionContext = Microsoft.Azure.WebJobs.ExecutionContext;
 
 namespace GenericSecurityTokenService
 {
-    public static class AuthorityEndpoint
+    public static class IdentityEndpoint
     {
         private static IFunctionFactory _factory;
 
@@ -25,18 +27,18 @@ namespace GenericSecurityTokenService
             return _factory ?? (_factory = new CoreFunctionFactory(new CoreAppModule(context.FunctionAppDirectory)));
         }
 
-        private static void EstablishHttpContextAccessor(
+        private static IHttpContextAccessor EstablishHttpContextAccessor(
             ExecutionContext context,
             HttpRequestMessage reqMessage,
             HttpRequest req
         )
         {
             var factory = GetFactory(context);
-            var httpAccessor = factory.ServiceProvider.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
+            var httpContextAccessor = factory.ServiceProvider.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
             var response = new MyHttpResponse(req);
             var httpContext = new MyHttpContext(factory.ServiceProvider, req, response);
-            httpContext.SetIdentityServerBasePath("/api/authority");
-            httpAccessor.HttpContext = httpContext;
+            httpContextAccessor.HttpContext = httpContext;
+            return httpContextAccessor;
         }
 
         private static void EstablishContextAccessor(
@@ -48,23 +50,28 @@ namespace GenericSecurityTokenService
             myContextAccessor.MyContext = new MyContext();
             myContextAccessor.MyContext.Dictionary["tt"] = Guid.NewGuid().ToString();
         }
-        [FunctionName("authority")]
+        [FunctionName("identity")]
         public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "authority/{*all}")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "identity")]
             HttpRequestMessage reqMessage,
             HttpRequest req,
             ExecutionContext context,
             ILogger log)
         {
-            EstablishHttpContextAccessor(context, reqMessage, req);
+            var httpContextAccessor = EstablishHttpContextAccessor(context,reqMessage,req);
             EstablishContextAccessor(context);
-          
-            var factory = GetFactory(context);
-            var functionHandler = factory.Create<IAuthorityFunction>();
-            var httpResponseMessage = reqMessage.CreateResponse();
-            await functionHandler.InvokeAsync(httpResponseMessage);
 
-            return httpResponseMessage;
+            var factory = GetFactory(context);
+            var tokenValidator = factory.ServiceProvider.GetService(typeof(ITokenValidator)) as ITokenValidator;
+            httpContextAccessor.HttpContext.User = await tokenValidator.ValidateTokenAsync(reqMessage.Headers.Authorization); ;
+
+            if (httpContextAccessor.HttpContext.User == null)
+            {
+                return reqMessage.CreateResponse(HttpStatusCode.Unauthorized);
+            }
+            // Authentication boilerplate code end
+
+            return reqMessage.CreateResponse(HttpStatusCode.OK, "Hello " + httpContextAccessor.HttpContext.User.Identity.Name);
         }
     }
 }

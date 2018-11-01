@@ -69,9 +69,15 @@ namespace IdentityServer4.Endpoints.Results
 
             var expando = new ExpandoObject();
             dynamic expandoDynamic = expando as dynamic;
-            expandoDynamic.id_token = Response.IdentityToken;
             expandoDynamic.access_token = Response.AccessToken;
-            expandoDynamic.refresh_token = Response.RefreshToken;
+            if (!string.IsNullOrEmpty(Response.IdentityToken))
+            {
+                expandoDynamic.id_token = Response.IdentityToken;
+            }
+            if (!string.IsNullOrEmpty(Response.RefreshToken))
+            {
+                expandoDynamic.refresh_token = Response.RefreshToken;
+            }
             expandoDynamic.expires_in = Response.AccessTokenLifetime;
             expandoDynamic.token_type = OidcConstants.TokenResponse.BearerTokenType;
 

@@ -100,6 +100,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AzureFunctions", "AzureFunc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericSecurityTokenService", "GenericSecurityTokenService\GenericSecurityTokenService.csproj", "{615211AD-92E0-430F-B9B0-C4476E9048DE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Console_ExtensionGrantClient", "Console_ExtensionGrantClient\Console_ExtensionGrantClient.csproj", "{D22A258E-56D5-414E-A745-DBE93BDE744B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -238,6 +240,10 @@ Global
 		{615211AD-92E0-430F-B9B0-C4476E9048DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{615211AD-92E0-430F-B9B0-C4476E9048DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{615211AD-92E0-430F-B9B0-C4476E9048DE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D22A258E-56D5-414E-A745-DBE93BDE744B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D22A258E-56D5-414E-A745-DBE93BDE744B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D22A258E-56D5-414E-A745-DBE93BDE744B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D22A258E-56D5-414E-A745-DBE93BDE744B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -271,6 +277,7 @@ Global
 		{8BE80AAE-0268-41D5-8362-4D917BFFC13D} = {019B24FC-5A59-45CC-B07E-2399CF53AC53}
 		{CD226B99-8B8D-41E5-A807-ACB29019A532} = {8BE80AAE-0268-41D5-8362-4D917BFFC13D}
 		{615211AD-92E0-430F-B9B0-C4476E9048DE} = {3405542D-E135-4ACB-9B5C-A52A696941A6}
+		{D22A258E-56D5-414E-A745-DBE93BDE744B} = {3405542D-E135-4ACB-9B5C-A52A696941A6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}

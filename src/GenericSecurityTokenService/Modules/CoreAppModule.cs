@@ -6,6 +6,7 @@ using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using GenericSecurityTokenService.Functions;
+using GenericSecurityTokenService.Security;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
@@ -129,7 +130,7 @@ namespace GenericSecurityTokenService.Modules
             services.AddMemoryCache();
             services.AddSingleton<IHttpContextAccessor, MyHttpContextAccessor>();
             services.AddSingleton<IMyContextAccessor, MyContextAccessor>();
-
+            services.AddSingleton<ITokenValidator, TokenValidator>();
         }
     }
 }

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Console_ExtensionGrantClient": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ISSUER": "http://localhost:7071/api/authority"
+      }
+    }
+  }
+}

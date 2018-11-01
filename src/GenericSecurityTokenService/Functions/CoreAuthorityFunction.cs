@@ -53,6 +53,7 @@ namespace GenericSecurityTokenService.Functions
         public async Task InvokeAsync(HttpResponseMessage httpResponseMessage)
         {
             ActionResult result = null;
+            bool executed = false;
             try
             {
                 _logger.LogInformation("C# HTTP trigger Authority function processed a request.");
@@ -78,7 +79,7 @@ namespace GenericSecurityTokenService.Functions
                         */
                         _logger.LogTrace("Invoking result: {type}", endpointResult2.GetType().FullName);
                         await endpointResult2.ExecuteAsync(httpResponseMessage);
-                        
+                        executed = true;
 
                     }
 
@@ -100,11 +101,10 @@ namespace GenericSecurityTokenService.Functions
                 throw;
             }
 
-            httpResponseMessage.StatusCode = HttpStatusCode.NotFound;
+            if (!executed)
+            {
+                httpResponseMessage.StatusCode = HttpStatusCode.NotFound;
+            }
         }
-
-       
     }
-
-     
 }
