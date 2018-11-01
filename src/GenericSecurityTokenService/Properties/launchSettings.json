@@ -3,7 +3,7 @@
     "GenericSecurityTokenService": {
       "commandName": "Project",
       "environmentVariables": {
-        "ISSUER": "http://localhost:7071/api/authority",
+        "ISSUERdd": "http://localhost:7071/api/authority",
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }

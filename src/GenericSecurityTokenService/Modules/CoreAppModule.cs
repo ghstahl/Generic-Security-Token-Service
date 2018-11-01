@@ -62,6 +62,8 @@ namespace GenericSecurityTokenService.Modules
             configurationBuilder.AddEnvironmentVariables();
             var config = configurationBuilder.Build();
 
+            services.AddSingleton<IConfiguration>(config);
+
             bool useRedis = Convert.ToBoolean(config["appOptions:redis:useRedis"]);
             bool useKeyVault = Convert.ToBoolean(config["appOptions:keyVault:useKeyVault"]);
 

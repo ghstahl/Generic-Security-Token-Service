@@ -4,15 +4,18 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GenericSecurityTokenService.Security
 {
+    
     public class TokenValidator : ITokenValidator
     {
         private IConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
+        private IConfiguration _configuration;
 
         private IConfigurationManager<OpenIdConnectConfiguration> ConfigurationManager
         {
@@ -20,7 +23,7 @@ namespace GenericSecurityTokenService.Security
             {
                 if (_configurationManager == null)
                 {
-                    var issuer = Environment.GetEnvironmentVariable("ISSUER");
+                    var issuer = _configuration["ISSUER"];
 
                     var documentRetriever = new HttpDocumentRetriever {RequireHttps = issuer.StartsWith("https://")};
 
@@ -35,6 +38,11 @@ namespace GenericSecurityTokenService.Security
 
             }
         }
+
+        public TokenValidator(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
         public async Task<ClaimsPrincipal> ValidateTokenAsync(AuthenticationHeaderValue value)
         {
             if (value?.Scheme != "Bearer")
@@ -42,7 +50,7 @@ namespace GenericSecurityTokenService.Security
                 return null;
             }
             var config = await ConfigurationManager.GetConfigurationAsync(CancellationToken.None);
-            var audience = Environment.GetEnvironmentVariable("AUDIENCE");
+            var audience =_configuration["AUDIENCE"];
 
             var validationParameter = new TokenValidationParameters()
             {
