@@ -16,21 +16,13 @@ namespace GenericSecurityTokenService.Functions
         private IFunctionHttpContextAccessor _httpContextAccessor;
         private ITokenValidator _tokenValidator;
 
-        public CoreIdentityFunction(
-            IFunctionHttpContextAccessor httpContextAccessor,
-            ITokenValidator tokenValidator)
+        public CoreIdentityFunction(IFunctionHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            _tokenValidator = tokenValidator;
         }
 
         public async Task InvokeAsync()
         {
-
-            _httpContextAccessor.HttpContext.User =
-                await _tokenValidator.ValidateTokenAsync(_httpContextAccessor.HttpRequestMessage.Headers.Authorization);
-            ;
-
             if (_httpContextAccessor.HttpContext.User == null)
             {
                 _httpContextAccessor.HttpResponseMessage.StatusCode = (HttpStatusCode.Unauthorized);

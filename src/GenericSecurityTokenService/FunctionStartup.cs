@@ -2,9 +2,11 @@ using System;
 using System.Net.Http;
 using GenericSecurityTokenService.Functions;
 using GenericSecurityTokenService.Modules;
+using GenericSecurityTokenService.Security;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
+using System.Threading.Tasks;
 
 namespace GenericSecurityTokenService
 {
@@ -34,6 +36,16 @@ namespace GenericSecurityTokenService
             return httpAccessor;
         }
 
+        public static async Task EstablishIdentityAsync(
+            ExecutionContext context, IFunctionHttpContextAccessor httpContextAccessor)
+        {
+     
+            var factory = GetFactory(context);
+            var tokenValidator = factory.ServiceProvider.GetService(typeof(ITokenValidator)) as ITokenValidator;
+
+            httpContextAccessor.HttpContext.User =
+                await tokenValidator.ValidateTokenAsync(httpContextAccessor.HttpRequestMessage.Headers.Authorization);
+        }
         public static void EstablishContextAccessor(
             ExecutionContext context)
         {
