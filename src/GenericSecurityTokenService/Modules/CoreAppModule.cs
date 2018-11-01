@@ -66,7 +66,10 @@ namespace GenericSecurityTokenService.Modules
             bool useKeyVault = Convert.ToBoolean(config["appOptions:keyVault:useKeyVault"]);
 
             services.AddSingleton<HttpClient>();
+
             services.AddSingleton<IAuthorityFunction, CoreAuthorityFunction>();
+            services.AddSingleton<IIdentityFunction, CoreIdentityFunction>();
+         
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddTransient<ILoggerFactory, LoggerFactory>();
 
@@ -125,10 +128,9 @@ namespace GenericSecurityTokenService.Modules
             endpoints.ForEach(item => item.Path = item.Path.Value.Replace("connect", "api/Authority/connect"));
             endpoints.ForEach(item => item.Path = item.Path.Value.Replace(".well-known/openid-configuration", "api/Authority/.well-known/openid-configuration"));//
 
-
-
             services.AddMemoryCache();
-            services.AddSingleton<IHttpContextAccessor, MyHttpContextAccessor>();
+            services.AddSingleton<IFunctionHttpContextAccessor, MyHttpContextAccessor>();
+            services.AddSingleton<IHttpContextAccessor>(s => s.GetService<IFunctionHttpContextAccessor>());
             services.AddSingleton<IMyContextAccessor, MyContextAccessor>();
             services.AddSingleton<ITokenValidator, TokenValidator>();
         }

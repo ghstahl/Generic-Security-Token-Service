@@ -20,36 +20,6 @@ namespace GenericSecurityTokenService
 {
     public static class IdentityEndpoint
     {
-        private static IFunctionFactory _factory;
-
-        private static IFunctionFactory GetFactory(ExecutionContext context)
-        {
-            return _factory ?? (_factory = new CoreFunctionFactory(new CoreAppModule(context.FunctionAppDirectory)));
-        }
-
-        private static IHttpContextAccessor EstablishHttpContextAccessor(
-            ExecutionContext context,
-            HttpRequestMessage reqMessage,
-            HttpRequest req
-        )
-        {
-            var factory = GetFactory(context);
-            var httpContextAccessor = factory.ServiceProvider.GetService(typeof(IHttpContextAccessor)) as IHttpContextAccessor;
-            var response = new MyHttpResponse(req);
-            var httpContext = new MyHttpContext(factory.ServiceProvider, req, response);
-            httpContextAccessor.HttpContext = httpContext;
-            return httpContextAccessor;
-        }
-
-        private static void EstablishContextAccessor(
-            ExecutionContext context)
-        {
-            var factory = GetFactory(context);
-            var myContextAccessor =
-                factory.ServiceProvider.GetService(typeof(IMyContextAccessor)) as IMyContextAccessor;
-            myContextAccessor.MyContext = new MyContext();
-            myContextAccessor.MyContext.Dictionary["tt"] = Guid.NewGuid().ToString();
-        }
         [FunctionName("identity")]
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "identity")]
@@ -58,10 +28,16 @@ namespace GenericSecurityTokenService
             ExecutionContext context,
             ILogger log)
         {
-            var httpContextAccessor = EstablishHttpContextAccessor(context,reqMessage,req);
-            EstablishContextAccessor(context);
+            var httpContextAccessor = FunctionStartup.EstablishHttpContextAccessor(context, reqMessage, req);
+            FunctionStartup.EstablishContextAccessor(context);
 
-            var factory = GetFactory(context);
+            var factory = FunctionStartup.GetFactory(context);
+            var functionHandler = factory.Create<IIdentityFunction>();
+            await functionHandler.InvokeAsync();
+
+            return httpContextAccessor.HttpResponseMessage;
+            /*
+
             var tokenValidator = factory.ServiceProvider.GetService(typeof(ITokenValidator)) as ITokenValidator;
             httpContextAccessor.HttpContext.User = await tokenValidator.ValidateTokenAsync(reqMessage.Headers.Authorization); ;
 
@@ -72,6 +48,7 @@ namespace GenericSecurityTokenService
             // Authentication boilerplate code end
 
             return reqMessage.CreateResponse(HttpStatusCode.OK, "Hello " + httpContextAccessor.HttpContext.User.Identity.Name);
+            */
         }
     }
 }

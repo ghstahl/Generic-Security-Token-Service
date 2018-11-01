@@ -1,8 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs.Host;
-using Microsoft.Extensions.Logging;
-
 namespace GenericSecurityTokenService.Functions
 {
     /// <summary>
@@ -13,6 +9,6 @@ namespace GenericSecurityTokenService.Functions
         /// <summary>
         /// Invokes the function.
         /// </summary>
-        Task InvokeAsync(System.Net.Http.HttpResponseMessage httpResponseMessage);
+        Task InvokeAsync();
     }
 }

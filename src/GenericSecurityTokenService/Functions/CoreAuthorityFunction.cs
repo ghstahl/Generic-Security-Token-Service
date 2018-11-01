@@ -30,12 +30,12 @@ namespace GenericSecurityTokenService.Functions
         private IEndpointRouter _endpointRouter;
         private IServiceProvider _serviceProvider;
         private IMyContextAccessor _myContextAccessor;
-        private IHttpContextAccessor _httpContextAccessor;
+        private IFunctionHttpContextAccessor _httpContextAccessor;
         private IEventService _events;
         private ILogger _logger;
 
         public CoreAuthorityFunction(
-            IHttpContextAccessor httpContextAccessor,
+            IFunctionHttpContextAccessor httpContextAccessor,
             IMyContextAccessor myContextAccessor,
             IServiceProvider serviceProvider,
             IEventService events,
@@ -50,7 +50,7 @@ namespace GenericSecurityTokenService.Functions
             _logger = logger;
         }
 
-        public async Task InvokeAsync(HttpResponseMessage httpResponseMessage)
+        public async Task InvokeAsync()
         {
             ActionResult result = null;
             bool executed = false;
@@ -78,7 +78,7 @@ namespace GenericSecurityTokenService.Functions
                         * interface to the endpoint results.
                         */
                         _logger.LogTrace("Invoking result: {type}", endpointResult2.GetType().FullName);
-                        await endpointResult2.ExecuteAsync(httpResponseMessage);
+                        await endpointResult2.ExecuteAsync(_httpContextAccessor.HttpResponseMessage);
                         executed = true;
 
                     }
@@ -103,7 +103,7 @@ namespace GenericSecurityTokenService.Functions
 
             if (!executed)
             {
-                httpResponseMessage.StatusCode = HttpStatusCode.NotFound;
+                _httpContextAccessor.HttpResponseMessage.StatusCode = HttpStatusCode.NotFound;
             }
         }
     }
