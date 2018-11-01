@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -15,7 +16,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for the jwks document
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class JsonWebKeysResult : IEndpointResult, IEndpointResult2
+    public class JsonWebKeysResult : IEndpointResult
     {
         /// <summary>
         /// Gets the web keys.
@@ -58,7 +59,10 @@ namespace IdentityServer4.Endpoints.Results
 
             return context.Response.WriteJsonAsync(new { keys = WebKeys });
         }
-
-        public object Value => new {keys = WebKeys};
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            var result = new JsonResult(new { keys = WebKeys });
+            return result;
+        }
     }
 }

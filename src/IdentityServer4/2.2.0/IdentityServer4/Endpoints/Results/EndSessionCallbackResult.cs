@@ -12,6 +12,7 @@ using System.Net;
 using System;
 using IdentityServer4.Extensions;
 using IdentityServer4.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -84,6 +85,11 @@ namespace IdentityServer4.Endpoints.Results
             }
 
             return $"<!DOCTYPE html><html><style>iframe{{display:none;width:0;height:0;}}</style><body>{framesHtml}</body></html>";
+        }
+
+        public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

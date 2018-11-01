@@ -1,8 +1,8 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using GenericSecurityTokenService.Extensions;
 using GenericSecurityTokenService.Functions;
-using GenericSecurityTokenService.Functions.FunctionOptions;
 using GenericSecurityTokenService.Modules;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
@@ -49,17 +49,17 @@ namespace GenericSecurityTokenService
         [FunctionName("authority")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "authority/{*all}")]
+            HttpRequestMessage reqMessage,
             HttpRequest req,
             ExecutionContext context,
             ILogger log)
         {
             EstablishHttpContextAccessor(context, req);
             EstablishContextAccessor(context);
-
+          
             var factory = GetFactory(context);
             var functionHandler = factory.Create<IAuthorityFunction>();
             var result = await functionHandler.InvokeAsync();
-            
             return result;
         }
     }

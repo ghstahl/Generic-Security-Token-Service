@@ -8,11 +8,14 @@ using IdentityServer4.Hosting;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenResult : IEndpointResult, IEndpointResult2
+    internal class TokenResult : IEndpointResult
     {
         public TokenResponse Response { get; set; }
 
@@ -58,7 +61,7 @@ namespace IdentityServer4.Endpoints.Results
             public string refresh_token { get; set; }
         }
 
-        public Task<string> BuildResponseAsync(HttpContext context)
+        public async Task<ActionResult> BuildActionResultAsync()
         {
             var dto = new ResultDto
             {
@@ -68,24 +71,26 @@ namespace IdentityServer4.Endpoints.Results
                 expires_in = Response.AccessTokenLifetime,
                 token_type = OidcConstants.TokenResponse.BearerTokenType
             };
-            var json = ObjectSerializer.ToString(ObjectSerializer.ToJObject(dto));
-            return Task.FromResult(json);
-        }
+            var expando = new ExpandoObject();
+            dynamic expandoDynamic = expando as dynamic;
+            expandoDynamic.id_token = Response.IdentityToken;
+            expandoDynamic.access_token = Response.AccessToken;
+            expandoDynamic.refresh_token = Response.RefreshToken;
+            expandoDynamic.expires_in = Response.AccessTokenLifetime;
+            expandoDynamic.token_type = OidcConstants.TokenResponse.BearerTokenType;
 
-        public object Value
-        {
-            get
+            if (!Response.Custom.IsNullOrEmpty())
             {
-                var dto = new ResultDto
-                {
-                    id_token = Response.IdentityToken,
-                    access_token = Response.AccessToken,
-                    refresh_token = Response.RefreshToken,
-                    expires_in = Response.AccessTokenLifetime,
-                    token_type = OidcConstants.TokenResponse.BearerTokenType
-                };
-                return dto;
+                IDictionary<string, object> dictionary_object = expando;
+                dictionary_object.AddDictionary(Response.Custom);
             }
+
+            var result = new JsonResult(dto)
+            {
+               // SetNoCache = true
+            };
+          
+            return result;
         }
     }
 }

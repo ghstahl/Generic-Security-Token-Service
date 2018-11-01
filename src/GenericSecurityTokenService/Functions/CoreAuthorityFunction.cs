@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
-using GenericSecurityTokenService.Functions.FunctionOptions;
 using GenericSecurityTokenService.Modules;
 using IdentityServer4;
 using IdentityServer4.Events;
@@ -77,7 +76,7 @@ namespace GenericSecurityTokenService.Functions
                         * interface to the endpoint results.
                         */
                         _logger.LogTrace("Invoking result: {type}", endpointResult2.GetType().FullName);
-                        result = new JsonResult(endpointResult2.Value);
+                        result = await endpointResult2.BuildActionResultAsync();
                     }
 
                     /*
@@ -97,7 +96,7 @@ namespace GenericSecurityTokenService.Functions
                 _logger.LogCritical(ex, "Unhandled exception: {exception}", ex.Message);
                 throw;
             }
-
+           
             return result ?? (result = new NotFoundResult());
         }
     }

@@ -5,6 +5,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Reflection;
 
 #pragma warning disable 1591
@@ -29,6 +30,25 @@ namespace IdentityServer4.Extensions
                 else
                 {
                     jobject.Add(new JProperty(item.Key, item.Value));
+                }
+            }
+        }
+        public static void AddDictionary(this IDictionary<string, object> expando, Dictionary<string, object> dictionary)
+        {
+            foreach (var item in dictionary)
+            {
+                if (expando.TryGetValue(item.Key, out _))
+                {
+                    throw new Exception("Item does already exist - cannot add it via a custom entry: " + item.Key);
+                }
+
+                if (item.Value.GetType().GetTypeInfo().IsClass)
+                {
+                    expando.Add(item.Key, JToken.FromObject(item.Value));
+                }
+                else
+                {
+                    expando.Add(item.Key, item.Value);
                 }
             }
         }

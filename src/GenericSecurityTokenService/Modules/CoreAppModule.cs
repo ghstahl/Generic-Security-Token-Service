@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading;
 using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
@@ -16,7 +14,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
@@ -25,74 +22,6 @@ using ProfileServiceManager.Extensions;
 
 namespace GenericSecurityTokenService.Modules
 {
-    public class MyHttpContextAccessor : IHttpContextAccessor
-    {
-        private static AsyncLocal<(string traceIdentifier, HttpContext context)> _httpContextCurrent 
-            = new AsyncLocal<(string traceIdentifier, HttpContext context)>();
-
-        public HttpContext HttpContext
-        {
-            get
-            {
-                var value = _httpContextCurrent.Value;
-                // Only return the context if the stored request id matches the stored trace identifier
-                // context.TraceIdentifier is cleared by HttpContextFactory.Dispose.
-                return value.traceIdentifier == value.context?.TraceIdentifier ? value.context : null;
-            }
-            set
-            {
-                _httpContextCurrent.Value = (value?.TraceIdentifier, value);
-            }
-        }
-    }
-
-    public class MyContext
-    {
-        public string TraceIdentifier { get; set; }
-        private Dictionary<string, string> _dictionary;
-
-        public Dictionary<string, string> Dictionary
-        {
-            get { return _dictionary ?? (_dictionary = new Dictionary<string, string>()); }
-        }
-    }
-    public interface IMyContextAccessor
-    {
-        MyContext MyContext { get; set; }
-    }
-    public class MyContextAccessor : IMyContextAccessor
-    {
-        private static AsyncLocal<(string traceIdentifier, MyContext context)> _contextCurrent
-            = new AsyncLocal<(string traceIdentifier, MyContext context)>();
-
-        public MyContext MyContext
-        {
-            get
-            {
-                var value = _contextCurrent.Value;
-                // Only return the context if the stored request id matches the stored trace identifier
-                // context.TraceIdentifier is cleared by HttpContextFactory.Dispose.
-                return value.traceIdentifier == value.context?.TraceIdentifier ? value.context : null;
-            }
-            set
-            {
-                _contextCurrent.Value = (value?.TraceIdentifier, value);
-            }
-        }
-    }
-
-    public class MyHostingEnvironment : IHostingEnvironment
-    {
-        public string EnvironmentName { get; set; }
-        public string ApplicationName { get; set; }
-        public string WebRootPath { get; set; }
-        public IFileProvider WebRootFileProvider { get; set; }
-        public string ContentRootPath { get; set; }
-        public IFileProvider ContentRootFileProvider { get; set; }
-    }
-
-     
- 
     /// <summary>
     /// This represents the module entity for dependencies.
     /// </summary>

@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Extensions;
 using IdentityServer4.Hosting;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4Extras.Endpoints
 {
@@ -52,6 +57,29 @@ namespace IdentityServer4Extras.Endpoints
             public int expires_in { get; set; }
             public string token_type { get; set; }
             public string refresh_token { get; set; }
+        }
+
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            var expando = new ExpandoObject();
+            dynamic expandoDynamic = expando as dynamic;
+            expandoDynamic.id_token = Response.IdentityToken;
+            expandoDynamic.access_token = Response.AccessToken;
+            expandoDynamic.refresh_token = Response.RefreshToken;
+            expandoDynamic.expires_in = Response.AccessTokenLifetime;
+            expandoDynamic.token_type = OidcConstants.TokenResponse.BearerTokenType;
+
+            if (!Response.Custom.IsNullOrEmpty())
+            {
+                IDictionary<string, object> dictionary_object = expando;
+                dictionary_object.AddDictionary(Response.Custom);
+            }
+            var inner = new JsonResult(expandoDynamic);
+            var result = new CustomActionResult<JsonResult>(inner)
+            {
+                SetNoCache = true
+            };
+            return result;
         }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -14,7 +15,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for a discovery document
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class DiscoveryDocumentResult : IEndpointResult, IEndpointResult2
+    public class DiscoveryDocumentResult : IEndpointResult
     {
         /// <summary>
         /// Gets the entries.
@@ -58,7 +59,19 @@ namespace IdentityServer4.Endpoints.Results
 
             return context.Response.WriteJsonAsync(ObjectSerializer.ToJObject(Entries));
         }
- 
-        public object Value => Entries;
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            int? setCache = null;
+            if (MaxAge.HasValue && MaxAge.Value >= 0)
+            {
+                setCache = MaxAge.Value;
+            }
+
+            var result = new CustomActionResult<JsonResult>(new JsonResult(Entries))
+            {
+                SetCache = setCache
+            };
+            return result;
+        }
     }
 }

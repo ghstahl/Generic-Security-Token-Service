@@ -13,6 +13,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.Extensions;
 using System;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -93,6 +94,11 @@ namespace IdentityServer4.Endpoints.Results
             }
 
             context.Response.Redirect(redirect);
+        }
+
+        public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

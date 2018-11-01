@@ -9,6 +9,7 @@ using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Http;
 using IdentityServer4.Extensions;
 using IdentityServer4.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer4.Endpoints.Results
@@ -80,6 +81,11 @@ namespace IdentityServer4.Endpoints.Results
             context.Response.RedirectToAbsoluteUrl(url);
 
             return Task.CompletedTask;
+        }
+
+        public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

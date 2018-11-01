@@ -2,11 +2,13 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using Microsoft.Extensions.Primitives;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -43,6 +45,34 @@ namespace IdentityServer4.Endpoints.Results
             }
 
             return Task.CompletedTask;
+        }
+
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+           
+            int? statusCode = null;
+            if (Constants.ProtectedResourceErrorStatusCodes.ContainsKey(Error))
+            {
+                statusCode = Constants.ProtectedResourceErrorStatusCodes[Error];
+            }
+            Dictionary<string, string> headers = new Dictionary<string,string>();
+            var errorString = string.Format($"error=\"{Error}\"");
+            if (ErrorDescription.IsMissing())
+            {
+                headers.Add("WwwAuthentication", new StringValues(new[] { "Bearer", errorString }));
+            }
+            else
+            {
+                var errorDescriptionString = string.Format($"error_description=\"{ErrorDescription}\"");
+                headers.Add("WwwAuthentication", new StringValues(new[] { "Bearer", errorString, errorDescriptionString }));
+            }
+            var result = new CustomActionResult<ActionResult>(null)
+            {
+                StatusCode = statusCode,
+                SetNoCache = true,
+                Headers = headers
+            };
+            return result;
         }
     }
 }

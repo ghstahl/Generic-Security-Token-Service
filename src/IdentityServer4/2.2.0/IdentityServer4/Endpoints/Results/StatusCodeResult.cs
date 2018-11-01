@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -51,6 +52,11 @@ namespace IdentityServer4.Endpoints.Results
             context.Response.StatusCode = StatusCode;
 
             return Task.CompletedTask;
+        }
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            var result = new Microsoft.AspNetCore.Mvc.StatusCodeResult(StatusCode);
+            return result;
         }
     }
 }

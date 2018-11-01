@@ -7,6 +7,7 @@ using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4.Configuration;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -349,5 +350,10 @@ if (typeof define == 'function' && define.amd) define([], function() { return Sh
 </body>
 </html>
 ";
+
+        public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

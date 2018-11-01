@@ -16,6 +16,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Authentication;
 using System.Text.Encodings.Web;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -198,6 +199,11 @@ namespace IdentityServer4.Endpoints.Results
 
             var url = errorUrl.AddQueryString(_options.UserInteraction.ErrorIdParameter, id);
             context.Response.RedirectToAbsoluteUrl(url);
+        }
+
+        public Task<ActionResult> BuildActionResultAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

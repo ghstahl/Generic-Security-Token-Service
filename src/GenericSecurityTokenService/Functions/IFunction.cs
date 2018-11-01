@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using GenericSecurityTokenService.Functions.FunctionOptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;

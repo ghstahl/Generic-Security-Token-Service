@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -22,6 +23,15 @@ namespace IdentityServer4.Endpoints.Results
         {
             context.Response.SetNoCache();
             await context.Response.WriteJsonAsync(Claims);
+        }
+
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            var result = new CustomActionResult<JsonResult>(new JsonResult(Claims))
+            {
+                SetNoCache = true
+            };
+            return result;
         }
     }
 }

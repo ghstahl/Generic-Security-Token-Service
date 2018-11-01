@@ -4,13 +4,25 @@
 
 using Microsoft.AspNetCore.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Hosting
 {
     /// <summary>
     /// Endpoint result
     /// </summary>
-    public interface IEndpointResult
+    public interface IEndpointResult2
+    {
+        /// <summary>
+        /// Builds an ActionResult
+        /// </summary>
+        /// <returns></returns>
+        Task<ActionResult> BuildActionResultAsync();
+    }
+    /// <summary>
+    /// Endpoint result
+    /// </summary>
+    public interface IEndpointResult: IEndpointResult2
     {
         /// <summary>
         /// Executes the result.
@@ -19,16 +31,5 @@ namespace IdentityServer4.Hosting
         /// <returns></returns>
         Task ExecuteAsync(HttpContext context);
     }
-    /// <summary>
-    /// Endpoint result
-    /// </summary>
-    public interface IEndpointResult2
-    {
-        /// <summary>
-        /// Executes the result.
-        /// </summary>
-        /// <param name="context">The HTTP context.</param>
-        /// <returns></returns>
-        object Value { get; }
-    }
+    
 }

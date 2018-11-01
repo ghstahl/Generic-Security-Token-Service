@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -41,6 +42,28 @@ namespace IdentityServer4.Endpoints.Results
         {
             public string error { get; set; }
             public string error_description { get; set; }
-        }    
+        }
+
+
+        public async Task<ActionResult> BuildActionResultAsync()
+        {
+            JsonResult inner = null;
+            if (Error.IsPresent())
+            {
+                var dto = new ResultDto
+                {
+                    error = Error,
+                    error_description = ErrorDescription
+                };
+                inner = new JsonResult(dto);
+            }
+
+            var result = new CustomActionResult<JsonResult>(inner)
+            {
+                StatusCode = 404,
+                SetNoCache = true
+            };
+            return result;
+        }
     }
 }
