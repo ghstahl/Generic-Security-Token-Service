@@ -32,7 +32,14 @@ namespace IdentityServer4Extras.Services
 
         public Task<string> UnObfuscateAsync(string key)
         {
-            return Task.FromResult(UnprotectAsync(key).GetAwaiter().GetResult());
+            try
+            {
+                return Task.FromResult(UnprotectAsync(key).GetAwaiter().GetResult());
+            }
+            catch (Exception e)
+            {
+                return Task.FromResult((string)null);
+            }
         }
     }
 }

@@ -83,7 +83,8 @@ namespace FunctionsCore.Security
                 }
                 catch (SecurityTokenException e)
                 {
-                    return null;
+                    var appIdentity = new ClaimsIdentity();
+                    return new ClaimsPrincipal(appIdentity);
                 }
             }
 

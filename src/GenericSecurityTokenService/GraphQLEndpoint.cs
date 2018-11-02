@@ -30,7 +30,7 @@ namespace GenericSecurityTokenService
         {
             var httpContextAccessor = FunctionStartup.EstablishHttpContextAccessor(context, reqMessage, req);
             FunctionStartup.EstablishContextAccessor(context);
-            await FunctionStartup.EstablishIdentityAsync(context,httpContextAccessor);
+            await FunctionStartup.EstablishIdentityAsync(context, httpContextAccessor);
             var factory = FunctionStartup.GetFactory(context);
             var functionHandler = factory.Create<IGraphQLFunction>();
             await functionHandler.InvokeAsync();

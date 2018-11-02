@@ -1,5 +1,6 @@
 using System;
 using System.Net.Http;
+using System.Security.Claims;
 using GenericSecurityTokenService.Modules;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Http;
@@ -48,6 +49,11 @@ namespace GenericSecurityTokenService
 
             httpContextAccessor.HttpContext.User =
                 await tokenValidator.ValidateTokenAsync(httpContextAccessor.HttpRequestMessage.Headers.Authorization);
+            if (httpContextAccessor.HttpContext.User == null)
+            {
+                var appIdentity = new ClaimsIdentity();
+                httpContextAccessor.HttpContext.User = new ClaimsPrincipal(appIdentity);
+            }
         }
         public static void EstablishContextAccessor(
             ExecutionContext context)
