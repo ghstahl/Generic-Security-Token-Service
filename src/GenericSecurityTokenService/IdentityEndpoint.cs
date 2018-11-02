@@ -20,9 +20,9 @@ namespace GenericSecurityTokenService
 {
     public static class IdentityEndpoint
     {
-        [FunctionName("identity")]
+        [FunctionName("Identity")]
         public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "identity")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "Identity")]
             HttpRequestMessage reqMessage,
             HttpRequest req,
             ExecutionContext context,
@@ -36,19 +36,7 @@ namespace GenericSecurityTokenService
             await functionHandler.InvokeAsync();
 
             return httpContextAccessor.HttpResponseMessage;
-            /*
-
-            var tokenValidator = factory.ServiceProvider.GetService(typeof(ITokenValidator)) as ITokenValidator;
-            httpContextAccessor.HttpContext.User = await tokenValidator.ValidateTokenAsync(reqMessage.Headers.Authorization); ;
-
-            if (httpContextAccessor.HttpContext.User == null)
-            {
-                return reqMessage.CreateResponse(HttpStatusCode.Unauthorized);
-            }
-            // Authentication boilerplate code end
-
-            return reqMessage.CreateResponse(HttpStatusCode.OK, "Hello " + httpContextAccessor.HttpContext.User.Identity.Name);
-            */
+            
         }
     }
 }

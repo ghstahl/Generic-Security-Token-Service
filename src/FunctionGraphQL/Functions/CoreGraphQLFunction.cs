@@ -89,8 +89,8 @@ namespace FunctionGraphQL.Functions
             var json = _writer.Write(result);
             dynamic obj = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(json);
 
-            var rr = new ObjectResult(obj) { StatusCode = (int)httpResult };
-            _httpContextAccessor.HttpResponseMessage.Content = new JsonContent(rr);
+          //  var rr = new ObjectResult(obj) { StatusCode = (int)httpResult };
+            _httpContextAccessor.HttpResponseMessage.Content = new JsonContent(obj);
         }
     }
 }
