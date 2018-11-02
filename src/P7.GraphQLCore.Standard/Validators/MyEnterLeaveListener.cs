@@ -47,8 +47,8 @@ namespace P7.GraphQLCore.Validators
             get { return (RunningPath.Any() ? RunningPath.Peek() : ""); }
         }
 
-        private readonly List<MatchingNodeListener> _listeners =
-            new List<MatchingNodeListener>();
+        private readonly List<INodeVisitor> _listeners =
+            new List<INodeVisitor>();
 
         public MyEnterLeaveListener(Action<MyEnterLeaveListener> configure)
         {
@@ -94,9 +94,10 @@ namespace P7.GraphQLCore.Validators
                     FragmentDefinition = fragmentDefinition
                 });
             }
-            _listeners
-                .Where(l => l.Enter != null && l.Matches(node))
-                .Apply(l => l.Enter(node));
+            foreach (var listener in _listeners)
+            {
+                listener.Enter(node);
+            }
         }
 
         public void Leave(INode node)
@@ -108,37 +109,17 @@ namespace P7.GraphQLCore.Validators
                 RunningPath.Pop();
                 FireEnterLeaveListenerState(new EnterLeaveListenerState(OperationType, CurrentFieldPath));
             }
-            _listeners
-                .Where(l => l.Leave != null && l.Matches(node))
-                .Apply(l => l.Leave(node));
+            foreach (var listener in _listeners)
+            {
+                listener.Leave(node);
+            }
         }
-        public void Match<T>(
-           Action<T> enter = null,
-           Action<T> leave = null)
-           where T : INode
+        public void Match<TNode>(
+            Action<TNode> enter = null,
+            Action<TNode> leave = null)
+            where TNode : INode
         {
-            if (enter == null && leave == null)
-            {
-                throw new ExecutionError("Must provide an enter or leave function.");
-            }
-
-            Func<INode, bool> matches = n => n.GetType().IsAssignableFrom(typeof(T));
-
-            var listener = new MatchingNodeListener
-            {
-                Matches = matches
-            };
-
-            if (enter != null)
-            {
-                listener.Enter = n => enter((T)n);
-            }
-
-            if (leave != null)
-            {
-                listener.Leave = n => leave((T)n);
-            }
-
+            var listener = new MatchingNodeVisitor<TNode>(enter, leave);
             _listeners.Add(listener);
         }
 

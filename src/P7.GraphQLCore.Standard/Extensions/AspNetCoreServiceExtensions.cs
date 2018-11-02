@@ -50,7 +50,9 @@ namespace P7.GraphQLCore.Extensions
                     return graphQLJsonDocumentWriterOptions;
                 });
 
-            services.AddSingleton<IDocumentWriter, GraphQLDocumentWriter>();
+            //services.AddSingleton<IDocumentWriter, GraphQLDocumentWriter>();
+            services.AddSingleton<IDocumentWriter, DocumentWriter>();
+
             services.AddTransient<QueryCore>();
             services.AddTransient<MutationCore>();
             services.AddSingleton<ISchema, SchemaCore>();

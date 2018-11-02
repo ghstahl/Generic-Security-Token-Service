@@ -15,6 +15,16 @@ namespace P7.GraphQLCore
         }
 
 
+        public Task WriteAsync<T>(Stream stream, T value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IByteResult> WriteAsync<T>(T value)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Write(object value)
         {
             return base.SerializeObject(value);

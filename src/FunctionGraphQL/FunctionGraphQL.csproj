@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GraphQL" Version="2.1.0" />
+    <PackageReference Include="GraphQL" Version="2.3.0" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.23" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
