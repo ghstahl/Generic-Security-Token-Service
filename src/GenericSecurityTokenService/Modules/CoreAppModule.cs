@@ -22,6 +22,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
+using P7.Core;
+using P7.GraphQLCore;
 using P7.GraphQLCore.Extensions;
 using P7.GraphQLCore.Stores;
 using P7IdentityServer4.Extensions;
@@ -34,6 +36,7 @@ namespace GenericSecurityTokenService.Modules
     /// </summary>
     public class CoreAppModule : Module
     {
+        public static IConfiguration Configuration { get; set; }
         private string _basePath;
         public CoreAppModule(string basePath)
         {
@@ -67,12 +70,12 @@ namespace GenericSecurityTokenService.Modules
                 configurationBuilder.AddUserSecrets<CoreAppModule>();
             }
             configurationBuilder.AddEnvironmentVariables();
-            var config = configurationBuilder.Build();
+            Configuration = configurationBuilder.Build();
 
-            services.AddSingleton<IConfiguration>(config);
+            services.AddSingleton<IConfiguration>(Configuration);
 
-            bool useRedis = Convert.ToBoolean(config["appOptions:redis:useRedis"]);
-            bool useKeyVault = Convert.ToBoolean(config["appOptions:keyVault:useKeyVault"]);
+            bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
+            bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
 
             services.AddSingleton<HttpClient>();
 
@@ -84,9 +87,9 @@ namespace GenericSecurityTokenService.Modules
             services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
             services.AddTransient<ILoggerFactory, LoggerFactory>();
 
-            var clients = config.LoadClientsFromSettings();
-            var apiResources = config.LoadApiResourcesFromSettings();
-            var identityResources = config.LoadIdentityResourcesFromSettings();
+            var clients = Configuration.LoadClientsFromSettings();
+            var apiResources = Configuration.LoadApiResourcesFromSettings();
+            var identityResources = Configuration.LoadIdentityResourcesFromSettings();
 
             var builder = services
                 .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
@@ -105,7 +108,7 @@ namespace GenericSecurityTokenService.Modules
             {
                 builder.AddKeyVaultTokenCreateService();
                 services.AddKeyVaultTokenCreateServiceTypes();
-                services.AddKeyVaultTokenCreateServiceConfiguration(config);
+                services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
             }
             else
             {
@@ -148,6 +151,11 @@ namespace GenericSecurityTokenService.Modules
             builder.Services.TryAddSingleton<IGraphQLFieldAuthority, InMemoryGraphQLFieldAuthority>();
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
+
+
+
+            services.RegisterP7CoreConfigurationServices(Configuration);
+            services.RegisterGraphQLCoreConfigurationServices(Configuration);
         }
     }
 }
