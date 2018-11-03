@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using IdentityServer4.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace GenericSecurityTokenService.WebApp.Controllers
+namespace GenericSecurityTokenService.Controllers
 {
     [Route("")]
     [ApiController]
