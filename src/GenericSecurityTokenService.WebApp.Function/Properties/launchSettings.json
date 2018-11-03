@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "GenericSecurityTokenService.WebApp.Function": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}

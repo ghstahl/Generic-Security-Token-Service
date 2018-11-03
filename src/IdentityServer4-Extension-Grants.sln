@@ -110,6 +110,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WebApp", "WebApp", "{391BEA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericSecurityTokenService.WebApp", "GenericSecurityTokenService.WebApp\GenericSecurityTokenService.WebApp.csproj", "{E0612359-EEC4-41DC-A8DC-582A3BCEAF27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericSecurityTokenService.WebApp.Function", "GenericSecurityTokenService.WebApp.Function\GenericSecurityTokenService.WebApp.Function.csproj", "{04A997E8-3B55-48B3-8D5D-9CE1531B2882}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -264,6 +266,10 @@ Global
 		{E0612359-EEC4-41DC-A8DC-582A3BCEAF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0612359-EEC4-41DC-A8DC-582A3BCEAF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0612359-EEC4-41DC-A8DC-582A3BCEAF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04A997E8-3B55-48B3-8D5D-9CE1531B2882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04A997E8-3B55-48B3-8D5D-9CE1531B2882}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04A997E8-3B55-48B3-8D5D-9CE1531B2882}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04A997E8-3B55-48B3-8D5D-9CE1531B2882}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -302,6 +308,7 @@ Global
 		{A9923E82-E07B-4B4E-8506-1BC5F6BA6061} = {3405542D-E135-4ACB-9B5C-A52A696941A6}
 		{391BEAE8-7AFE-4E26-9A25-E2069B47D74F} = {3405542D-E135-4ACB-9B5C-A52A696941A6}
 		{E0612359-EEC4-41DC-A8DC-582A3BCEAF27} = {391BEAE8-7AFE-4E26-9A25-E2069B47D74F}
+		{04A997E8-3B55-48B3-8D5D-9CE1531B2882} = {391BEAE8-7AFE-4E26-9A25-E2069B47D74F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}

@@ -132,7 +132,7 @@ namespace GenericSecurityTokenService
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
+            /*
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -150,6 +150,7 @@ namespace GenericSecurityTokenService
                         }
                     };
                 });
+                */
             services.AddLogging();
         }
 
