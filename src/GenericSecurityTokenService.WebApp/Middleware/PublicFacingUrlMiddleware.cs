@@ -19,22 +19,16 @@ namespace GenericSecurityTokenService.Middleware
     {
         public static string PathRootUrl { get; set; }
         private readonly RequestDelegate _next;
-        private static string _identityServerOrigin;
+
         private static string GetIdentityServerOrigin(HttpContext context)
         {
-            if (_identityServerOrigin == null)
+            var request = context.Request;
+            var origin = $"{request.Scheme}://{request.Host}";
+            if (!string.IsNullOrEmpty(PathRootUrl))
             {
-                var request = context.Request;
-                var origin = $"{request.Scheme}://{request.Host}";
-                if (!string.IsNullOrEmpty(PathRootUrl))
-                {
-                    origin += $"/{PathRootUrl}";
-                }
-
-                _identityServerOrigin = origin;
+                origin += $"/{PathRootUrl}";
             }
-
-            return _identityServerOrigin;
+            return origin;
         }
 
         public PublicFacingUrlMiddleware(RequestDelegate next)

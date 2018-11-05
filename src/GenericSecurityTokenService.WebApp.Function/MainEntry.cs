@@ -29,6 +29,7 @@ namespace GenericSecurityTokenService
                 log.LogInformation($"C# HTTP trigger:{req.Method} {path}.");
              
                 HttpClient client = TheHost.GetServer(context,req, log).CreateClient();
+                client.BaseAddress = new Uri($"{req.Scheme}://{req.Host}/");
                 foreach (var header in req.Headers)
                 {
                     IEnumerable<string> values = header.Value;
