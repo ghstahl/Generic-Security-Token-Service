@@ -53,7 +53,7 @@ namespace GenericSecurityTokenService.Controllers
             _logger.LogInformation(_actionContextAccessor.ActionContext.HttpContext.Request.Host.ToUriComponent());
             if (_output == null)
             {
-                Output.Add("authority", _actionContextAccessor.ActionContext.HttpContext.GetIdentityServerHost());
+                Output.Add("authority", _actionContextAccessor.ActionContext.HttpContext.GetIdentityServerOrigin());
             }
             return Output;
         }

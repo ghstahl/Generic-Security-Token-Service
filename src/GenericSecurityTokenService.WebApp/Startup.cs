@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using GenericSecurityTokenService.Middleware;
 using GenericSecurityTokenService.Services;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
+using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -66,7 +69,10 @@ namespace GenericSecurityTokenService
             bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
             bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
             var builder = services
-                .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
+                .AddIdentityServer(options =>
+                {
+                    options.InputLengthRestrictions.RefreshToken = 256;
+                })
                 .AddInMemoryIdentityResources(identityResources)
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
@@ -163,6 +169,23 @@ namespace GenericSecurityTokenService
             services.AddLogging();
             // Pass configuration (IConfigurationRoot) to the configuration service if needed
             _externalStartupConfiguration.ConfigureService(services, null);
+
+            var identityServer4BasePath = Configuration["IdentityServerPublicFacingUri"];
+            if (!string.IsNullOrEmpty(identityServer4BasePath))
+            {
+                identityServer4BasePath = identityServer4BasePath.Trim('/');
+                var endpoints = builder.Services
+                    .Where(service => service.ServiceType == typeof(Endpoint))
+                    .Select(item => (Endpoint)item.ImplementationInstance)
+                    .ToList();
+
+                // endpoints.ForEach(item =>item.Path.Value.r = $"api/Authority/{item.Path.Value}");
+                endpoints.ForEach(item => item.Path = item.Path.Value.Replace("connect", $"{identityServer4BasePath}/connect"));
+                endpoints.ForEach(item => item.Path = item.Path.Value.Replace(".well-known/openid-configuration", 
+                    $"{identityServer4BasePath}/.well-known/openid-configuration"));
+
+            }
+ 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -173,7 +196,10 @@ namespace GenericSecurityTokenService
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseMiddleware<PublicFacingUrlMiddleware>();
+           
             app.UseIdentityServer();
+            
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();
@@ -197,6 +223,7 @@ namespace GenericSecurityTokenService
             }
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            PublicFacingUrlMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
         }
         private void StartupLogger()
         { 

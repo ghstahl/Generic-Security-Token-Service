@@ -19,13 +19,13 @@ namespace GenericSecurityTokenService
         [FunctionName("MainEntry")]
         public static async Task<HttpResponseMessage> Run(
             ExecutionContext context,
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "MainEntry/{*all}")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "{*all}")]
             HttpRequest req,
             ILogger log)
         {
             try
             {
-                var path = req.Path.Value.Substring(10) + req.QueryString.Value;
+                var path = req.Path.Value + req.QueryString.Value;
                 log.LogInformation($"C# HTTP trigger:{req.Method} {path}.");
              
                 HttpClient client = TheHost.GetServer(context,req, log).CreateClient();
