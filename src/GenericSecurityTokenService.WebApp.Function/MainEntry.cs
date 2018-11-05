@@ -19,17 +19,23 @@ namespace GenericSecurityTokenService
         [FunctionName("MainEntry")]
         public static async Task<HttpResponseMessage> Run(
             ExecutionContext context,
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = "MainEntry/{*all}")]
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = "MainEntry/{*all}")]
             HttpRequest req,
             ILogger log)
         {
             try
             {
                 var path = req.Path.Value.Substring(10) + req.QueryString.Value;
-                HttpClient client = TheHost.GetServer(context).CreateClient();
+                log.LogInformation($"C# HTTP trigger:{req.Method} {path}.");
+             
+                HttpClient client = TheHost.GetServer(context,req, log).CreateClient();
                 foreach (var header in req.Headers)
                 {
                     IEnumerable<string> values = header.Value;
+                    if (header.Key == "Host")
+                    {
+                        continue;
+                    }
                     client.DefaultRequestHeaders.TryAddWithoutValidation(header.Key, values);
                 }
 
@@ -61,12 +67,12 @@ namespace GenericSecurityTokenService
             }
             catch (Exception e)
             {
+                log.LogError(e, $"MainEntry Exception:{e.Message}");
                 return new HttpResponseMessage()
                 {
-                    StatusCode = HttpStatusCode.NotFound
+                    StatusCode = HttpStatusCode.InternalServerError
                 };
             }
-
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using GenericSecurityTokenService.Services;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4Extras;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
@@ -31,10 +33,17 @@ namespace GenericSecurityTokenService
     {
         public IConfiguration Configuration { get; private set; }
         private readonly IHostingEnvironment _hostingEnvironment;
-        public Startup(IConfiguration configuration, IHostingEnvironment hostingEnvironment)
+        private IStartupConfigurationService _externalStartupConfiguration;
+
+        public Startup(
+            IConfiguration configuration, 
+            IHostingEnvironment hostingEnvironment, 
+            IStartupConfigurationService externalStartupConfiguration)
         {
             Configuration = configuration;
             _hostingEnvironment = hostingEnvironment;
+            _externalStartupConfiguration = externalStartupConfiguration;
+            _externalStartupConfiguration.ConfigureEnvironment(hostingEnvironment);
             StartupConfiguration(configuration);
             StartupLogger();
         }
@@ -152,11 +161,14 @@ namespace GenericSecurityTokenService
                 });
                 */
             services.AddLogging();
+            // Pass configuration (IConfigurationRoot) to the configuration service if needed
+            _externalStartupConfiguration.ConfigureService(services, null);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            _externalStartupConfiguration.Configure(app, env, loggerFactory);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

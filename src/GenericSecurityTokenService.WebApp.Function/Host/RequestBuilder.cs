@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace GenericSecurityTokenService.Host
+namespace Microsoft.AspNetCore.TestHost
 {
     /// <summary>
     /// Used to construct a HttpRequestMessage object.

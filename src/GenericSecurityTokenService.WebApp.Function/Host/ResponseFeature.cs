@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 
-namespace GenericSecurityTokenService.Host
+namespace Microsoft.AspNetCore.TestHost
 {
     internal class ResponseFeature : IHttpResponseFeature
     {

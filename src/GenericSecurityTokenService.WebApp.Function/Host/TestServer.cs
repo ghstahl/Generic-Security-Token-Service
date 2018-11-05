@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
  
 
-namespace GenericSecurityTokenService.Host
+namespace Microsoft.AspNetCore.TestHost
 {
     public class TestServer : IServer
     {
