@@ -1,0 +1,447 @@
+{
+	"info": {
+		"_postman_id": "fc946e63-0616-fb44-a751-166c6cf9d0e6",
+		"name": "IdentityServer4-Extension-Grants",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "MainEntry",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}",
+					"host": [
+						"{{domain}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": ".well-known/openid-configuration",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/.well-known/openid-configuration",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						".well-known",
+						"openid-configuration"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": ".well-known/openid-configuration/jwks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/.well-known/openid-configuration/jwks",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						".well-known",
+						"openid-configuration",
+						"jwks"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "arbitrary_resource_owner",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "arbitrary_resource_owner",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "offline_access metal nitro In Flames",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_claims",
+							"value": "{\"top\":[\"TopDog\"],\"role\": [\"application\",\"limited\"],\"query\": [\"dashboard\", \"licensing\"],\"seatId\": [\"8c59ec41-54f3-460b-a04e-520fc5b9973d\"],\"piid\": [\"2368d213-d06c-4c2a-a099-11c34adc3579\"]}",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "886bea3f-e025-4ab9-a811-e9b86f563668",
+							"type": "text"
+						},
+						{
+							"key": "access_token_lifetime",
+							"value": "3600",
+							"type": "text"
+						},
+						{
+							"key": "access_token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDcyMjMsImV4cCI6MTUzOTQ1MDgyMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTM5NDQ3MjIwLCJpZHAiOiJsb2NhbCIsInRvcCI6IlRvcERvZyIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwicHJvZmlsZV9zZXJ2aWNlX2tleSI6ImFyYml0cmFyeV9yZXNvdXJjZV9vd25lcl9wcm9maWxlX3NlcnZpY2UiLCJzY29wZSI6WyJtZXRhbCIsIm5pdHJvIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciJdfQ.D1WtL9lOjjqYmTGLf-YO83rKXVagTvcWPA3_GMP9Bg2op_WYZc9aq7FRtKQA_zJpGw0qoWnUe-ISPKGdHVSFSX5n8OQRH4rkzprrOvRhjcx6617eBOLHx09aUNKgI2GNmykeoQTwrSNOp06yLJUOp1qgHKNPh3HBfSDUzcdqBDgul42aizfDyLcAscqgSmIcvRg1gwfJau0ApVbmbgSRKgILNRvwb_93l2rjTnDSSN7WbtBBz_F0zbEy5mKgH1p7_pvAyZQVpTsnKaYfwBMck0tgOKwpzeiLs2oRGkt3ZzPsGlnt6YSAXtJQE_xP4U8DTD9ebnlzqeJzXWsgv43Alg",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/token",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "arbitrary_no_subject",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "arbitrary_no_subject",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "a b c d e",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_claims",
+							"value": "{\"role\": [\"application\", \"limited\"],\"query\": [\"dashboard\", \"licensing\"],\"seatId\": [\"8c59ec41-54f3-460b-a04e-520fc5b9973d\"],\"piid\": [\"2368d213-d06c-4c2a-a099-11c34adc3579\"]}",
+							"type": "text"
+						},
+						{
+							"key": "access_token_lifetime",
+							"value": "3600",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_amrs",
+							"value": "[\"agent:username:agent0@supporttech.com\",\"agent:challenge:fullSSN\",\"agent:challenge:homeZip\"]",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_audiences",
+							"value": "[\"cat\",\"dog\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/token",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "arbitrary_identity",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "arbitrary_identity",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "offline_access a b c d e",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_claims",
+							"value": "{\n\t\"preferred_username\": [\"ted@ted.com\"],\n\t\"name\": [\"ted@ted.com\"]\n}",
+							"type": "text"
+						},
+						{
+							"key": "subject",
+							"value": "886bea3f-e025-4ab9-a811-e9b86f563668",
+							"type": "text"
+						},
+						{
+							"key": "access_token_lifetime",
+							"value": "3600",
+							"type": "text"
+						},
+						{
+							"key": "access_token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1Mzk0NDcyMjMsImV4cCI6MTUzOTQ1MDgyMywiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwibWV0YWwiLCJuaXRybyJdLCJjbGllbnRfaWQiOiJhcmJpdHJhcnktcmVzb3VyY2Utb3duZXItY2xpZW50Iiwic3ViIjoiODg2YmVhM2YtZTAyNS00YWI5LWE4MTEtZTliODZmNTYzNjY4IiwiYXV0aF90aW1lIjoxNTM5NDQ3MjIwLCJpZHAiOiJsb2NhbCIsInRvcCI6IlRvcERvZyIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwicHJvZmlsZV9zZXJ2aWNlX2tleSI6ImFyYml0cmFyeV9yZXNvdXJjZV9vd25lcl9wcm9maWxlX3NlcnZpY2UiLCJzY29wZSI6WyJtZXRhbCIsIm5pdHJvIiwib2ZmbGluZV9hY2Nlc3MiXSwiYW1yIjpbImFyYml0cmFyeV9yZXNvdXJjZV9vd25lciJdfQ.D1WtL9lOjjqYmTGLf-YO83rKXVagTvcWPA3_GMP9Bg2op_WYZc9aq7FRtKQA_zJpGw0qoWnUe-ISPKGdHVSFSX5n8OQRH4rkzprrOvRhjcx6617eBOLHx09aUNKgI2GNmykeoQTwrSNOp06yLJUOp1qgHKNPh3HBfSDUzcdqBDgul42aizfDyLcAscqgSmIcvRg1gwfJau0ApVbmbgSRKgILNRvwb_93l2rjTnDSSN7WbtBBz_F0zbEy5mKgH1p7_pvAyZQVpTsnKaYfwBMck0tgOKwpzeiLs2oRGkt3ZzPsGlnt6YSAXtJQE_xP4U8DTD9ebnlzqeJzXWsgv43Alg",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "arbitrary_amrs",
+							"value": "[\"agent:username:agent0@supporttech.com\",\"agent:challenge:fullSSN\",\"agent:challenge:homeZip\"]",
+							"type": "text"
+						},
+						{
+							"key": "arbitrary_audiences",
+							"value": "[\"cat\",\"dog\"]",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/token",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "dsdfdsf",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/token",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "revoke refresh_token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "token_type_hint",
+							"value": "refresh_token",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "CfDJ8KCYS6ITMUNMj7yhU7AYnmzlFkbn3MUum5v6matdj0T5Ulxdc3MeG_OJbTCJwzNJhs0Yg6CoXXryg0amfXsRMlnydKyBBbfBJNCqOwsbXrrf9HPhxan4nwSrjeuA0D8AvKkUzlWGIjUIYeLw3o6YoESA5qsRc6gYxc6O1XttoDLO8QrEU_UudzzJUEq_IxdZ-aar2W5cxL7yekV2HISy2SE",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/revocation",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "revoke access_token",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "arbitrary-resource-owner-client",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "secret",
+							"type": "text"
+						},
+						{
+							"key": "token_type_hint",
+							"value": "access_token",
+							"type": "text"
+						},
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJSUzI1NiIsImtpZCI6Imh0dHBzOi8vcDdrZXl2YWx1dC52YXVsdC5henVyZS5uZXQva2V5cy9QN0lkZW50aXR5U2VydmVyNFNlbGZTaWduZWQvOGJkZDYxODA3NWQwNGEwZDgzZTk4NmI4YWE5NGQ3YjIiLCJ0eXAiOiJKV1QifQ.eyJuYmYiOjE1NDE0NDQzOTMsImV4cCI6MTU0MTQ0Nzk5MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo3MDcxL3YxL2dzdHMiLCJhdWQiOlsiaHR0cDovL2xvY2FsaG9zdDo3MDcxL3YxL2dzdHMvcmVzb3VyY2VzIiwiRmxhbWVzIiwiSW4iLCJtZXRhbCIsIm5pdHJvIl0sImNsaWVudF9pZCI6ImFyYml0cmFyeS1yZXNvdXJjZS1vd25lci1jbGllbnQiLCJzdWIiOiI4ODZiZWEzZi1lMDI1LTRhYjktYTgxMS1lOWI4NmY1NjM2NjgiLCJhdXRoX3RpbWUiOjE1NDE0NDQzOTMsImlkcCI6ImxvY2FsIiwidG9wIjoiVG9wRG9nIiwicm9sZSI6WyJhcHBsaWNhdGlvbiIsImxpbWl0ZWQiXSwicXVlcnkiOlsiZGFzaGJvYXJkIiwibGljZW5zaW5nIl0sInNlYXRJZCI6IjhjNTllYzQxLTU0ZjMtNDYwYi1hMDRlLTUyMGZjNWI5OTczZCIsInBpaWQiOiIyMzY4ZDIxMy1kMDZjLTRjMmEtYTA5OS0xMWMzNGFkYzM1NzkiLCJudWRpYnJhbmNoX3dhdGVybWFyayI6IkRhZmZ5IER1Y2siLCJzY29wZSI6WyJGbGFtZXMiLCJJbiIsIm1ldGFsIiwibml0cm8iLCJvZmZsaW5lX2FjY2VzcyJdLCJhbXIiOlsiYXJiaXRyYXJ5X3Jlc291cmNlX293bmVyIl19.P8CPvCrE-q6LIfMiASofS-_HhTJSI1IjEiFvpCwSnAf7EpjiCkXIZmXezroE1JoFt9kGu7hdFA30_C4GNQ3QN9lQFszaH7MuS5VC_xbHpUo4IpOsKmcGOSrs7TER594plqreJzkq_ksIl7ec7L1wAp9hcxl63mwohbFzh2LVENZZGBdDdEu8nWYs3UiQaFbzEabJVep4KHQKft_-YCTLzRr8KuPar_Yl3dSvWC3cl4QUKiG7kdaA4J7HCto7MNHaeKs1gTYGUzgmUZAv2LqP4mWl91MOO5yUloleUhKVqlp8-KwHq7GQFDdaosPG3--rF4G4jZFDkfpCaXtdIPH7yA",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{domain}}/{{baseUrl}}/connect/revocation",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"{{baseUrl}}",
+						"connect",
+						"revocation"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
