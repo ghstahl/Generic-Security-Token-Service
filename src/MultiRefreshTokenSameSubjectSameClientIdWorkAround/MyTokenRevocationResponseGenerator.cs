@@ -93,6 +93,11 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                 Logger.LogTrace("Hint was for refresh token");
                 response.Success = await RevokeRefreshTokenAsync(validationResult);
             }
+            else if (validationResult.TokenTypeHint == IdentityServer4Extras.Constants.TokenTypeHints.Subject)
+            {
+                Logger.LogTrace("Hint was for subject");
+                response.Success = await RevokeSubjectAsync(validationResult);
+            }
             else
             {
                 Logger.LogTrace("No hint for token type");
@@ -112,7 +117,33 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
 
             return response;
         }
+        /// <summary>
+        /// Revoke access token only if it belongs to client doing the request.
+        /// </summary>
+        protected virtual async Task<bool> RevokeSubjectAsync(TokenRevocationRequestValidationResult validationResult)
+        {
+            try
+            {
+                // Token is the subject in this case
+                string subject = validationResult.Token;
+                if (!string.IsNullOrEmpty(subject))
+                {
+                    // now we need to revoke this subject
+                    var rts = RefreshTokenStore as IRefreshTokenStore2;
+                    await rts.RemoveRefreshTokensAsync(subject, validationResult.Client.ClientId);
+                    var clientExtra = validationResult.Client as ClientExtra;
+                    await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, subject);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.LogError(e, "unexpected error in revocation");
+            }
 
+            return false;
+
+        }
         /// <summary>
         /// Revoke access token only if it belongs to client doing the request.
         /// </summary>
