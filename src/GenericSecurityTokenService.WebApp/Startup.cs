@@ -127,6 +127,7 @@ namespace GenericSecurityTokenService
             builder.SwapOutTokenResponseGenerator();
             builder.SwapOutDefaultTokenService();
             builder.SwapOutScopeValidator();
+            builder.SwapOutTokenRevocationRequestValidator();
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();
