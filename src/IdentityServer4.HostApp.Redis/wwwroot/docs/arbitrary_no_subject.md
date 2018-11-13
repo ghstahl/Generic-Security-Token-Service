@@ -37,6 +37,10 @@ This is really the only grant_type you will need...
   <dt><h2>arbitrary_audiences</h2></dt>
   <dd><b>OPTIONAL</b>.  This is a json array of strings.  
 	<b>i.e. <em>arbitrary_audiences:["cat","dog"]</em></b></dd>
+
+ <dt><h2>custom_payload</h2></dt>
+  <dd><b>OPTIONAL</b>.  This is a valid json.  
+	i.e. <em>custom_payload:{"some_string": "data","some_number": 1234,"some_object": {"some_string": "data","some_number": 1234},"some_array": [{"a": "b"},{"b": "c"}]}</em></dd>
 	
   <dt><h2>access_token_lifetime</h2></dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
@@ -60,21 +64,22 @@ Body:
 	access_token_lifetime:3600
 	arbitrary_amrs:["agent:username:agent0@supporttech.com","agent:challenge:fullSSN","agent:challenge:homeZip"]
 	arbitrary_audiences:["cat","dog"]
+	custom_payload:{"some_string": "data","some_number": 1234,"some_object": {"some_string": "data","some_number": 1234},"some_array": [{"a": "b"},{"b": "c"}]}
  ```
  Produces....  
  ```
 {
-    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDAxNDg3NzgsImV4cCI6MTU0Mjc0MDc3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwic2NvcGUiOlsiYSIsImIiLCJjIiwiZCIsImUiXSwiYW1yIjpbImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl19.d8q_0dKw8UuweIvv45wH2yxvihgcgYQodgGpJo29S0VYMkVSID-cXIbdLZTcUN5fwvG4iIlfRgDzScqJw0qqE91U_Cpr5AN-821suJfSe5QpkwPdL62ZAfqvGEsG-X16Wmx9pBA3hcsxBos0wW4cr9Y2Qo71eE2RqQ2KhjtCEp5F9woEAQ7YZAs5W88W_L6eGq_IPw_vg1utEResRgLpryf8UU22GFHBU5c8K1ZFXSfiaKVtJs02-McrY8fmPC1TMIK8IDTzUPRrWSB6Y8x5NobpzjWUlTu4qMEMBVG3G66yfhowSI5Wp_Jk5rigDrfnlagYNee2RQn5Mau32UCF5Q",
+    "access_token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDIxNDc5OTQsImV4cCI6MTU0NDczOTk5NCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwic2NvcGUiOlsiYSIsImIiLCJjIiwiZCIsImUiXSwiYW1yIjpbImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl0sImN1c3RvbV9wYXlsb2FkIjp7InNvbWVfc3RyaW5nIjoiZGF0YSIsInNvbWVfbnVtYmVyIjoxMjM0LCJzb21lX29iamVjdCI6eyJzb21lX3N0cmluZyI6ImRhdGEiLCJzb21lX251bWJlciI6MTIzNH0sInNvbWVfYXJyYXkiOlt7ImEiOiJiIn0seyJiIjoiYyJ9XX19.2r-cxJtSyDIcQGPInmnXUd51RPbPi-AS8TQ0n0tSI0pixOuEG08fzzJGKKNX5hYFw47sdULRSL4DAsGporoo3_cUJH9Kao61qU-NaZw7qgS9CJwcm1Xw8zCwCTEy-cySNq0gt6V_aValvTGpfgHnmdzWM47GyK375O2Is1bwu3gIDdl4yf9fwNxNb4hBuCK2S84SmvQDrPFJuGz4b1cE9K0hogCLnkAHfe3-7DrekXuXLiVA1Y_vTbMxQSu0C8THG5s1P6GH5rBV5oG5LOaVftWSIV8UX5vDSlzyAPnrncdMu5sCvXcZi0sxtk2ouAgPQs-bS5Y3onRUdQLn_Se-pQ",
     "expires_in": 2592000,
     "token_type": "Bearer"
 }
 ```
-[Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDAxNDg3NzgsImV4cCI6MTU0Mjc0MDc3OCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwic2NvcGUiOlsiYSIsImIiLCJjIiwiZCIsImUiXSwiYW1yIjpbImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl19.d8q_0dKw8UuweIvv45wH2yxvihgcgYQodgGpJo29S0VYMkVSID-cXIbdLZTcUN5fwvG4iIlfRgDzScqJw0qqE91U_Cpr5AN-821suJfSe5QpkwPdL62ZAfqvGEsG-X16Wmx9pBA3hcsxBos0wW4cr9Y2Qo71eE2RqQ2KhjtCEp5F9woEAQ7YZAs5W88W_L6eGq_IPw_vg1utEResRgLpryf8UU22GFHBU5c8K1ZFXSfiaKVtJs02-McrY8fmPC1TMIK8IDTzUPRrWSB6Y8x5NobpzjWUlTu4qMEMBVG3G66yfhowSI5Wp_Jk5rigDrfnlagYNee2RQn5Mau32UCF5Q)
+[Decode Token via jwt.io](https://jwt.io/#debugger-io?token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImE3MjhhYTE5M2VhZTMyMzg0M2ZjNTZlOTNlN2MwZDFiIiwidHlwIjoiSldUIn0.eyJuYmYiOjE1NDIxNDc5OTQsImV4cCI6MTU0NDczOTk5NCwiaXNzIjoiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbGhvc3Q6NDQzMzIvcmVzb3VyY2VzIiwiYSIsImIiLCJjIiwiZCIsImUiLCJjYXQiLCJkb2ciXSwiY2xpZW50X2lkIjoiYXJiaXRyYXJ5LXJlc291cmNlLW93bmVyLWNsaWVudCIsInJvbGUiOlsiYXBwbGljYXRpb24iLCJsaW1pdGVkIl0sInF1ZXJ5IjpbImRhc2hib2FyZCIsImxpY2Vuc2luZyJdLCJzZWF0SWQiOiI4YzU5ZWM0MS01NGYzLTQ2MGItYTA0ZS01MjBmYzViOTk3M2QiLCJwaWlkIjoiMjM2OGQyMTMtZDA2Yy00YzJhLWEwOTktMTFjMzRhZGMzNTc5IiwibnVkaWJyYW5jaF93YXRlcm1hcmsiOiJEYWZmeSBEdWNrIiwic2NvcGUiOlsiYSIsImIiLCJjIiwiZCIsImUiXSwiYW1yIjpbImFnZW50OnVzZXJuYW1lOmFnZW50MEBzdXBwb3J0dGVjaC5jb20iLCJhZ2VudDpjaGFsbGVuZ2U6ZnVsbFNTTiIsImFnZW50OmNoYWxsZW5nZTpob21lWmlwIl0sImN1c3RvbV9wYXlsb2FkIjp7InNvbWVfc3RyaW5nIjoiZGF0YSIsInNvbWVfbnVtYmVyIjoxMjM0LCJzb21lX29iamVjdCI6eyJzb21lX3N0cmluZyI6ImRhdGEiLCJzb21lX251bWJlciI6MTIzNH0sInNvbWVfYXJyYXkiOlt7ImEiOiJiIn0seyJiIjoiYyJ9XX19.2r-cxJtSyDIcQGPInmnXUd51RPbPi-AS8TQ0n0tSI0pixOuEG08fzzJGKKNX5hYFw47sdULRSL4DAsGporoo3_cUJH9Kao61qU-NaZw7qgS9CJwcm1Xw8zCwCTEy-cySNq0gt6V_aValvTGpfgHnmdzWM47GyK375O2Is1bwu3gIDdl4yf9fwNxNb4hBuCK2S84SmvQDrPFJuGz4b1cE9K0hogCLnkAHfe3-7DrekXuXLiVA1Y_vTbMxQSu0C8THG5s1P6GH5rBV5oG5LOaVftWSIV8UX5vDSlzyAPnrncdMu5sCvXcZi0sxtk2ouAgPQs-bS5Y3onRUdQLn_Se-pQ)
 
 ```
 {
-  "nbf": 1540148778,
-  "exp": 1542740778,
+  "nbf": 1542147994,
+  "exp": 1544739994,
   "iss": "https://localhost:44332",
   "aud": [
     "https://localhost:44332/resources",
@@ -109,7 +114,23 @@ Body:
     "agent:username:agent0@supporttech.com",
     "agent:challenge:fullSSN",
     "agent:challenge:homeZip"
-  ]
+  ],
+  "custom_payload": {
+    "some_string": "data",
+    "some_number": 1234,
+    "some_object": {
+      "some_string": "data",
+      "some_number": 1234
+    },
+    "some_array": [
+      {
+        "a": "b"
+      },
+      {
+        "b": "c"
+      }
+    ]
+  }
 }
 ```
  
