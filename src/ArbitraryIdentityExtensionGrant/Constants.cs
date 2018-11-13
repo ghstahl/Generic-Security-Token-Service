@@ -8,7 +8,7 @@
         public const string ArbitraryClaims = "arbitrary_claims";
         public const string ArbitraryAmrs = "arbitrary_amrs";
         public const string ArbitraryAudiences = "arbitrary_audiences";
-        
+        public const string CustomPayload = "custom_payload";
         public const string Subject = "subject";
         public const string ArbitraryIdentityProfileService = "arbitrary_identity_profile_service";
     }

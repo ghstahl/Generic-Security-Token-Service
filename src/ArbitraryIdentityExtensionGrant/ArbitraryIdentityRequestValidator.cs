@@ -7,7 +7,7 @@ using IdentityModel;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-
+using IdentityServer4Extras.Extensions;
 namespace ArbitraryIdentityExtensionGrant
 {
     static class RequestValidationExtensions
@@ -75,7 +75,8 @@ namespace ArbitraryIdentityExtensionGrant
                                                                          JwtClaimTypes.SessionId,
                                                                          JwtClaimTypes.Subject,
                                                                          JwtClaimTypes.Scope,
-                                                                         JwtClaimTypes.Confirmation
+                                                                         JwtClaimTypes.Confirmation,
+                                                                         Constants.CustomPayload
                                                                      });
 
         private static List<string> _oneMustExitsArguments;
@@ -145,6 +146,18 @@ namespace ArbitraryIdentityExtensionGrant
                     }
                 }
             }
+            if (!error)
+            {
+                var customPayload = raw[Constants.CustomPayload];
+                if (!string.IsNullOrWhiteSpace(customPayload))
+                {
+                    error = !customPayload.IsValidJson();
+                    if (error)
+                    {
+                        los.Add($"{Constants.CustomPayload} is not valid: '{customPayload}'.");
+                    }
+                }
+            }
 
             if (error)
             {
@@ -153,6 +166,4 @@ namespace ArbitraryIdentityExtensionGrant
             }
         }
     }
-
-
 }

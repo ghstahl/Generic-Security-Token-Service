@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Services;
@@ -62,6 +63,12 @@ namespace ArbitraryIdentityExtensionGrant
                 {
                     token.Claims.Add(claim);
                 }
+            }
+            var customPayload = request.ValidatedRequest.Raw[Constants.CustomPayload];
+            if (!string.IsNullOrWhiteSpace(customPayload))
+            {
+                token.Claims.Add(new Claim(Constants.CustomPayload, customPayload, IdentityServerConstants.ClaimValueTypes.Json));
+
             }
             var clientExtra = request.ValidatedRequest.Client as ClientExtra;
             if (!string.IsNullOrEmpty(clientExtra.Watermark))

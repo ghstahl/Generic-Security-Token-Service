@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
 using IdentityServer4.Validation;
+using IdentityServer4Extras.Extensions;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -77,7 +78,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                          JwtClaimTypes.SessionId,
                                                                          JwtClaimTypes.Subject,
                                                                          JwtClaimTypes.Scope,
-                                                                         JwtClaimTypes.Confirmation
+                                                                         JwtClaimTypes.Confirmation,
+                                                                         Constants.CustomPayload
                                                                      });
 
         private static List<string> _oneMustExitsArguments;
@@ -149,7 +151,18 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     }
                 }
             }
-
+            if (!error)
+            {
+                var customPayload = raw[Constants.CustomPayload];
+                if (!string.IsNullOrWhiteSpace(customPayload))
+                {
+                    error = !customPayload.IsValidJson();
+                    if (error)
+                    {
+                        los.Add($"{Constants.CustomPayload} is not valid: '{customPayload}'.");
+                    }
+                }
+            }
             if (error)
             {
                 context.Result.IsError = true;

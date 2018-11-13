@@ -7,6 +7,7 @@
         public const string ArbitraryNoSubject = "arbitrary_no_subject";
         public const string ArbitraryClaims = "arbitrary_claims";
         public const string ArbitraryAmrs = "arbitrary_amrs";
+        public const string CustomPayload = "custom_payload";
         public const string ArbitraryAudiences = "arbitrary_audiences";
     }
 }

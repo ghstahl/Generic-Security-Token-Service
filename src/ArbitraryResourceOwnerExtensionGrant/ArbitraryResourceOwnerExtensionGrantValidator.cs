@@ -18,6 +18,7 @@ using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
@@ -145,6 +146,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
             {
                 subject = context.Request.Raw.Get("subject");
             }
+           
+
             // get user's identity
             var claims = new List<Claim>
             {
@@ -156,6 +159,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             _principalAugmenter.AugmentPrincipal(principal);
             var userClaimsFinal = new List<Claim>()
             {
+            
                 
             };
            
