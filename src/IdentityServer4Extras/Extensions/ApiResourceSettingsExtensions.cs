@@ -28,10 +28,20 @@ namespace IdentityServer4Extras.Extensions
                         scopes.Add(new Scope($"{prePend}{scopeRecord.Name}",scopeRecord.DisplayName));
                     }
                 }
-                
+                List<Secret> apiSecrets = new List<Secret>();
+                if (apiResourceRecord.Secrets != null)
+                {
+                    foreach (var secret in apiResourceRecord.Secrets)
+                    {
+                        apiSecrets.Add(new Secret(secret.Sha256()));
+                    }
+
+                   
+                }
                 apiResources.Add(new ApiResource(apiResourceRecord.Name)
                 {
-                    Scopes = scopes
+                    Scopes = scopes,
+                    ApiSecrets = apiSecrets
                 });
             }
 

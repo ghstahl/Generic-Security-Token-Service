@@ -13,5 +13,7 @@ namespace IdentityServer4Extras.Models
 
         [JsonProperty("scopes")]
         public List<ApiResourceScope> Scopes { get; set; }
+        [JsonProperty("secrets")]
+        public List<string> Secrets { get; set; }
     }
 }
