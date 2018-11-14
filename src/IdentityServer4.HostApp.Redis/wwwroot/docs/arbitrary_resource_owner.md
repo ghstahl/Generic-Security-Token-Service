@@ -11,11 +11,8 @@
   <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_resource_owner</b>".</dd>
 
   <dt><h2>subject</h2></dt>
-  <dd><b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.</dd>
+  <dd><b>REQUIRED</b>.  The passed through subject.</dd>
   
-  <dt><h2>access_token</h2></dt>
-  <dd><b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.</dd>
-
   <dt><h2>client_id</h2></dt>
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
          the registration process described by Section 2.2.</dd>
@@ -30,7 +27,7 @@
 	<b>i.e. <em>scope:offline_access a b c d e</em></b></dd>
 	
   <dt><h2>arbitrary_claims</h2></dt>
-  <dd><b>REQUIRED</b>.  This is a json string object of key/array pairs.  
+  <dd><b>OPTIONAL</b>.  This is a json string object of key/array pairs.  
 	<b>i.e. <em>arbitrary_claims:{"top":["TopDog"],"role": ["application","limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}</em></b></dd>
 
   <dt><h2>arbitrary_amrs</h2></dt>

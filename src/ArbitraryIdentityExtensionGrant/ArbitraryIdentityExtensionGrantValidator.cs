@@ -154,11 +154,7 @@ namespace ArbitraryIdentityExtensionGrant
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
             _principalAugmenter.AugmentPrincipal(principal);
-            var userClaimsFinal = new List<Claim>()
-            {
-                new Claim(ArbitraryIdentityExtensionGrant.Constants.ArbitraryClaims, 
-                    raw[ArbitraryIdentityExtensionGrant.Constants.ArbitraryClaims])
-            };
+            var userClaimsFinal = new List<Claim>();
 
  
             // optional stuff;

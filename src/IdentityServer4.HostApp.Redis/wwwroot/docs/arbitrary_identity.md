@@ -11,10 +11,7 @@
   <dd><b>REQUIRED</b>.  Value MUST be set to "<b>arbitrary_identity</b>".</dd>
 
   <dt><h2>subject</h2></dt>
-  <dd><b>REQUIRED if access_token is missing</b>.  The passed through subject. Either subject or access_token must be passed.</dd>
-  
-  <dt><h2>access_token</h2></dt>
-  <dd><b>REQUIRED if subject is missing</b>.  An access_token granted by this service.  access_token takes precedence over subject if both are passed.  The subject in the access_token is the only thing used, but that access_token has to be valid.</dd>
+  <dd><b>REQUIRED</b>.  The passed through subject.</dd>
 
   <dt><h2>client_id</h2></dt>
   <dd><b>REQUIRED</b>.  The client identifier issued to the client during
@@ -30,7 +27,7 @@
 	<b>i.e. <em>scope:offline_access a b c d e</em></b></dd>
 	 
   <dt><h2>arbitrary_claims</h2></dt>
-  <dd><b>REQUIRED</b>.  This is a json string object of key/value pairs.  
+  <dd><b>OPTIONAL</b>.  This is a json string object of key/value pairs.  
 	i.e. <em>arbitrary_claims:{"some-guid":"1234abcd","In":"Flames"}</em></dd>
 
   <dt><h2>arbitrary_amrs</h2></dt>

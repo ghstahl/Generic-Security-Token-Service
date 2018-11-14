@@ -46,8 +46,7 @@ namespace ArbitraryIdentityExtensionGrant
                                                                       new List<string>
                                                                       {
                                                                           "client_id",
-                                                                          "client_secret",
-                                                                          Constants.ArbitraryClaims
+                                                                          "client_secret" 
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
