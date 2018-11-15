@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using IdentityModel;
@@ -16,7 +15,7 @@ namespace IdentityServer4Extras.Validators
     /// <summary>
     /// Validates a client secret using the registered secret validators and parsers
     /// </summary>
-    public class NoSecretRefreshClientSecretValidator : IClientSecretValidator
+    public class NoSecretRefreshClientSecretValidator : IClientSecretValidatorPlugin
     {
         private IClientSecretValidator StockClientSecretValidator { get; set; }
         private readonly ILogger _logger;
@@ -25,6 +24,7 @@ namespace IdentityServer4Extras.Validators
         private readonly SecretValidator _validator;
         private readonly SecretParser _parser;
         private readonly ISecretParserExtra _secretParserExtra;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityServer4.Validation.ClientSecretValidator"/> class.
         /// </summary>
@@ -33,12 +33,16 @@ namespace IdentityServer4Extras.Validators
         /// <param name="validator">The validator.</param>
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
-        public NoSecretRefreshClientSecretValidator(IClientStore clients, SecretParser parser,
+        public NoSecretRefreshClientSecretValidator(
+            ClientSecretValidator stockClientSecretValidator,
+            IClientStore clients,
+            SecretParser parser,
             ISecretParserExtra secretParserExtra,
-            SecretValidator validator, 
-            IEventService events, ILogger<IdentityServer4.Validation.ClientSecretValidator> logger)
+            SecretValidator validator,
+            IEventService events,
+            ILogger<NoSecretRefreshClientSecretValidator> logger)
         {
-            StockClientSecretValidator = new ClientSecretValidator(clients,parser,validator,events,logger);
+            StockClientSecretValidator = stockClientSecretValidator;
             _clients = clients;
             _parser = parser;
             _secretParserExtra = secretParserExtra;
@@ -79,6 +83,7 @@ namespace IdentityServer4Extras.Validators
                 _logger.LogError("No client with id '{clientId}' found. aborting", parsedSecret.Id);
                 return fail;
             }
+
             var form = (await context.Request.ReadFormAsync()).AsNameValueCollection();
             var grantType = form.Get(OidcConstants.TokenRequest.GrantType);
             if (grantType == OidcConstants.GrantTypes.RefreshToken)
@@ -101,6 +106,7 @@ namespace IdentityServer4Extras.Validators
                     return success;
                 }
             }
+
             return await StockClientSecretValidator.ValidateAsync(context);
         }
 

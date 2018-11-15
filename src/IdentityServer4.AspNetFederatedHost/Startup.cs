@@ -130,7 +130,10 @@ namespace IdentityServer4.AspNetFederatedHost
             // my replacement services.
             builder.AddProfileServiceManager();
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
+            
+            builder.AddPluginHostClientSecretValidator();
             builder.AddNoSecretRefreshClientSecretValidator();
+
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
 
             // My Types

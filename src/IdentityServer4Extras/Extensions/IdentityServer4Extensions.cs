@@ -12,14 +12,17 @@ namespace IdentityServer4Extras.Extensions
 {
     public static class IdentityServer4Extensions
     {
+        public static IIdentityServerBuilder AddPluginHostClientSecretValidator(this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<ClientSecretValidator>();
+            builder.Services.RemoveAll<IClientSecretValidator>();
+            builder.Services.AddTransient<ClientSecretValidator>();
+            builder.Services.TryAddTransient<IClientSecretValidator, PluginHostClientSecretValidator>();
+            return builder;
+        }
         public static IIdentityServerBuilder AddNoSecretRefreshClientSecretValidator(this IIdentityServerBuilder builder)
         {
-            builder.Services.Remove<IClientSecretValidator>();
-            builder.Services.TryAddTransient<IClientSecretValidator, NoSecretRefreshClientSecretValidator>();
-
-            builder.Services.Remove<IClientSecretValidator>();
-            builder.Services.TryAddTransient<IClientSecretValidator, NoSecretRefreshClientSecretValidator>();
-          
+            builder.Services.AddTransient<IClientSecretValidatorPlugin, NoSecretRefreshClientSecretValidator>();
             return builder;
         }
         public static IIdentityServerBuilder AddInMemoryPersistedGrantStoreExtra(this IIdentityServerBuilder builder)

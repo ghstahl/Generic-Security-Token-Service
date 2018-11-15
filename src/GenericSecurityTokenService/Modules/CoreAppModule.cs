@@ -118,7 +118,9 @@ namespace GenericSecurityTokenService.Modules
 
             // my replacement services.
             builder.AddRefreshTokenRevokationGeneratorWorkAround();
+            builder.AddPluginHostClientSecretValidator();
             builder.AddNoSecretRefreshClientSecretValidator();
+
             builder.AddInMemoryClientStoreExtra(); // redis extra needs IClientStoreExtra
             builder.SwapOutTokenResponseGenerator();
             builder.SwapOutDefaultTokenService();
