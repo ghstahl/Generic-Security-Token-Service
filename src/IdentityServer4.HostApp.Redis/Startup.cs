@@ -6,10 +6,12 @@ using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
+using AspNetCoreRateLimit;
 using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Health;
+using IdentityServer4.HostApp.RateLimiting;
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -55,6 +57,7 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -161,6 +164,7 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
 
+            services.AddRateLimiting(Configuration);
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
@@ -170,7 +174,8 @@ namespace IdentityServer4.HostApp
             services.RegisterGraphQLCoreConfigurationServices(Configuration);
 
             services.AddMyHealthCheck(Configuration);
-            services.AddMemoryCache();
+
+         
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -286,9 +291,11 @@ namespace IdentityServer4.HostApp
 
 
             app.UseStaticFiles();
+            app.UseIdentityServerClientMiddleware();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
+
             app.UseMvc();
         }
         private void StartupLogger()
