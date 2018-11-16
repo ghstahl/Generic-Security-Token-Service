@@ -17,21 +17,18 @@ namespace ClientIdRateLimitStore
 
         public async Task<ClientRequestIdentity> GetClientRequestIdentityAsync(HttpContext httpContext)
         {
-            var clientId = "anon";
             var parsedSecret = await _parser.ParseAsync(httpContext);
             if (parsedSecret != null)
             {
-                clientId = parsedSecret.Id;
-
+                var identity = new ClientRequestIdentity
+                {
+                    Path = httpContext.Request.Path.ToString().ToLowerInvariant(),
+                    HttpVerb = httpContext.Request.Method.ToLowerInvariant(),
+                    ClientId = parsedSecret.Id
+                };
+                return identity;
             }
-
-            var identity = new ClientRequestIdentity
-            {
-                Path = httpContext.Request.Path.ToString().ToLowerInvariant(),
-                HttpVerb = httpContext.Request.Method.ToLowerInvariant(),
-                ClientId = clientId
-            };
-            return identity;
+            return null;
         }
     }
 }
