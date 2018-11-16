@@ -291,7 +291,7 @@ namespace IdentityServer4.HostApp
 
 
             app.UseStaticFiles();
-            app.UseIdentityServerClientMiddleware();
+            app.UseClientRateLimiting();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();

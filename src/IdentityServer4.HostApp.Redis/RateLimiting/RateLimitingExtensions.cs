@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AspNetCoreRateLimit;
+using ClientIdRateLimitStore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,7 +28,7 @@ namespace IdentityServer4.HostApp.RateLimiting
             services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
 
 
-            services.AddSingleton<IClientRateLimiterHandler, ClientRateLimiterHandler>();
+            services.AddIdentityServerClientRequestStore();
 
         }
     }

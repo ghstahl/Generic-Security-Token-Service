@@ -44,6 +44,7 @@
     <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\AspNetCore.HealthChecks\AspNetCore.HealthChecks.csproj" />
     <ProjectReference Include="..\AspNetCoreRateLimit.Core\AspNetCoreRateLimit.Core.csproj" />
+    <ProjectReference Include="..\ClientIdRateLimitStore\ClientIdRateLimitStore.csproj" />
     <ProjectReference Include="..\GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj" />
     <ProjectReference Include="..\GraphQLCoreController\GraphQLCoreController.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj" />
