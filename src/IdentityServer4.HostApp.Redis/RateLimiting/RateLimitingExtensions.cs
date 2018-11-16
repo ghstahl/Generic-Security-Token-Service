@@ -43,9 +43,8 @@ namespace IdentityServer4.HostApp.RateLimiting
             services.AddSingleton<IClientPolicyStore, DistributedCacheClientPolicyStore>();
             services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
 
-
             services.AddIdentityServerClientRequestStore();
-
+            services.AddClientRateLimitServices();
         }
     }
 }

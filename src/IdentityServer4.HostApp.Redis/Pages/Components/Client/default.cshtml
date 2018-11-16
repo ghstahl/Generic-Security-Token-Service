@@ -1,12 +1,14 @@
-﻿@model IdentityServer4Extras.ClientExtra
+﻿@using AspNetCoreRateLimit
+@model IdentityServer4.HostApp.ViewComponents.ClientViewComponentModel
 
 <div>
     @if (Model != null)
     {
-        var secrets = from item in Model.ClientSecrets
+        var clientExtra = Model.ClientExtra;
+        var secrets = from item in clientExtra.ClientSecrets
             select item.Value;
 
-        <h3>@Model.ClientId</h3>
+        <h3>@clientExtra.ClientId</h3>
         <div class="table-responsive">
             <table class="table  table-bordered">
                 <thead class="thead-light">
@@ -17,11 +19,11 @@
                 </thead>
                 <tbody>
                 <tr>
-                    <td>@nameof(Model.Enabled)</td>
-                    <td>@Model.Enabled</td>
+                    <td>@nameof(clientExtra.Enabled)</td>
+                    <td>@clientExtra.Enabled</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.ClientSecrets)</td>
+                    <td>@nameof(clientExtra.ClientSecrets)</td>
                     <td>
                         <ul class="list-unstyled">
                             @foreach (var item in secrets)
@@ -32,13 +34,13 @@
                     </td>
 
                 </tr>
-                @if (Model.AllowedScopes != null)
+                @if (clientExtra.AllowedScopes != null)
                 {
                     <tr>
-                        <td>@nameof(Model.AllowedScopes)</td>
+                        <td>@nameof(clientExtra.AllowedScopes)</td>
                         <td>
                             <ul class="list-unstyled">
-                                @foreach (var item in Model.AllowedScopes)
+                                @foreach (var item in clientExtra.AllowedScopes)
                                 {
                                     <li>@item</li>
                                 }
@@ -49,10 +51,10 @@
 
                 }
                 <tr>
-                    <td>@nameof(Model.AllowedGrantTypes)</td>
+                    <td>@nameof(clientExtra.AllowedGrantTypes)</td>
                     <td>
                         <ul class="list-unstyled">
-                            @foreach (var item in Model.AllowedGrantTypes)
+                            @foreach (var item in clientExtra.AllowedGrantTypes)
                             {
                                 <li>@item</li>
                             }
@@ -60,46 +62,89 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.AccessTokenLifetime)</td>
-                    <td>@Model.AccessTokenLifetime</td>
+                    <td>@nameof(clientExtra.AccessTokenLifetime)</td>
+                    <td>@clientExtra.AccessTokenLifetime</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.AbsoluteRefreshTokenLifetime)</td>
-                    <td>@Model.AbsoluteRefreshTokenLifetime</td>
+                    <td>@nameof(clientExtra.AbsoluteRefreshTokenLifetime)</td>
+                    <td>@clientExtra.AbsoluteRefreshTokenLifetime</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.SlidingRefreshTokenLifetime)</td>
-                    <td>@Model.SlidingRefreshTokenLifetime</td>
+                    <td>@nameof(clientExtra.SlidingRefreshTokenLifetime)</td>
+                    <td>@clientExtra.SlidingRefreshTokenLifetime</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.RefreshTokenUsage)</td>
-                    <td>@Model.RefreshTokenUsage</td>
+                    <td>@nameof(clientExtra.RefreshTokenUsage)</td>
+                    <td>@clientExtra.RefreshTokenUsage</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.AccessTokenType)</td>
-                    <td>@Model.AccessTokenType</td>
+                    <td>@nameof(clientExtra.AccessTokenType)</td>
+                    <td>@clientExtra.AccessTokenType</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.AllowOfflineAccess)</td>
-                    <td>@Model.AllowOfflineAccess</td>
+                    <td>@nameof(clientExtra.AllowOfflineAccess)</td>
+                    <td>@clientExtra.AllowOfflineAccess</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.RequireClientSecret)</td>
-                    <td>@Model.RequireClientSecret</td>
+                    <td>@nameof(clientExtra.RequireClientSecret)</td>
+                    <td>@clientExtra.RequireClientSecret</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.RequireRefreshClientSecret)</td>
-                    <td>@Model.RequireRefreshClientSecret</td>
+                    <td>@nameof(clientExtra.RequireRefreshClientSecret)</td>
+                    <td>@clientExtra.RequireRefreshClientSecret</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.ClientClaimsPrefix)</td>
-                    <td>@Model.ClientClaimsPrefix</td>
+                    <td>@nameof(clientExtra.ClientClaimsPrefix)</td>
+                    <td>@clientExtra.ClientClaimsPrefix</td>
                 </tr>
                 <tr>
-                    <td>@nameof(Model.Watermark)</td>
-                    <td>@Model.Watermark</td>
+                    <td>@nameof(clientExtra.Watermark)</td>
+                    <td>@clientExtra.Watermark</td>
                 </tr>
                 </tbody>
+            </table>
+        </div>
+    }
+    @if (Model != null && Model.RateLimitCounterRecords != null)
+    {
+        <h3>Rate-Limit-Records</h3>
+        <div class="table-responsive">
+            <table class="table  table-bordered">
+                <thead class="thead-light">
+                <tr>
+                    <th>Period</th>
+                    <th>Limit</th>
+                    <th>Remaining</th>
+                </tr>
+                </thead>
+           
+            <tbody>
+          
+            @{
+                var rateLimitCounterRecords = Model.RateLimitCounterRecords;
+                foreach (var item in rateLimitCounterRecords)
+                {
+                    long currentCount = 0;
+                    <tr>
+                        <td>@item.RateLimitRule.Period</td>
+                        <td>@item.RateLimitRule.Limit</td>
+
+                        @if (item.RateLimitCounter != null)
+                        {
+                            var rateLimitCounter = (RateLimitCounter) item.RateLimitCounter;
+                            currentCount = rateLimitCounter.TotalRequests;
+                        }
+                        @{
+                            var remaining = item.RateLimitRule.Limit - currentCount;
+                            <td>
+                                @remaining
+                            </td>
+                        } 
+                        
+                    </tr>
+                }
+            }
+            </tbody>
             </table>
         </div>
     }

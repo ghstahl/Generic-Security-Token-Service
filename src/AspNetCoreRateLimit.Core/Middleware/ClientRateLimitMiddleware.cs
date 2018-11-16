@@ -12,15 +12,16 @@ namespace AspNetCoreRateLimit
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ClientRateLimitMiddleware> _logger;
-        private readonly ClientRateLimitProcessor _processor;
         private readonly ClientRateLimitOptions _options;
         private IClientRequestStore _clientRequestStore;
+        private IClientRateLimitProcessor _processor;
 
         public ClientRateLimitMiddleware(RequestDelegate next,
             IOptions<ClientRateLimitOptions> options,
             IRateLimitCounterStore counterStore,
             IClientPolicyStore policyStore,
             IClientRequestStore clientRequestStore,
+            IClientRateLimitProcessor clientRateLimitProcessor,
             ILogger<ClientRateLimitMiddleware> logger
             )
         {
@@ -28,8 +29,8 @@ namespace AspNetCoreRateLimit
             _options = options.Value;
             _clientRequestStore = clientRequestStore;
             _logger = logger;
-
-            _processor = new ClientRateLimitProcessor(_options, counterStore, policyStore);
+            _processor = clientRateLimitProcessor;
+           // _processor = new ClientRateLimitProcessor(_options, counterStore, policyStore);
         }
 
         public async Task Invoke(HttpContext httpContext)

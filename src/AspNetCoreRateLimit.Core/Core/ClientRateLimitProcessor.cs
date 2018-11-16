@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using AspNetCoreRateLimit.Services;
+using Microsoft.Extensions.Options;
 
 namespace AspNetCoreRateLimit
 {
-    public class ClientRateLimitProcessor
+    public class ClientRateLimitProcessor : IClientRateLimitProcessor
     {
         private readonly ClientRateLimitOptions _options;
         private readonly IRateLimitCounterStore _counterStore;
@@ -13,18 +15,18 @@ namespace AspNetCoreRateLimit
 
         private static readonly object _processLocker = new object();
 
-        public ClientRateLimitProcessor(ClientRateLimitOptions options,
-           IRateLimitCounterStore counterStore,
-           IClientPolicyStore policyStore)
+        public ClientRateLimitProcessor(
+            IOptions<ClientRateLimitOptions> options,
+            IRateLimitCounterStore counterStore,
+            IClientPolicyStore policyStore)
         {
-            _options = options;
+            _options = options.Value;
             _counterStore = counterStore;
             _policyStore = policyStore;
-
-            _core = new RateLimitCore(false, options, _counterStore);
+            _core = new RateLimitCore(false, options.Value, _counterStore);
         }
 
-        public List<RateLimitRule> GetMatchingRules(ClientRequestIdentity identity)
+        public IEnumerable<RateLimitRule> GetMatchingRules(ClientRequestIdentity identity)
         {
             var limits = new List<RateLimitRule>();
             var policy = _policyStore.Get($"{_options.ClientPolicyPrefix}_{identity.ClientId}");
@@ -34,11 +36,14 @@ namespace AspNetCoreRateLimit
                 if (_options.EnableEndpointRateLimiting)
                 {
                     // search for rules with endpoints like "*" and "*:/matching_path"
-                    var pathLimits = policy.Rules.Where(l => $"*:{identity.Path}".ContainsIgnoreCase(l.Endpoint)).AsEnumerable();
+                    var pathLimits = policy.Rules.Where(l => $"*:{identity.Path}".ContainsIgnoreCase(l.Endpoint))
+                        .AsEnumerable();
                     limits.AddRange(pathLimits);
 
                     // search for rules with endpoints like "matching_verb:/matching_path"
-                    var verbLimits = policy.Rules.Where(l => $"{identity.HttpVerb}:{identity.Path}".ContainsIgnoreCase(l.Endpoint)).AsEnumerable();
+                    var verbLimits = policy.Rules
+                        .Where(l => $"{identity.HttpVerb}:{identity.Path}".ContainsIgnoreCase(l.Endpoint))
+                        .AsEnumerable();
                     limits.AddRange(verbLimits);
                 }
                 else
@@ -59,11 +64,14 @@ namespace AspNetCoreRateLimit
                 if (_options.EnableEndpointRateLimiting)
                 {
                     // search for rules with endpoints like "*" and "*:/matching_path" in general rules
-                    var pathLimits = _options.GeneralRules.Where(l => $"*:{identity.Path}".ContainsIgnoreCase(l.Endpoint)).AsEnumerable();
+                    var pathLimits = _options.GeneralRules
+                        .Where(l => $"*:{identity.Path}".ContainsIgnoreCase(l.Endpoint)).AsEnumerable();
                     matchingGeneralLimits.AddRange(pathLimits);
 
                     // search for rules with endpoints like "matching_verb:/matching_path" in general rules
-                    var verbLimits = _options.GeneralRules.Where(l => $"{identity.HttpVerb}:{identity.Path}".ContainsIgnoreCase(l.Endpoint)).AsEnumerable();
+                    var verbLimits = _options.GeneralRules
+                        .Where(l => $"{identity.HttpVerb}:{identity.Path}".ContainsIgnoreCase(l.Endpoint))
+                        .AsEnumerable();
                     matchingGeneralLimits.AddRange(verbLimits);
                 }
                 else
@@ -74,12 +82,13 @@ namespace AspNetCoreRateLimit
                 }
 
                 // get the most restrictive general limit for each period 
-                var generalLimits = matchingGeneralLimits.GroupBy(l => l.Period).Select(l => l.OrderBy(x => x.Limit)).Select(l => l.First()).ToList();
+                var generalLimits = matchingGeneralLimits.GroupBy(l => l.Period).Select(l => l.OrderBy(x => x.Limit))
+                    .Select(l => l.First()).ToList();
 
                 foreach (var generalLimit in generalLimits)
                 {
                     // add general rule if no specific rule is declared for the specified period
-                    if(!limits.Exists(l => l.Period == generalLimit.Period))
+                    if (!limits.Exists(l => l.Period == generalLimit.Period))
                     {
                         limits.Add(generalLimit);
                     }
@@ -93,9 +102,9 @@ namespace AspNetCoreRateLimit
             }
 
             limits = limits.OrderBy(l => l.PeriodTimespan).ToList();
-            if(_options.StackBlockedRequests)
+            if (_options.StackBlockedRequests)
             {
-                limits.Reverse();   
+                limits.Reverse();
             }
 
             return limits;
@@ -110,7 +119,8 @@ namespace AspNetCoreRateLimit
 
             if (_options.EndpointWhitelist != null && _options.EndpointWhitelist.Any())
             {
-                if (_options.EndpointWhitelist.Any(x => $"{requestIdentity.HttpVerb}:{requestIdentity.Path}".ContainsIgnoreCase(x)) ||
+                if (_options.EndpointWhitelist.Any(x =>
+                        $"{requestIdentity.HttpVerb}:{requestIdentity.Path}".ContainsIgnoreCase(x)) ||
                     _options.EndpointWhitelist.Any(x => $"*:{requestIdentity.Path}".ContainsIgnoreCase(x)))
                     return true;
             }
@@ -132,5 +142,6 @@ namespace AspNetCoreRateLimit
         {
             return _core.RetryAfterFrom(timestamp, rule);
         }
+
     }
 }

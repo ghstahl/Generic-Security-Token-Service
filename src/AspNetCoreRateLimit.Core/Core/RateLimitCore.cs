@@ -13,7 +13,7 @@ namespace AspNetCoreRateLimit
 
         public RateLimitCore(bool ipRateLimiting,
             RateLimitCoreOptions options,
-           IRateLimitCounterStore counterStore)
+            IRateLimitCounterStore counterStore)
         {
             _ipRateLimiting = ipRateLimiting;
             _options = options;
@@ -22,11 +22,11 @@ namespace AspNetCoreRateLimit
 
         public string ComputeCounterKey(ClientRequestIdentity requestIdentity, RateLimitRule rule)
         {
-            var key = _ipRateLimiting ? 
-                $"{_options.RateLimitCounterPrefix}_{requestIdentity.ClientIp}_{rule.Period}" :
-                $"{_options.RateLimitCounterPrefix}_{requestIdentity.ClientId}_{rule.Period}";
+            var key = _ipRateLimiting
+                ? $"{_options.RateLimitCounterPrefix}_{requestIdentity.ClientIp}_{rule.Period}"
+                : $"{_options.RateLimitCounterPrefix}_{requestIdentity.ClientId}_{rule.Period}";
 
-            if(_options.EnableEndpointRateLimiting)
+            if (_options.EnableEndpointRateLimiting)
             {
                 key += $"_{requestIdentity.HttpVerb}_{requestIdentity.Path}";
 
@@ -83,7 +83,32 @@ namespace AspNetCoreRateLimit
 
             return counter;
         }
+        public RateLimitCounter? GetStoredRateLimitCounter(ClientRequestIdentity requestIdentity, RateLimitRule rule)
+        {
+            var counterId = ComputeCounterKey(requestIdentity, rule);
 
+            // serial reads and writes
+            lock (_processLocker)
+            {
+                var entry = _counterStore.Get(counterId);
+                if (entry.HasValue)
+                {
+                    // entry has not expired
+                    if (entry.Value.Timestamp + rule.PeriodTimespan.Value >= DateTime.UtcNow)
+                    {
+
+                        // deep copy
+                        var counter = new RateLimitCounter
+                        {
+                            Timestamp = entry.Value.Timestamp,
+                            TotalRequests = entry.Value.TotalRequests
+                        };
+                        return counter;
+                    }
+                }
+            }
+            return null;
+        }
         public RateLimitHeaders GetRateLimitHeaders(ClientRequestIdentity requestIdentity, RateLimitRule rule)
         {
             var headers = new RateLimitHeaders();
@@ -91,15 +116,17 @@ namespace AspNetCoreRateLimit
             var entry = _counterStore.Get(counterId);
             if (entry.HasValue)
             {
-                headers.Reset = (entry.Value.Timestamp + ConvertToTimeSpan(rule.Period)).ToUniversalTime().ToString("o", DateTimeFormatInfo.InvariantInfo);
+                headers.Reset = (entry.Value.Timestamp + ConvertToTimeSpan(rule.Period)).ToUniversalTime()
+                    .ToString("o", DateTimeFormatInfo.InvariantInfo);
                 headers.Limit = rule.Period;
                 headers.Remaining = (rule.Limit - entry.Value.TotalRequests).ToString();
             }
             else
             {
-                headers.Reset = (DateTime.UtcNow + ConvertToTimeSpan(rule.Period)).ToUniversalTime().ToString("o", DateTimeFormatInfo.InvariantInfo);
+                headers.Reset = (DateTime.UtcNow + ConvertToTimeSpan(rule.Period)).ToUniversalTime()
+                    .ToString("o", DateTimeFormatInfo.InvariantInfo);
                 headers.Limit = rule.Period;
-                headers.Remaining = rule.Limit .ToString();
+                headers.Remaining = rule.Limit.ToString();
             }
 
             return headers;
