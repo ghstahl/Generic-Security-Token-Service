@@ -6,9 +6,24 @@ using AspNetCoreRateLimit;
 using ClientIdRateLimitStore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServer4.HostApp.RateLimiting
 {
+    public class MyClientRateLimitOptions : ClientRateLimitOptions
+    {
+
+    }
+    public class MyClientRateLimitOptionsAccessor : IOptions<ClientRateLimitOptions>
+    {
+        private MyClientRateLimitOptions _optionsValue;
+
+        public MyClientRateLimitOptionsAccessor(IOptions<MyClientRateLimitOptions> options)
+        {
+            _optionsValue = options.Value;
+        }
+        public ClientRateLimitOptions Value => _optionsValue;
+    }
     public static class RateLimitingExtensions
     {
         public static void AddRateLimiting(this IServiceCollection services, IConfiguration configuration)
@@ -17,7 +32,8 @@ namespace IdentityServer4.HostApp.RateLimiting
             services.AddOptions();
 
             //load general configuration from appsettings.json
-            services.Configure<ClientRateLimitOptions>(configuration.GetSection("IdentityServerClientRateLimiting"));
+            services.Configure<MyClientRateLimitOptions>(configuration.GetSection("IdentityServerClientRateLimiting"));
+            services.AddSingleton<IOptions<ClientRateLimitOptions>, MyClientRateLimitOptionsAccessor>();
 
             //load client rules from appsettings.json
             services.Configure<ClientRateLimitPolicies>(configuration.GetSection("ClientRateLimitPolicies"));
