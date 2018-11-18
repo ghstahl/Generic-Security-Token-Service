@@ -7,6 +7,7 @@ namespace IdentityServerRequestTrackerEvaluator.ClientRateLimiter
     {
         public static IServiceCollection AddClientRateLimiter(this IServiceCollection services)
         {
+            services.AddTransient<ClientRateLimiterRequestTrackerResult>();
             services.AddSingleton<IIdentityServerRequestTrackerEvaluator, ClientRateLimiter>();
             return services;
         }

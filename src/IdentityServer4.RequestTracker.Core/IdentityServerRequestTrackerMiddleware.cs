@@ -108,7 +108,6 @@ namespace IdentityServer4RequestTracker
                     {
                         return; // do not continue to the real IdentityServer4 middleware.
                     }
-                   
                 }
             }
            
@@ -124,7 +123,9 @@ namespace IdentityServer4RequestTracker
             try
             {
                 name = evaluator.Name;
-                directive = await evaluator.EvaluateAsync(requestRecord);
+                var result = await evaluator.EvaluateAsync(requestRecord);
+                await result.ProcessAsync(requestRecord.HttpContext);
+                directive = result.Directive;
             }
             catch (Exception e)
             {
