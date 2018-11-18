@@ -57,7 +57,8 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDistributedMemoryCache();
+           
+            
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -103,11 +104,15 @@ namespace IdentityServer4.HostApp
                     });
                 builder.AddRedisOperationalStoreExtra();
                 services.AddRedisOperationalStoreExtraTypes();
-
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                });
             }
             else
             {
                 builder.AddInMemoryPersistedGrantStoreExtra();
+                services.AddDistributedMemoryCache();
             }
 
             if (_hostingEnvironment.IsDevelopment())
