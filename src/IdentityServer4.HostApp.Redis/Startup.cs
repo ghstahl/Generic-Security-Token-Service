@@ -12,10 +12,13 @@ using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Health;
 using IdentityServer4.HostApp.RateLimiting;
+
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServer4Extras.Stores;
+using IdentityServer4RequestTracker;
+using IdentityServerRequestTrackerEvaluator.ClientRateLimiter;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -170,6 +173,8 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreExtensionGrantsTypes();
 
             services.AddRateLimiting(Configuration);
+            services.AddIdentityServer4RequestTrackerMiddleware();
+            services.AddClientRateLimiter();
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
@@ -297,6 +302,7 @@ namespace IdentityServer4.HostApp
 
             app.UseStaticFiles();
             app.UseClientRateLimiting();
+            app.UseIdentityServer4RequestTrackerMiddleware();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();

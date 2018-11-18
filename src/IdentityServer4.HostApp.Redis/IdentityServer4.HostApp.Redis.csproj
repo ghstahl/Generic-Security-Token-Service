@@ -49,7 +49,9 @@
     <ProjectReference Include="..\GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj" />
     <ProjectReference Include="..\GraphQLCoreController\GraphQLCoreController.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj" />
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\IdentityServerRequestTrackerEvaluator.ClientRateLimiter\IdentityServerRequestTrackerEvaluator.ClientRateLimiter.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
     <ProjectReference Include="..\P7.Core\P7.Core.csproj" />
