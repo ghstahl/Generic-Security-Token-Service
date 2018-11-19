@@ -6,13 +6,11 @@ using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
-using AspNetCoreRateLimit;
 using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions;
 using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.HostApp.Health;
 using IdentityServer4.HostApp.RateLimiting;
-
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -172,7 +170,7 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
 
-            services.AddRateLimiting(Configuration);
+         //   services.AddRateLimiting(Configuration);
             services.AddClientRateLimiterOptions(Configuration);
             
             services.AddIdentityServer4RequestTrackerMiddleware();
@@ -303,7 +301,6 @@ namespace IdentityServer4.HostApp
 
 
             app.UseStaticFiles();
-            app.UseClientRateLimiting();
             app.UseIdentityServer4RequestTrackerMiddleware();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");

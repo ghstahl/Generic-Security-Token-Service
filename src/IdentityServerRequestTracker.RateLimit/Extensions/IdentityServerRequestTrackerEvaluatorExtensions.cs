@@ -12,7 +12,7 @@ namespace IdentityServerRequestTracker.RateLimit.Extensions
         {
             services.AddTransient<ClientRateLimiterRequestTrackerResult>();
             services.AddSingleton<IIdentityServerRequestTrackerEvaluator, ClientRateLimiterRequestTrackerEvaluator>();
-            services.AddSingleton<IClientRateLimitProcessor, ClientRateLimitProcessor>();
+            services.AddSingleton<IClientRateLimitProcessor, RateLimitCore>();
             services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             
 

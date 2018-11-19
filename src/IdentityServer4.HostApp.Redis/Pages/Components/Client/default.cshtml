@@ -1,4 +1,5 @@
-﻿@using AspNetCoreRateLimit
+﻿ 
+@using IdentityServerRequestTracker.RateLimit.Services
 @model IdentityServer4.HostApp.ViewComponents.ClientViewComponentModel
 
 <div>
@@ -105,7 +106,7 @@
             </table>
         </div>
     }
-    @if (Model != null && Model.RateLimitCounterRecords != null)
+    @if (Model != null && Model.RateLimitRuleRecords != null)
     {
         <h3>Rate-Limit-Records</h3>
         <div class="table-responsive">
@@ -121,8 +122,8 @@
             <tbody>
           
             @{
-                var rateLimitCounterRecords = Model.RateLimitCounterRecords;
-                foreach (var item in rateLimitCounterRecords)
+                var rateLimitRuleRecords = Model.RateLimitRuleRecords;
+                foreach (var item in rateLimitRuleRecords)
                 {
                     long currentCount = 0;
                     <tr>

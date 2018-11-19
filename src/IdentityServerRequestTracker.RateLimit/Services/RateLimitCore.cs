@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using IdentityServerRequestTracker.RateLimit.Options;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServerRequestTracker.RateLimit.Services
 {
-    public class RateLimitCore
+    public class RateLimitCore: IClientRateLimitProcessor
     {
         private readonly ClientRateLimitingOptions _options;
         private readonly IRateLimitCounterStore _counterStore;
-        private readonly bool _ipRateLimiting;
 
         private static readonly object _processLocker = new object();
 
-        public RateLimitCore(bool ipRateLimiting,
-            ClientRateLimitingOptions options,
+        public RateLimitCore( 
+            IOptions<ClientRateLimitingOptions> options,
             IRateLimitCounterStore counterStore)
         {
-            _ipRateLimiting = ipRateLimiting;
-            _options = options;
+            _options = options.Value;
             _counterStore = counterStore;
         }
 
@@ -31,6 +31,23 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                 hashBytes = algorithm.ComputeHash(idBytes);
             }
             return BitConverter.ToString(hashBytes).Replace("-", string.Empty);
+        }
+
+        public RateLimitClientsRule GetRateLimitClientsRule(ClientRequestIdentity identity)
+        {
+            var clientsRule = (from item in _options.Rules
+                from clientId in item.ClientIds
+                where clientId == identity.ClientId && item.Enabled
+                select item).FirstOrDefault();
+            if (clientsRule != null)
+            {
+                foreach (var item in clientsRule.Settings.RateLimitRules)
+                {
+                    //parse period text into time spans
+                    item.PeriodTimespan = ConvertToTimeSpan(item.Period);
+                }
+            }
+            return clientsRule;
         }
 
         public RateLimitCounter ProcessRequest(ClientRequestIdentity requestIdentity, RateLimitRule rule)

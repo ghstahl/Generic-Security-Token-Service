@@ -11,5 +11,8 @@ namespace IdentityServerRequestTracker.RateLimit.Services
         RateLimitCounter ProcessRequest(ClientRequestIdentity identity, RateLimitRule rule);
         string RetryAfterFrom(DateTime counterTimestamp, RateLimitRule rule);
         RateLimitHeaders GetRateLimitHeaders(ClientRequestIdentity identity, RateLimitRule rule);
+        RateLimitCounter? GetStoredRateLimitCounter(ClientRequestIdentity requestIdentity, RateLimitRule rule);
+
+
     }
 }
