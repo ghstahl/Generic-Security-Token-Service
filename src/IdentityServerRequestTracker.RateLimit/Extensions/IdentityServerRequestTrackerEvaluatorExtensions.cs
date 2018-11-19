@@ -21,7 +21,7 @@ namespace IdentityServerRequestTracker.RateLimit.Extensions
         }
         public static void AddClientRateLimiterOptions(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<ClientRateLimitingOptions>(configuration.GetSection("IdentityServerClientRateLimiting2"));
+            services.Configure<ClientRateLimitingOptions>(configuration.GetSection("IdentityServerClientRateLimiting"));
         }
         public static void AddDistributedCacheRateLimitCounterStore(this IServiceCollection services)
         {

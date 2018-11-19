@@ -11,6 +11,8 @@ using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
+using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.RateLimit.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -54,6 +56,7 @@ namespace GenericSecurityTokenService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -97,11 +100,15 @@ namespace GenericSecurityTokenService
                     });
                 builder.AddRedisOperationalStoreExtra();
                 services.AddRedisOperationalStoreExtraTypes();
-
+                services.AddDistributedRedisCache(options =>
+                {
+                    options.Configuration = redisConnectionString;
+                });
             }
             else
             {
                 builder.AddInMemoryPersistedGrantStoreExtra();
+                services.AddDistributedMemoryCache();
             }
             if (useKeyVault)
             {
@@ -141,34 +148,23 @@ namespace GenericSecurityTokenService
 
             builder.AddProtectedRefreshTokenKeyObfuscator();
 
+            // Tracker and Ratelimiter
+            services.AddIdentityServerRequestTrackerMiddleware();
+            services.AddClientRateLimiterOptions(Configuration);
+            services.AddClientRateLimiter();
+
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
             services.Configure<Options.RedisAppOptions>(Configuration.GetSection("appOptions:redis"));
             services.Configure<Options.KeyVaultAppOptions>(Configuration.GetSection("appOptions:keyVault"));
             services.RegisterP7CoreConfigurationServices(Configuration);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddHttpContextAccessor();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            /*
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = Configuration["self:authority"];
-                    options.RequireHttpsMetadata = false;
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidAudiences = new List<string>()
-                        {
-                            $"{options.Authority}/Resouces"
-                        }
-                    };
-                });
-                */
+            
             services.AddLogging();
             // Pass configuration (IConfigurationRoot) to the configuration service if needed
             _externalStartupConfiguration.ConfigureService(services, null);
@@ -201,7 +197,8 @@ namespace GenericSecurityTokenService
                 app.UseDeveloperExceptionPage();
             }
             app.UseMiddleware<PublicFacingUrlMiddleware>();
-           
+
+            app.UseIdentityServerRequestTrackerMiddleware();
             app.UseIdentityServer();
             
             app.UseCors("CorsPolicy");

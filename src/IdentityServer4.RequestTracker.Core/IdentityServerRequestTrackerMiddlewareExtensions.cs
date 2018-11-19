@@ -11,11 +11,11 @@ namespace IdentityServerRequestTracker
     // Extension method used to add the middleware to the HTTP request pipeline.
     public static class IdentityServerRequestTrackerMiddlewareExtensions
     {
-        public static IApplicationBuilder UseIdentityServer4RequestTrackerMiddleware(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseIdentityServerRequestTrackerMiddleware(this IApplicationBuilder builder)
         {
             return builder.UseMiddleware<IdentityServerRequestTrackerMiddleware>();
         }
-        public static IServiceCollection AddIdentityServer4RequestTrackerMiddleware(this IServiceCollection services)
+        public static IServiceCollection AddIdentityServerRequestTrackerMiddleware(this IServiceCollection services)
         {
             return services;
         }

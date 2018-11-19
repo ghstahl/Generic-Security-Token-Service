@@ -41,40 +41,63 @@ namespace IdentityServerRequestTracker
             {
                 var baseUrl = httpContext.GetIdentityServerBaseUrl().EnsureTrailingSlash();
                 var issuerUri = httpContext.GetIdentityServerIssuerUri();
+                var index = issuerUri.IndexOf("://") + 3;
+                var runningUri = issuerUri.Substring(index);
+                index = runningUri.IndexOf('/');
+                var baseUrlSegment = index >=0?runningUri.Substring(index):"";
                 // generate response
-                _logger.LogTrace("Calling into discovery response generator: {type}", _responseGenerator.GetType().FullName);
+                _logger.LogTrace("Calling into discovery response generator: {type}",
+                    _responseGenerator.GetType().FullName);
                 var response = await _responseGenerator.CreateDiscoveryDocumentAsync(baseUrl, issuerUri);
 
                 var issuer = response["issuer"] as string;
 
                 _endpointDictionary = new Dictionary<string, string>
                 {
-                    {"discovery", "/.well-known/openid-configuration"},
-                    {"jwks_uri", (response["jwks_uri"] as string).Substring(issuer.Length)},
+                    {
+                        "discovery",
+                        $"{baseUrlSegment}/.well-known/openid-configuration"
+                    },
+                    {
+                        "jwks_uri",
+                        $"{baseUrlSegment}{(response["jwks_uri"] as string).Substring(issuer.Length)}"
+                    },
                     {
                         "authorization_endpoint",
-                        (response["authorization_endpoint"] as string).Substring(issuer.Length)
+                        $"{baseUrlSegment}{(response["authorization_endpoint"] as string).Substring(issuer.Length)}"
                     },
-                    {"token_endpoint", (response["token_endpoint"] as string).Substring(issuer.Length)},
-                    {"userinfo_endpoint", (response["userinfo_endpoint"] as string).Substring(issuer.Length)},
+                    {
+                        "token_endpoint",
+                        $"{baseUrlSegment}{(response["token_endpoint"] as string).Substring(issuer.Length)}"
+                    },
+                    {
+                        "userinfo_endpoint",
+                        $"{baseUrlSegment}{(response["userinfo_endpoint"] as string).Substring(issuer.Length)}"
+                    },
                     {
                         "end_session_endpoint",
-                        (response["end_session_endpoint"] as string).Substring(issuer.Length)
+                        $"{baseUrlSegment}{(response["end_session_endpoint"] as string).Substring(issuer.Length)}"
                     },
                     {
                         "check_session_iframe",
-                        (response["check_session_iframe"] as string).Substring(issuer.Length)
+                        $"{baseUrlSegment}{(response["check_session_iframe"] as string).Substring(issuer.Length)}"
                     },
-                    {"revocation_endpoint", (response["revocation_endpoint"] as string).Substring(issuer.Length)},
+
+                    {
+                        "revocation_endpoint",
+                        $"{baseUrlSegment}{(response["revocation_endpoint"] as string).Substring(issuer.Length)}"
+                    },
                     {
                         "introspection_endpoint",
-                        (response["introspection_endpoint"] as string).Substring(issuer.Length)
-                    } 
+                        $"{baseUrlSegment}{(response["introspection_endpoint"] as string).Substring(issuer.Length)}"
+                    }
+
                 };
             }
+
             return _endpointDictionary;
         }
-        
+
 
         public async Task Invoke(HttpContext httpContext)
         {

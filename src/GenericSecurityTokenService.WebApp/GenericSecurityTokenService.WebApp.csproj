@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +22,9 @@
     <ProjectReference Include="..\IdentityModelExtras\IdentityModelExtras.csproj" />
     <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj" />
+    <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
+    <ProjectReference Include="..\IdentityServerRequestTracker.RateLimit\IdentityServerRequestTracker.RateLimit.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
   </ItemGroup>

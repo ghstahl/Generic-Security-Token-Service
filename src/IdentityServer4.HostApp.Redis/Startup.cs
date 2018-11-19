@@ -170,10 +170,9 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
 
-         //   services.AddRateLimiting(Configuration);
+            // Tracker and Ratelimiter
+            services.AddIdentityServerRequestTrackerMiddleware();
             services.AddClientRateLimiterOptions(Configuration);
-            
-            services.AddIdentityServer4RequestTrackerMiddleware();
             services.AddClientRateLimiter();
 
             // my configurations
@@ -301,7 +300,7 @@ namespace IdentityServer4.HostApp
 
 
             app.UseStaticFiles();
-            app.UseIdentityServer4RequestTrackerMiddleware();
+            app.UseIdentityServerRequestTrackerMiddleware();
             app.UseIdentityServer();
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
