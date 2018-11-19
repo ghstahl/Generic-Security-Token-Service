@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using IdentityServerRequestTracker;
 using IdentityServerRequestTracker.RateLimit.Options;
@@ -57,6 +58,8 @@ namespace IdentityServerRequestTracker.RateLimit.Services
             {
                 var result = _serviceProvider.GetService<ClientRateLimiterRequestTrackerResult>();
                 result.RateLimitClientsRule = rateLimitClientsRule;
+                result.IdentityServerRequestRecord = requestRecord;
+                result.Directive = RequestTrackerEvaluatorDirective.AllowRequest;
                 foreach (var rule in rateLimitClientsRule.Settings.RateLimitRules)
                 {
                     if (rule.Limit > 0)
@@ -80,11 +83,8 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                             // break execution
                          
                             result.Directive = RequestTrackerEvaluatorDirective.DenyRequest;
-                            result.IdentityServerRequestRecord = requestRecord;
                             result.Rule = rule;
                             result.RetryAfter = retryAfter;
-                            result.RateLimitClientsRule = rateLimitClientsRule;
-
 
                             return result;
                         }
@@ -101,13 +101,16 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                         // break execution
                       
                         result.Directive = RequestTrackerEvaluatorDirective.DenyRequest;
-                        result.IdentityServerRequestRecord = requestRecord;
                         result.Rule = rule;
                         result.RetryAfter = Int32.MaxValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
                         return result;
                     }
                 }
+                result.Rule = rateLimitClientsRule.Settings.RateLimitRules.OrderByDescending(x => x.PeriodTimespan.Value).First();
+                
+
+                return result;
             }
 
 

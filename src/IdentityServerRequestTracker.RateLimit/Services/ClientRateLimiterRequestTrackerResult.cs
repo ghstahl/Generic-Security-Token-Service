@@ -37,17 +37,22 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                 ClientId = IdentityServerRequestRecord.ClientId,
                 EndpointKey = IdentityServerRequestRecord.EndpointKey
             };
-
-            await ReturnQuotaExceededResponse(httpContext, Rule, RetryAfter);
-            //set X-Rate-Limit headers for the longest period
-            if (RateLimitClientsRule.Settings.RateLimitRules.Any() 
-                && !RateLimitClientsRule.Settings.DisableRateLimitHeaders)
+            if (Directive == RequestTrackerEvaluatorDirective.DenyRequest)
             {
-                var rule = RateLimitClientsRule.Settings.RateLimitRules.OrderByDescending(x => x.PeriodTimespan.Value).First();
-                var headers = _processor.GetRateLimitHeaders(identity, rule);
-                headers.Context = httpContext;
+                await ReturnQuotaExceededResponse(httpContext, Rule, RetryAfter);
+            }
+            else
+            {
+                //set X-Rate-Limit headers for the longest period
+                if (RateLimitClientsRule.Settings.RateLimitRules.Any()
+                    && !RateLimitClientsRule.Settings.DisableRateLimitHeaders)
+                {
+                    var rule = RateLimitClientsRule.Settings.RateLimitRules.OrderByDescending(x => x.PeriodTimespan.Value).First();
+                    var headers = _processor.GetRateLimitHeaders(identity, rule);
+                    headers.Context = httpContext;
 
-                httpContext.Response.OnStarting(SetRateLimitHeaders, state: headers);
+                    httpContext.Response.OnStarting(SetRateLimitHeaders, state: headers);
+                }
             }
         }
         private Task SetRateLimitHeaders(object rateLimitHeaders)

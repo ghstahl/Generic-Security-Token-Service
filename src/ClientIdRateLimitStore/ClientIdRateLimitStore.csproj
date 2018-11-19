@@ -9,7 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AspNetCoreRateLimit.Core\AspNetCoreRateLimit.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
   </ItemGroup>
 
