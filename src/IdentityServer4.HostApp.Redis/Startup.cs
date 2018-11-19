@@ -17,8 +17,8 @@ using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServer4Extras.Stores;
-using IdentityServer4RequestTracker;
-using IdentityServerRequestTrackerEvaluator.ClientRateLimiter;
+using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.RateLimit.Extensions;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -60,8 +60,8 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-           
-            
+            services.AddOptions();
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",
@@ -173,6 +173,8 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreExtensionGrantsTypes();
 
             services.AddRateLimiting(Configuration);
+            services.AddClientRateLimiterOptions(Configuration);
+            
             services.AddIdentityServer4RequestTrackerMiddleware();
             services.AddClientRateLimiter();
 

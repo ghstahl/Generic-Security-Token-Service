@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using IdentityServer4RequestTracker;
+using IdentityServerRequestTrackerEvaluator.ClientRateLimiter.Options;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 
 namespace IdentityServerRequestTrackerEvaluator.ClientRateLimiter
 {
@@ -16,16 +18,27 @@ namespace IdentityServerRequestTrackerEvaluator.ClientRateLimiter
     public class ClientRateLimiterRequestTrackerResult : IRequestTrackerResult
     {
         private IServiceProvider _serviceProvider;
+        private ClientRateLimitingOptions _options;
         public RequestTrackerEvaluatorDirective Directive { get; set; }
 
-        public ClientRateLimiterRequestTrackerResult(IServiceProvider serviceProvider)
+        public ClientRateLimiterRequestTrackerResult(
+            IOptions<ClientRateLimitingOptions> options,
+            IServiceProvider serviceProvider)
         {
+            _options = options.Value;
             _serviceProvider = serviceProvider;
         }
 
         public async Task ProcessAsync(HttpContext httpContext)
         {
             var result = _serviceProvider.GetService(typeof(ClientRateLimiterRequestTrackerResult));
+            var identity = new ClientRequestIdentity
+            {
+                Path = httpContext.Request.Path.ToString().ToLowerInvariant(),
+                HttpVerb = httpContext.Request.Method.ToLowerInvariant(),
+                ClientId = parsedSecret.Id
+            };
+            return identity;
         }
 
         
@@ -40,16 +53,13 @@ namespace IdentityServerRequestTrackerEvaluator.ClientRateLimiter
             Name = "client_rate_limiter";
         }
         public string Name { get; set; }
-        public async Task<RequestTrackerEvaluatorDirective> EvaluateAsync(IdentityServerRequestRecord requestRecord)
+        public async Task<IRequestTrackerResult> EvaluateAsync(IdentityServerRequestRecord requestRecord)
         {
-            return RequestTrackerEvaluatorDirective.AllowRequest;
+            var result = _serviceProvider.GetService<ClientRateLimiterRequestTrackerResult>();
+            result.Directive = RequestTrackerEvaluatorDirective.AllowRequest;
+            return result;
         }
 
-        Task<IRequestTrackerResult> IIdentityServerRequestTrackerEvaluator.EvaluateAsync(IdentityServerRequestRecord requestRecord)
-        {
-            var result = _serviceProvider.GetService< ClientRateLimiterRequestTrackerResult>();
-            result.Directive = RequestTrackerEvaluatorDirective.AllowRequest;
-            throw new NotImplementedException();
-        }
+        
     }
 }

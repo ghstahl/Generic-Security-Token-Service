@@ -4,7 +4,7 @@ using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace IdentityServer4RequestTracker
+namespace IdentityServerRequestTracker
 {
     // You may need to install the Microsoft.AspNetCore.Http.Abstractions package into your project
 

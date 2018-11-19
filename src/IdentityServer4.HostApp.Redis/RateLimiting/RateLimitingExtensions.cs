@@ -28,8 +28,7 @@ namespace IdentityServer4.HostApp.RateLimiting
     {
         public static void AddRateLimiting(this IServiceCollection services, IConfiguration configuration)
         {
-            // needed to load configuration from appsettings.json
-            services.AddOptions();
+          
 
             //load general configuration from appsettings.json
             services.Configure<MyClientRateLimitOptions>(configuration.GetSection("IdentityServerClientRateLimiting"));

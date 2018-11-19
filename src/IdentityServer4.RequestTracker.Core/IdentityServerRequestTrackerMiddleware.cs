@@ -9,7 +9,7 @@ using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityServer4RequestTracker
+namespace IdentityServerRequestTracker
 {
     public class IdentityServerRequestTrackerMiddleware
     {

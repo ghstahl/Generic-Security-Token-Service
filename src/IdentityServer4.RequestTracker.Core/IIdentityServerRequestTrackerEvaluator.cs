@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace IdentityServer4RequestTracker
+namespace IdentityServerRequestTracker
 {
     public interface IIdentityServerRequestTrackerEvaluator
     {

@@ -1,4 +1,4 @@
-﻿namespace IdentityServer4RequestTracker
+﻿namespace IdentityServerRequestTracker
 {
     public enum RequestTrackerEvaluatorDirective
     {

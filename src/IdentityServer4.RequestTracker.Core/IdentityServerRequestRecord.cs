@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace IdentityServer4RequestTracker
+namespace IdentityServerRequestTracker
 {
     public class IdentityServerRequestRecord
     {
