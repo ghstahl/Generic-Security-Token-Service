@@ -1,6 +1,7 @@
 ﻿using IdentityServerRequestTracker;
 using IdentityServerRequestTracker.RateLimit.Options;
 using IdentityServerRequestTracker.RateLimit.Services;
+using IdentityServerRequestTracker.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

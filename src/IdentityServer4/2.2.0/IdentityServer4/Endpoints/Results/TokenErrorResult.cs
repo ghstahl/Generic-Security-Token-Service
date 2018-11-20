@@ -17,7 +17,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenErrorResult : IEndpointResult
+    public interface ITokenErrorEndpointResult : IEndpointResult
+    {
+    }
+    internal class TokenErrorResult : ITokenErrorEndpointResult
     {
         public TokenErrorResponse Response { get; }
 

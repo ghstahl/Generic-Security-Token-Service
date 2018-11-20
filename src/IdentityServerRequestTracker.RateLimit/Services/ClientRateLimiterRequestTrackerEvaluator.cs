@@ -1,11 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.Models;
 using IdentityServerRequestTracker.RateLimit.Options;
+using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 
 namespace IdentityServerRequestTracker.RateLimit.Services
 {
@@ -19,38 +25,58 @@ namespace IdentityServerRequestTracker.RateLimit.Services
             IServiceProvider serviceProvider,
             IClientRateLimitProcessor processor,
             ILogger<ClientRateLimiterRequestTrackerEvaluator> logger
-            )
+        )
         {
             _serviceProvider = serviceProvider;
             _processor = processor;
             _logger = logger;
             Name = "client_rate_limiter";
         }
+
         public string Name { get; set; }
-        public async Task<IRequestTrackerResult> EvaluateAsync(IdentityServerRequestRecord requestRecord)
+
+        public async Task<IRequestTrackerResult> PreEvaluateAsync(IdentityServerRequestRecord requestRecord)
         {
-           
-            if (string.IsNullOrEmpty(requestRecord.ClientId))
+
+            if (requestRecord.Client == null)
             {
                 // not for us
-                return new AllowRequestTrackerResult();
+                return new SkipRequestTrackerResult();
             }
 
-            var result = await EvaluateRateLimitRules(requestRecord);
+            var result = await PreEvaluateRateLimitRules(requestRecord);
             return result;
         }
-        public virtual void LogBlockedRequest(
-            HttpContext httpContext, 
-            ClientRequestIdentity identity, RateLimitCounter counter, RateLimitRule rule)
+
+         
+
+        public async Task<IRequestTrackerResult> PostEvaluateAsync(IdentityServerRequestRecord requestRecord, bool error)
         {
-            _logger.LogInformation($"Request {httpContext.Request.Method}:{identity.EndpointKey} from ClientId {identity.ClientId} has been blocked, quota {rule.Limit}/{rule.Period} exceeded by {counter.TotalRequests}. Blocked by rule {rule.Endpoint}, TraceIdentifier {httpContext.TraceIdentifier}.");
+            if (requestRecord.Client == null)
+            {
+                // not for us
+                return new SkipRequestTrackerResult();
+            }
+
+            var result = await PostEvaluateRateLimitRules(requestRecord, error);
+            return result;
         }
 
-        async Task<IRequestTrackerResult> EvaluateRateLimitRules(IdentityServerRequestRecord requestRecord)
+
+        public virtual void LogBlockedRequest(
+            HttpContext httpContext,
+            ClientRequestIdentity identity, RateLimitCounter counter, RateLimitRule rule)
         {
+            _logger.LogInformation(
+                $"Request {httpContext.Request.Method}:{identity.EndpointKey} from ClientId {identity.ClientId} has been blocked, quota {rule.Limit}/{rule.Period} exceeded by {counter.TotalRequests}. Blocked by rule {rule.Endpoint}, TraceIdentifier {httpContext.TraceIdentifier}.");
+        }
+
+        async Task<IRequestTrackerResult> PreEvaluateRateLimitRules(IdentityServerRequestRecord requestRecord)
+        {
+            // ONLY CHECK THE COUNT and Deny.  DO NOT MUTATE any data
             var identity = new ClientRequestIdentity()
             {
-                ClientId = requestRecord.ClientId,
+                ClientId = requestRecord.Client.ClientId,
                 EndpointKey = requestRecord.EndpointKey
             };
             var rateLimitClientsRule = _processor.GetRateLimitClientsRule(identity);
@@ -64,15 +90,15 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                 {
                     if (rule.Limit > 0)
                     {
-                        // increment counter
-                        var counter = _processor.ProcessRequest(identity, rule);
+                        // get the current counter
+                        var counter = _processor.GetCurrentRateLimitCounter(identity, rule);
                         // check if key expired
                         if (counter.Timestamp + rule.PeriodTimespan.Value < DateTime.UtcNow)
                         {
                             continue;
                         } // check if limit is reached
 
-                        if (counter.TotalRequests > rule.Limit)
+                        if (counter.TotalRequests >= rule.Limit)
                         {
                             //compute retry after value
                             var retryAfter = _processor.RetryAfterFrom(counter.Timestamp, rule);
@@ -81,7 +107,7 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                             LogBlockedRequest(requestRecord.HttpContext, identity, counter, rule);
 
                             // break execution
-                         
+
                             result.Directive = RequestTrackerEvaluatorDirective.DenyRequest;
                             result.Rule = rule;
                             result.RetryAfter = retryAfter;
@@ -92,14 +118,14 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                     else
                     {
                         // process request count
-                        var counter = _processor.ProcessRequest(identity, rule);
+                        var counter = _processor.GetCurrentRateLimitCounter(identity, rule);
 
                         // log blocked request
                         LogBlockedRequest(requestRecord.HttpContext, identity, counter, rule);
 
                         // break execution (Int32 max used to represent infinity)
                         // break execution
-                      
+
                         result.Directive = RequestTrackerEvaluatorDirective.DenyRequest;
                         result.Rule = rule;
                         result.RetryAfter = Int32.MaxValue.ToString(System.Globalization.CultureInfo.InvariantCulture);
@@ -107,17 +133,69 @@ namespace IdentityServerRequestTracker.RateLimit.Services
                         return result;
                     }
                 }
-                result.Rule = rateLimitClientsRule.Settings.RateLimitRules.OrderByDescending(x => x.PeriodTimespan.Value).First();
-                
+
+                result.Rule = rateLimitClientsRule.Settings.RateLimitRules
+                    .OrderByDescending(x => x.PeriodTimespan.Value).First();
 
                 return result;
             }
-
 
             var allowResult = _serviceProvider.GetService<ClientRateLimiterRequestTrackerResult>();
             allowResult.Directive = RequestTrackerEvaluatorDirective.AllowRequest;
             return allowResult;
 
+        }
+
+        async Task<IRequestTrackerResult> PostEvaluateRateLimitRules(IdentityServerRequestRecord requestRecord,bool error)
+        {
+            if (!error)
+            {
+                // only increment if successful 
+                // Increment the counters on the way out.  Allow the request to finish
+                var identity = new ClientRequestIdentity()
+                {
+                    ClientId = requestRecord.Client.ClientId,
+                    EndpointKey = requestRecord.EndpointKey
+                };
+                var rateLimitClientsRule = _processor.GetRateLimitClientsRule(identity);
+                if (rateLimitClientsRule != null)
+                {
+                    foreach (var rule in rateLimitClientsRule.Settings.RateLimitRules)
+                    {
+                        if (rule.Limit > 0)
+                        {
+                            // increment counter
+                            var counter = _processor.ProcessRequest(identity, rule);
+                        }
+                    }
+
+                    //set X-Rate-Limit headers for the longest period
+                    if (rateLimitClientsRule.Settings.RateLimitRules.Any()
+                        && !rateLimitClientsRule.Settings.DisableRateLimitHeaders)
+                    {
+                        var rule = rateLimitClientsRule.Settings.RateLimitRules
+                            .OrderByDescending(x => x.PeriodTimespan.Value).First();
+                        var headers = _processor.GetRateLimitHeaders(identity, rule);
+                        headers.Context = requestRecord.HttpContext;
+                        requestRecord.HttpContext.Response.OnStarting(SetRateLimitHeaders, state: headers);
+                    }
+                }
+            }
+            var allowResult = new AllowRequestTrackerResult();
+            return allowResult;
+        }
+
+        private Task SetRateLimitHeaders(object state)
+        {
+            var headers = (RateLimitHeaders) state;
+            if (headers != null)
+            {
+                headers.Context.Response.Headers["X-Rate-Limit-Limit"] = headers.Limit;
+                headers.Context.Response.Headers["X-Rate-Limit-Remaining"] = headers.Remaining;
+                headers.Context.Response.Headers["X-Rate-Limit-Reset"] = headers.Reset;
+            }
+
+            return Task.CompletedTask;
         }
     }
 }

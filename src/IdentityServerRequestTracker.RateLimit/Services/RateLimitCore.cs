@@ -49,7 +49,32 @@ namespace IdentityServerRequestTracker.RateLimit.Services
             }
             return clientsRule;
         }
+        public RateLimitCounter GetCurrentRateLimitCounter(ClientRequestIdentity requestIdentity, RateLimitRule rule)
+        {
+            var counter = new RateLimitCounter
+            {
+                Timestamp = DateTime.UtcNow,
+                TotalRequests = 0
+            };
 
+            var counterId = ComputeCounterKey(requestIdentity, rule);
+
+            // serial reads and writes
+            lock (_processLocker)
+            {
+                var entry = _counterStore.Get(counterId);
+                if (entry.HasValue)
+                {
+                    // deep copy
+                    counter = new RateLimitCounter
+                    {
+                        Timestamp = entry.Value.Timestamp,
+                        TotalRequests = entry.Value.TotalRequests
+                    };
+                }
+            }
+            return counter;
+        }
         public RateLimitCounter ProcessRequest(ClientRequestIdentity requestIdentity, RateLimitRule rule)
         {
             var counter = new RateLimitCounter
