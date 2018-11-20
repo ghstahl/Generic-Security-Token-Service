@@ -12,6 +12,7 @@ using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.Extensions;
 using IdentityServerRequestTracker.RateLimit.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -199,8 +200,7 @@ namespace GenericSecurityTokenService
             app.UseMiddleware<PublicFacingUrlMiddleware>();
 
             app.UseIdentityServerRequestTrackerMiddleware();
-            app.UseIdentityServer();
-            
+
             app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.UseMvc();
