@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServerRequestTracker.RateLimit.Services
 {
-    public class AllowRequestTrackerResult : IRequestTrackerResult
+    public class SkipRequestTrackerResult : IRequestTrackerResult
     {
-        public RequestTrackerEvaluatorDirective Directive => RequestTrackerEvaluatorDirective.AllowRequest;
+        public RequestTrackerEvaluatorDirective Directive => RequestTrackerEvaluatorDirective.Skip;
 
         public Task ProcessAsync(HttpContext httpContext)
         {

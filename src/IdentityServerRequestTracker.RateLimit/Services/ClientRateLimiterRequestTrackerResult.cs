@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.Models;
 using IdentityServerRequestTracker.RateLimit.Options;
+using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 
@@ -31,39 +33,15 @@ namespace IdentityServerRequestTracker.RateLimit.Services
 
         public async Task ProcessAsync(HttpContext httpContext)
         {
-            
             var identity = new ClientRequestIdentity()
             {
-                ClientId = IdentityServerRequestRecord.ClientId,
+                ClientId = IdentityServerRequestRecord.Client.ClientId,
                 EndpointKey = IdentityServerRequestRecord.EndpointKey
             };
             if (Directive == RequestTrackerEvaluatorDirective.DenyRequest)
             {
                 await ReturnQuotaExceededResponse(httpContext, Rule, RetryAfter);
             }
-            else
-            {
-                //set X-Rate-Limit headers for the longest period
-                if (RateLimitClientsRule.Settings.RateLimitRules.Any()
-                    && !RateLimitClientsRule.Settings.DisableRateLimitHeaders)
-                {
-                    var rule = RateLimitClientsRule.Settings.RateLimitRules.OrderByDescending(x => x.PeriodTimespan.Value).First();
-                    var headers = _processor.GetRateLimitHeaders(identity, rule);
-                    headers.Context = httpContext;
-
-                    httpContext.Response.OnStarting(SetRateLimitHeaders, state: headers);
-                }
-            }
-        }
-        private Task SetRateLimitHeaders(object rateLimitHeaders)
-        {
-            var headers = (RateLimitHeaders)rateLimitHeaders;
-
-            headers.Context.Response.Headers["X-Rate-Limit-Limit"] = headers.Limit;
-            headers.Context.Response.Headers["X-Rate-Limit-Remaining"] = headers.Remaining;
-            headers.Context.Response.Headers["X-Rate-Limit-Reset"] = headers.Reset;
-
-            return Task.CompletedTask;
         }
         public virtual async Task ReturnQuotaExceededResponse(HttpContext httpContext, RateLimitRule rule, string retryAfter)
         {

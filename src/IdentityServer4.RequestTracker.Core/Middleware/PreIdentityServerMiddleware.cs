@@ -3,32 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IdentityServer4.Extensions;
-using IdentityServer4.Hosting;
 using IdentityServer4.ResponseHandling;
 using IdentityServer4.Validation;
+using IdentityServerRequestTracker.Models;
+using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
-namespace IdentityServerRequestTracker
+namespace IdentityServerRequestTracker.Middleware
 {
-    public class IdentityServerRequestTrackerMiddleware
+    public class PreIdentityServerMiddleware
     {
-        private readonly SecretParser _parser;
         private readonly IDiscoveryResponseGenerator _responseGenerator;
         private readonly RequestDelegate _next;
-        private readonly ILogger<IdentityServerRequestTrackerMiddleware> _logger;
+        private readonly ILogger<PreIdentityServerMiddleware> _logger;
  
         private Dictionary<string, string> _endpointDictionary;
         private IEnumerable<IIdentityServerRequestTrackerEvaluator> _evaluators;
+        private IClientSecretValidator _clientValidator;
 
-        public IdentityServerRequestTrackerMiddleware(
-            SecretParser parser, 
+        public PreIdentityServerMiddleware(
+            IClientSecretValidator clientValidator,
             IDiscoveryResponseGenerator responseGenerator, 
             IEnumerable<IIdentityServerRequestTrackerEvaluator> evaluators,
             RequestDelegate next,
-            ILogger<IdentityServerRequestTrackerMiddleware> logger)
+            ILogger<PreIdentityServerMiddleware> logger)
         {
-            _parser = parser;
+            _clientValidator  = clientValidator;
             _responseGenerator = responseGenerator;
             _evaluators = evaluators;
             _next = next;
@@ -99,45 +100,56 @@ namespace IdentityServerRequestTracker
         }
 
 
-        public async Task Invoke(HttpContext httpContext)
+        public async Task Invoke(HttpContext httpContext, IScopedStorage scopedStorage)
         {
             // start tracking
             await FetchDiscoveryData(httpContext);
             var endpointKey = (from item in _endpointDictionary
                 where item.Value == httpContext.Request.Path.Value
                 select item.Key).FirstOrDefault();
-            if (endpointKey != null)
+            if (endpointKey == null)
             {
-                _logger.LogInformation($"endpointKey={endpointKey},path={httpContext.Request.Path}");
-                var requestRecord = new IdentityServerRequestRecord
-                {
-                    HttpContext = httpContext,
-                    EndpointKey = endpointKey
-                };
-                if (httpContext.Request.Method == "POST")
-                {
-                    var parsedSecret = await _parser.ParseAsync(httpContext);
-                    if (parsedSecret != null)
-                    {
-                        // this is a request for a token
-                        requestRecord.ClientId = parsedSecret.Id;
-                    }
-                }
+                // not for us
+                await _next(httpContext);
+                return;
+            }
 
-                foreach (var evaluator in _evaluators)
+            _logger.LogInformation($"endpointKey={endpointKey},path={httpContext.Request.Path}");
+            var requestRecord = new IdentityServerRequestRecord
+            {
+                HttpContext = httpContext,
+                EndpointKey = endpointKey
+            };
+            // validate HTTP for clients
+            if (HttpMethods.IsPost(httpContext.Request.Method) && httpContext.Request.HasFormContentType)
+            {
+                // validate client
+                var clientResult = await _clientValidator.ValidateAsync(httpContext);
+                if (!clientResult.IsError)
                 {
-                    var directive = await ProcessEvaluatorAsync(evaluator, requestRecord);
-                    if (directive == RequestTrackerEvaluatorDirective.DenyRequest)
-                    {
-                        return; // do not continue to the real IdentityServer4 middleware.
-                    }
+                    requestRecord.Client = clientResult.Client;
                 }
             }
-           
+
+            foreach (var evaluator in _evaluators)
+            {
+                var directive = await ProcessPreEvaluatorAsync(evaluator, requestRecord);
+                if (directive == RequestTrackerEvaluatorDirective.DenyRequest)
+                {
+                    return; // do not continue to the real IdentityServer4 middleware.
+                }
+            }
+
+            scopedStorage.Storage["IdentityServerRequestRecord"] = requestRecord;
+            //
+            // The following invoke is letting the request continue on into the pipeline
+            // 
+
             await _next(httpContext);
+ 
         }
 
-        private async Task<RequestTrackerEvaluatorDirective> ProcessEvaluatorAsync(
+        private async Task<RequestTrackerEvaluatorDirective> ProcessPreEvaluatorAsync(
             IIdentityServerRequestTrackerEvaluator evaluator, 
             IdentityServerRequestRecord requestRecord)
         {
@@ -146,8 +158,11 @@ namespace IdentityServerRequestTracker
             try
             {
                 name = evaluator.Name;
-                var result = await evaluator.EvaluateAsync(requestRecord);
-                await result.ProcessAsync(requestRecord.HttpContext);
+                var result = await evaluator.PreEvaluateAsync(requestRecord);
+                if (result.Directive != RequestTrackerEvaluatorDirective.Skip)
+                {
+                    await result.ProcessAsync(requestRecord.HttpContext);
+                }
                 directive = result.Directive;
             }
             catch (Exception e)

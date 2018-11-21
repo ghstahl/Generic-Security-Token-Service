@@ -16,6 +16,7 @@ using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServer4Extras.Stores;
 using IdentityServerRequestTracker;
+using IdentityServerRequestTracker.Extensions;
 using IdentityServerRequestTracker.RateLimit.Extensions;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
@@ -301,8 +302,6 @@ namespace IdentityServer4.HostApp
 
             app.UseStaticFiles();
             app.UseIdentityServerRequestTrackerMiddleware();
-            app.UseIdentityServer();
-            app.UseCors("CorsPolicy");
             app.UseAuthentication();
 
             app.UseMvc();

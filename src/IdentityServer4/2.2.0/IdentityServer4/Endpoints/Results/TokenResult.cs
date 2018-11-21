@@ -16,7 +16,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenResult : IEndpointResult
+    public interface ITokenEndpointResult : IEndpointResult
+    {
+    }
+
+    internal class TokenResult : ITokenEndpointResult
     {
         public TokenResponse Response { get; set; }
 

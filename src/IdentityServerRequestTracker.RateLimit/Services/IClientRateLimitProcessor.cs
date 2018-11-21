@@ -14,5 +14,6 @@ namespace IdentityServerRequestTracker.RateLimit.Services
         RateLimitCounter? GetStoredRateLimitCounter(ClientRequestIdentity requestIdentity, RateLimitRule rule);
 
 
+        RateLimitCounter GetCurrentRateLimitCounter(ClientRequestIdentity identity, RateLimitRule rule);
     }
 }
