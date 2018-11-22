@@ -13,6 +13,12 @@ namespace IdentityServerRequestTracker.Usage.Extensions
    //         services.AddSingleton<IRateLimitCounterStore, DistributedCacheRateLimitCounterStore>();
             return services;
         }
+
+        public static IServiceCollection AddInMemoryClientUsageStore(this IServiceCollection services)
+        {
+            services.AddSingleton< IClientUsageStore,InMemoryClientUsageStore>();
+            return services;
+        }
         public static void AddClientUsageTrackerOptions(this IServiceCollection services, IConfiguration configuration)
         {
    //         services.Configure<ClientRateLimitingOptions>(configuration.GetSection("IdentityServerClientRateLimiting"));

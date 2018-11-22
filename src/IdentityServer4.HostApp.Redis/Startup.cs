@@ -181,8 +181,9 @@ namespace IdentityServer4.HostApp
 
             // Usage Tracking
             services.AddClientUsageTrackerOptions(Configuration);
-            services.AddClientUsageTracker();
-            
+            services.AddClientUsageTracker()
+                .AddInMemoryClientUsageStore();
+
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
             services.Configure<Options.RedisAppOptions>(Configuration.GetSection("appOptions:redis"));
