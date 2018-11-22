@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Caching.Distributed;
 using P7.Core.Utils;
+
 
 namespace IdentityServerRequestTracker.Usage.Services
 {
@@ -13,8 +15,9 @@ namespace IdentityServerRequestTracker.Usage.Services
         private List<IAggregatedClientUsageRecordReadWrite> ClientRecords =>
             _clientRecords ?? (_clientRecords = new List<IAggregatedClientUsageRecordReadWrite>());
 
-        public InMemoryClientUsageStore()
+        public InMemoryClientUsageStore(IDistributedCache memoryCache)
         {
+
         }
 
         public async Task TrackAsync(ClientUsageRecord record)

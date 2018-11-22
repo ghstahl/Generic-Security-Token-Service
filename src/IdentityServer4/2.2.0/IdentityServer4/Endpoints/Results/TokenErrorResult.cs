@@ -7,13 +7,7 @@ using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using IdentityServer4.Extensions;
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Net;
-using System.Net.Http;
-using IdentityModel;
 using IdentityServer4.ResponseHandling;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -59,25 +53,6 @@ namespace IdentityServer4.Endpoints.Results
         {
             public string error { get; set; }
             public string error_description { get; set; }
-        }
-
-        public async Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            var headers = httpResponseMessage.Headers;
-            httpResponseMessage.StatusCode = HttpStatusCode.BadRequest;
-            headers.SetNoCache();
-
-            var expando = new ExpandoObject();
-            dynamic expandoDynamic = expando as dynamic;
-            expandoDynamic.error = Response.Error;
-            expandoDynamic.error_description = Response.ErrorDescription;
- 
-            if (!Response.Custom.IsNullOrEmpty())
-            {
-                IDictionary<string, object> dictionary_object = expando;
-                dictionary_object.AddDictionary(Response.Custom);
-            }
-            httpResponseMessage.Content = new JsonContent(expandoDynamic);
-        }
+        }    
     }
 }

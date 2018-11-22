@@ -123,7 +123,7 @@ namespace IdentityServer4.Validation
         /// <param name="requestedScopes">The requested scopes.</param>
         /// <param name="filterIdentityScopes">if set to <c>true</c> [filter identity scopes].</param>
         /// <returns></returns>
-        public async Task<bool> AreScopesValidAsync(IEnumerable<string> requestedScopes, bool filterIdentityScopes = false)
+        public async virtual Task<bool> AreScopesValidAsync(IEnumerable<string> requestedScopes, bool filterIdentityScopes = false)
         {
             if (requestedScopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess))
             {
@@ -199,7 +199,7 @@ namespace IdentityServer4.Validation
         /// <param name="client">The client.</param>
         /// <param name="requestedScopes">The requested scopes.</param>
         /// <returns></returns>
-        public async Task<bool> AreScopesAllowedAsync(Client client, IEnumerable<string> requestedScopes)
+        public async virtual Task<bool> AreScopesAllowedAsync(Client client, IEnumerable<string> requestedScopes)
         {
             if (requestedScopes.Contains(IdentityServerConstants.StandardScopes.OfflineAccess))
             {

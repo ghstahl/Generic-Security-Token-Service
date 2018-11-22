@@ -77,14 +77,9 @@ namespace IdentityServer4.Endpoints
             // validate client
             var clientResult = await _clientValidator.ValidateAsync(context);
 
-            if (clientResult.IsError || clientResult.Client == null)
+            if (clientResult.Client == null)
             {
-                // I wish the client result actually had something close to a full TokenErrorResponse
-                // i.e. ErrorModel that has everything that the TokenErrorResponse needs
-                var error = clientResult.Error ?? OidcConstants.TokenErrors.InvalidClient;
-                var errorDescription = clientResult.ErrorDescription;
-               // wish I had a custom object to pass
-                return Error(error, errorDescription);
+                return Error(OidcConstants.TokenErrors.InvalidClient);
             }
 
             // validate request

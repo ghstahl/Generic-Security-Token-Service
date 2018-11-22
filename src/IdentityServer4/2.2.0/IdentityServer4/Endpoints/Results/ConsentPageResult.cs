@@ -3,14 +3,12 @@
 
 
 using System;
-using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer4.Configuration;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using IdentityServer4.Validation;
 using IdentityServer4.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IdentityServer4.Endpoints.Results
@@ -72,16 +70,6 @@ namespace IdentityServer4.Endpoints.Results
             context.Response.RedirectToAbsoluteUrl(url);
 
             return Task.CompletedTask;
-        }
-
-        public Task<ActionResult> BuildActionResultAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            throw new NotImplementedException();
         }
     }
 }

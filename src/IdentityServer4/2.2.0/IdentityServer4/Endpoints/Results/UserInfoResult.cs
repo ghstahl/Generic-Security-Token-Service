@@ -3,11 +3,9 @@
 
 
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -24,14 +22,6 @@ namespace IdentityServer4.Endpoints.Results
         {
             context.Response.SetNoCache();
             await context.Response.WriteJsonAsync(Claims);
-        }
- 
-        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            var headers = httpResponseMessage.Headers;
-            headers.SetNoCache();
-            httpResponseMessage.Content = new JsonContent(Claims);
-            return Task.CompletedTask;
         }
     }
 }

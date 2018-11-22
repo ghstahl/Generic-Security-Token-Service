@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
+    <ProjectReference Include="..\P7.Core\P7.Core.csproj" />
   </ItemGroup>
 
 </Project>
