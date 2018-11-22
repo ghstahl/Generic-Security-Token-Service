@@ -14,6 +14,7 @@ using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker;
 using IdentityServerRequestTracker.Extensions;
 using IdentityServerRequestTracker.RateLimit.Extensions;
+using IdentityServerRequestTracker.Usage.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -149,10 +150,17 @@ namespace GenericSecurityTokenService
 
             builder.AddProtectedRefreshTokenKeyObfuscator();
 
-            // Tracker and Ratelimiter
+            // Request Tracker
             services.AddIdentityServerRequestTrackerMiddleware();
+
+            // Ratelimiter
             services.AddClientRateLimiterOptions(Configuration);
             services.AddClientRateLimiter();
+
+            // Usage Tracking
+            services.AddClientUsageTrackerOptions(Configuration);
+            services.AddClientUsageTracker()
+                .AddInMemoryClientUsageStore();
 
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
