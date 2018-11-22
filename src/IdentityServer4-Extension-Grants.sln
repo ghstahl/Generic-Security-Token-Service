@@ -119,6 +119,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.RequestTrac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerRequestTracker.RateLimit", "IdentityServerRequestTracker.RateLimit\IdentityServerRequestTracker.RateLimit.csproj", "{33BAE4FC-3EF4-4D5F-9D00-66A924E54D91}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerRequestTracker.Usage", "IdentityServerRequestTracker.Usage\IdentityServerRequestTracker.Usage.csproj", "{99ABB63F-14EE-469E-BDA2-DA424E10CB6C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -285,6 +287,10 @@ Global
 		{33BAE4FC-3EF4-4D5F-9D00-66A924E54D91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33BAE4FC-3EF4-4D5F-9D00-66A924E54D91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33BAE4FC-3EF4-4D5F-9D00-66A924E54D91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99ABB63F-14EE-469E-BDA2-DA424E10CB6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99ABB63F-14EE-469E-BDA2-DA424E10CB6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99ABB63F-14EE-469E-BDA2-DA424E10CB6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99ABB63F-14EE-469E-BDA2-DA424E10CB6C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -328,6 +334,7 @@ Global
 		{EACA0454-25FB-48A6-B1DB-8604190D5A25} = {3405542D-E135-4ACB-9B5C-A52A696941A6}
 		{86CECDB6-FCB1-4D89-AD6B-E6C7B8F7345C} = {8DEB098C-C196-4B4D-BFC2-303587DFF8A3}
 		{33BAE4FC-3EF4-4D5F-9D00-66A924E54D91} = {8DEB098C-C196-4B4D-BFC2-303587DFF8A3}
+		{99ABB63F-14EE-469E-BDA2-DA424E10CB6C} = {8DEB098C-C196-4B4D-BFC2-303587DFF8A3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}

@@ -1,11 +1,10 @@
 ﻿using System.Threading.Tasks;
 using IdentityServerRequestTracker.Models;
-using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
 
-namespace IdentityServerRequestTracker.RateLimit.Services
+namespace IdentityServerRequestTracker.Services
 {
-    public class AllowRequestTrackerResult : IRequestTrackerResult
+    public class AllowRequestTrackerResult : IAllowRequestTrackerResult
     {
         public RequestTrackerEvaluatorDirective Directive => RequestTrackerEvaluatorDirective.AllowRequest;
 

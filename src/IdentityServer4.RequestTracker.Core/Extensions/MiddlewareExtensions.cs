@@ -20,6 +20,7 @@ namespace IdentityServerRequestTracker.Extensions
        
         public static IServiceCollection AddIdentityServerRequestTrackerMiddleware(this IServiceCollection services)
         {
+            services.AddTransient<IAllowRequestTrackerResult,AllowRequestTrackerResult>();
             services.AddScoped<IScopedStorage, ScopedStorage>();
             return services;
         }

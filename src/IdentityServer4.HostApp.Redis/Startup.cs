@@ -18,6 +18,7 @@ using IdentityServer4Extras.Stores;
 using IdentityServerRequestTracker;
 using IdentityServerRequestTracker.Extensions;
 using IdentityServerRequestTracker.RateLimit.Extensions;
+using IdentityServerRequestTracker.Usage.Extensions;
 using Markdig;
 using Markdig.Extensions.AutoIdentifiers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -171,11 +172,17 @@ namespace IdentityServer4.HostApp
             services.AddGraphQLCoreTypes();
             services.AddGraphQLCoreExtensionGrantsTypes();
 
-            // Tracker and Ratelimiter
+            // Request Tracker
             services.AddIdentityServerRequestTrackerMiddleware();
+
+            // Ratelimiter
             services.AddClientRateLimiterOptions(Configuration);
             services.AddClientRateLimiter();
 
+            // Usage Tracking
+            services.AddClientUsageTrackerOptions(Configuration);
+            services.AddClientUsageTracker();
+            
             // my configurations
             services.AddSingleton<IHostedService, SchedulerHostedService>();
             services.Configure<Options.RedisAppOptions>(Configuration.GetSection("appOptions:redis"));

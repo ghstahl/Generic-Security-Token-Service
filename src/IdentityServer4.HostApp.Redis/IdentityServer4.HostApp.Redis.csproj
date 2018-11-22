@@ -50,6 +50,7 @@
     <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
     <ProjectReference Include="..\IdentityServerRequestTracker.RateLimit\IdentityServerRequestTracker.RateLimit.csproj" />
+    <ProjectReference Include="..\IdentityServerRequestTracker.Usage\IdentityServerRequestTracker.Usage.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
     <ProjectReference Include="..\P7.Core\P7.Core.csproj" />
