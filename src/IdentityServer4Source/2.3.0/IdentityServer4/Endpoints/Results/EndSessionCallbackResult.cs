@@ -15,7 +15,7 @@ using IdentityServer4.Configuration;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class EndSessionCallbackResult : IEndpointResult
+    internal class EndSessionCallbackResult : IEndSessionCallbackEndpointResult
     {
         private readonly EndSessionCallbackValidationResult _result;
 

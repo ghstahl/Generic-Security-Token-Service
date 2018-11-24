@@ -17,7 +17,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for login page
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class LoginPageResult : IEndpointResult
+    public class LoginPageResult : ILoginPageEndpointResult
     {
         private readonly ValidatedAuthorizeRequest _request;
 

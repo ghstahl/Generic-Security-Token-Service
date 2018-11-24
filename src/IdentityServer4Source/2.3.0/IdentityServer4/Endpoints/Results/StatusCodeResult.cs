@@ -13,7 +13,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for a raw HTTP status code
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class StatusCodeResult : IEndpointResult
+    public class StatusCodeResult : IStatusCodeEndpointResult
     {
         /// <summary>
         /// Gets the status code.

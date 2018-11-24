@@ -13,7 +13,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for revocation error
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class TokenRevocationErrorResult : IEndpointResult
+    public class TokenRevocationErrorResult : ITokenRevocationErrorEndpointResult
     {
         /// <summary>
         /// Gets or sets the error.

@@ -9,7 +9,7 @@ using IdentityServer4.Extensions;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class BadRequestResult : IEndpointResult
+    internal class BadRequestResult : IBadRequestEndpointResult
     {
         public string Error { get; set; }
         public string ErrorDescription { get; set; }

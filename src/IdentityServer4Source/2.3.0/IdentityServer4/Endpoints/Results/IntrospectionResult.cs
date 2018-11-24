@@ -14,7 +14,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for introspection
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class IntrospectionResult : IEndpointResult
+    public class IntrospectionResult : IIntrospectionEndpointResult
     {
         /// <summary>
         /// Gets the result.

@@ -17,7 +17,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for a custom redirect
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class CustomRedirectResult : IEndpointResult
+    public class CustomRedirectResult : ICustomRedirectEndpointResult
     {
         private readonly ValidatedAuthorizeRequest _request;
         private readonly string _url;

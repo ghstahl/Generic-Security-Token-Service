@@ -14,7 +14,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for a discovery document
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class DiscoveryDocumentResult : IEndpointResult
+    public class DiscoveryDocumentResult : IDiscoveryDocumentEndpointResult
     {
         /// <summary>
         /// Gets the entries.

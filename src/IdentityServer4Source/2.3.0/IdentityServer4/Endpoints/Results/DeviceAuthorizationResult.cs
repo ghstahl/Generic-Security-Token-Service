@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class DeviceAuthorizationResult : IEndpointResult
+    internal class DeviceAuthorizationResult : IDeviceAuthorizationEndpointResult
     {
         public DeviceAuthorizationResponse Response { get; }
 

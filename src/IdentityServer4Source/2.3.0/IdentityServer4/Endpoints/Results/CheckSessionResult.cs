@@ -10,7 +10,7 @@ using IdentityServer4.Configuration;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class CheckSessionResult : IEndpointResult
+    internal class CheckSessionResult : ICheckSessionEndpointResult
     {
         public CheckSessionResult()
         {

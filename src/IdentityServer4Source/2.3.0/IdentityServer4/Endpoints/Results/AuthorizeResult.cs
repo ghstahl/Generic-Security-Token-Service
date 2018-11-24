@@ -19,7 +19,7 @@ using System.Text.Encodings.Web;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class AuthorizeResult : IEndpointResult
+    internal class AuthorizeResult : IAuthorizeEndpointResult
     {
         public AuthorizeResponse Response { get; }
 

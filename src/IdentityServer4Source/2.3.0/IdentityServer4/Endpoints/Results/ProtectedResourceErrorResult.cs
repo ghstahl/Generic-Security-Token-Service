@@ -12,7 +12,7 @@ using IdentityModel;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class ProtectedResourceErrorResult : IEndpointResult
+    internal class ProtectedResourceErrorResult : IProtectedResourceErrorEndpointResult
     {
         public string Error;
         public string ErrorDescription;

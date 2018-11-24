@@ -17,7 +17,7 @@ namespace IdentityServer4.Endpoints.Results
     /// Result for consent page
     /// </summary>
     /// <seealso cref="IdentityServer4.Hosting.IEndpointResult" />
-    public class ConsentPageResult : IEndpointResult
+    public class ConsentPageResult : IConsentPageEndpointResult
     {
         private readonly ValidatedAuthorizeRequest _request;
 

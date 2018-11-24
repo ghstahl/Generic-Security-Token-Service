@@ -11,7 +11,7 @@ using IdentityServer4.ResponseHandling;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class TokenErrorResult : IEndpointResult
+    internal class TokenErrorResult : ITokenErrorEndpointResult
     {
         public TokenErrorResponse Response { get; }
 

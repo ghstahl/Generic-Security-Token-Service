@@ -12,9 +12,6 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    public interface ITokenEndpointResult : IEndpointResult
-    {
-    }
     internal class TokenResult : ITokenEndpointResult
     {
         public TokenResponse Response { get; set; }

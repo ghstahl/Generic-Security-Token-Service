@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4.Endpoints.Results
 {
-    internal class UserInfoResult : IEndpointResult
+    internal class UserInfoResult : IUserInfoEndpointResult
     {
         public Dictionary<string, object> Claims;
 
