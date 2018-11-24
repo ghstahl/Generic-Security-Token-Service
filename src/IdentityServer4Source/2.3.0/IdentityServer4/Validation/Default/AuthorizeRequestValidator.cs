@@ -24,7 +24,7 @@ namespace IdentityServer4.Validation
         private readonly IClientStore _clients;
         private readonly ICustomAuthorizeRequestValidator _customValidator;
         private readonly IRedirectUriValidator _uriValidator;
-        private readonly ScopeValidator _scopeValidator;
+        private readonly IScopeValidator _scopeValidator;
         private readonly IUserSession _userSession;
         private readonly ILogger _logger;
 
@@ -36,7 +36,7 @@ namespace IdentityServer4.Validation
             IClientStore clients,
             ICustomAuthorizeRequestValidator customValidator,
             IRedirectUriValidator uriValidator,
-            ScopeValidator scopeValidator,
+            IScopeValidator scopeValidator,
             IUserSession userSession,
             ILogger<AuthorizeRequestValidator> logger)
         {

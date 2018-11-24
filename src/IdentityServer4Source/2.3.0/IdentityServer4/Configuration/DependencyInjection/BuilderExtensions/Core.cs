@@ -120,7 +120,9 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             builder.Services.AddTransient<SecretParser>();
             builder.Services.AddTransient<SecretValidator>();
+            builder.Services.AddTransient<IScopeValidator,ScopeValidator>();
             builder.Services.AddTransient<ScopeValidator>();
+
             builder.Services.AddTransient<ExtensionGrantValidator>();
             builder.Services.AddTransient<BearerTokenUsageValidator>();
             builder.Services.AddTransient<BackChannelLogoutClient>();

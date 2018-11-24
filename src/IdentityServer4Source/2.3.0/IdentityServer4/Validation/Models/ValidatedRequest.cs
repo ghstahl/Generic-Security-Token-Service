@@ -10,6 +10,7 @@ using System.Security.Claims;
 using IdentityModel;
 using System.Linq;
 using System;
+using IdentityServer4.Services;
 
 namespace IdentityServer4.Validation
 {
@@ -90,7 +91,7 @@ namespace IdentityServer4.Validation
         /// <value>
         /// The validated scopes.
         /// </value>
-        public ScopeValidator ValidatedScopes { get; set; }
+        public IScopeValidator ValidatedScopes { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the confirmation method (will become the cnf claim). Must be a JSON object.

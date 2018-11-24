@@ -12,6 +12,7 @@ using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Logging;
 using IdentityServer4.Models;
+using IdentityServer4.Services;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer4.Validation
@@ -19,12 +20,12 @@ namespace IdentityServer4.Validation
     internal class DeviceAuthorizationRequestValidator : IDeviceAuthorizationRequestValidator
     {
         private readonly IdentityServerOptions _options;
-        private readonly ScopeValidator _scopeValidator;
+        private readonly IScopeValidator _scopeValidator;
         private readonly ILogger<DeviceAuthorizationRequestValidator> _logger;
         
         public DeviceAuthorizationRequestValidator(
             IdentityServerOptions options,
-            ScopeValidator scopeValidator,
+            IScopeValidator scopeValidator,
             ILogger<DeviceAuthorizationRequestValidator> logger)
         {
             _options = options;
