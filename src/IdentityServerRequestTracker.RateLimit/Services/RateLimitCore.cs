@@ -35,19 +35,24 @@ namespace IdentityServerRequestTracker.RateLimit.Services
 
         public RateLimitClientsRule GetRateLimitClientsRule(ClientRequestIdentity identity)
         {
-            var clientsRule = (from item in _options.Rules
-                from clientId in item.ClientIds
-                where clientId == identity.ClientId && item.Enabled
-                select item).FirstOrDefault();
-            if (clientsRule != null)
+            if (_options != null && _options.Rules != null)
             {
-                foreach (var item in clientsRule.Settings.RateLimitRules)
+                var clientsRule = (from item in _options.Rules
+                    from clientId in item.ClientIds
+                    where clientId == identity.ClientId && item.Enabled
+                    select item).FirstOrDefault();
+                if (clientsRule != null)
                 {
-                    //parse period text into time spans
-                    item.PeriodTimespan = ConvertToTimeSpan(item.Period);
+                    foreach (var item in clientsRule.Settings.RateLimitRules)
+                    {
+                        //parse period text into time spans
+                        item.PeriodTimespan = ConvertToTimeSpan(item.Period);
+                    }
                 }
+                return clientsRule;
             }
-            return clientsRule;
+
+            return null;
         }
         public RateLimitCounter GetCurrentRateLimitCounter(ClientRequestIdentity requestIdentity, RateLimitRule rule)
         {
