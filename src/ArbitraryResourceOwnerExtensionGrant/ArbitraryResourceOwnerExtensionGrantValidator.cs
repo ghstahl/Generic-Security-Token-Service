@@ -169,14 +169,14 @@ namespace ArbitraryResourceOwnerExtensionGrant
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
             {
                 var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
-                if (accessTokenLifetime > 0 && accessTokenLifetime < context.Request.AccessTokenLifetime)
+                if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
                 {
                     context.Request.AccessTokenLifetime = accessTokenLifetime;
                 }
                 else
                 {
                     var errorDescription =
-                        $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and less than configured AccessTokenLifetime.";
+                        $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
                     LogError(errorDescription);
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
                     return;
