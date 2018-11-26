@@ -7,6 +7,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using Microsoft.Extensions.Logging;
+using MoreLinq.Extensions;
 
 namespace IdentityServer4Extras.Services
 {
@@ -39,6 +40,14 @@ namespace IdentityServer4Extras.Services
             {
                 GrantedResources.OfflineAccess = true;
                 requestedScopes = requestedScopes.Where(x => x != IdentityServerConstants.StandardScopes.OfflineAccess).ToArray();
+            }
+            var distinct = requestedScopes.DistinctBy(i => i);
+            var grantedApis = from item in requestedScopes
+                let c = new ApiResource(item)
+                select c;
+            foreach (var grantedItem in grantedApis)
+            {
+                GrantedResources.ApiResources.Add(grantedItem);
             }
             return true;
         }
