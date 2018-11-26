@@ -149,5 +149,40 @@
             </table>
         </div>
     }
+    @if (Model != null && Model.UsageRecords != null && Model.UsageRecords.Count> 0)
+    {
+        <h3>Usage Records</h3>
+        <div class="table-responsive">
+            <table class="table  table-bordered">
+                <thead class="thead-light">
+                    <tr>
+                        <th>ClientId</th>
+                        <th>GrantType</th>
+                        <th>Count</th>
+                        <th>StartTime</th>
+                        <th>EndTime</th>
+                    </tr>
+                </thead>
+           
+                <tbody>
+          
+                @{
+                    var records = Model.UsageRecords;
+                    foreach (var item in records)
+                    {
+                        long currentCount = 0;
+                    <tr>
+                        <td>@item.ClientId</td>
+                        <td>@item.GrantType</td>
+                        <td>@item.Count</td>
+                        <td>@item.DateRange.Item1</td>
+                        <td>@item.DateRange.Item2</td>
+                    </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>
 

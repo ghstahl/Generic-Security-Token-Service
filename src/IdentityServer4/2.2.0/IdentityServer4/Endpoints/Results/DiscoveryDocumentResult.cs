@@ -6,9 +6,7 @@ using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -59,18 +57,6 @@ namespace IdentityServer4.Endpoints.Results
             }
 
             return context.Response.WriteJsonAsync(ObjectSerializer.ToJObject(Entries));
-        }
-        
-        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            var headers = httpResponseMessage.Headers;
-            if (MaxAge.HasValue && MaxAge.Value >= 0)
-            {
-                headers.SetCache(MaxAge.Value);
-            }
-
-            httpResponseMessage.Content = new JsonContent(Entries);
-            return Task.CompletedTask;
         }
     }
 }

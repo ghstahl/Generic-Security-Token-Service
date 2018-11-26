@@ -75,8 +75,8 @@ namespace IdentityServer4Extras.Extensions
         public static IIdentityServerBuilder SwapOutScopeValidator(
             this IIdentityServerBuilder builder)
         {
-            builder.Services.RemoveAll<ScopeValidator>();
-            builder.Services.TryAddTransient<ScopeValidator, MyScopeValidator>();
+            builder.Services.RemoveAll<IScopeValidator>();
+            builder.Services.TryAddTransient<IScopeValidator, MyScopeValidator>();
             return builder;
         }
         public static IIdentityServerBuilder SwapOutTokenRevocationRequestValidator(

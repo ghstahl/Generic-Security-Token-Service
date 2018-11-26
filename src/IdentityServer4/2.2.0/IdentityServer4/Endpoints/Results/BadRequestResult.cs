@@ -2,13 +2,10 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using IdentityServer4.Hosting;
 using Microsoft.AspNetCore.Http;
 using IdentityServer4.Extensions;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -44,24 +41,6 @@ namespace IdentityServer4.Endpoints.Results
         {
             public string error { get; set; }
             public string error_description { get; set; }
-        }
- 
-        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            var headers = httpResponseMessage.Headers;
-            httpResponseMessage.StatusCode = HttpStatusCode.BadRequest;
-            headers.SetNoCache();
-
-            if (Error.IsPresent())
-            {
-                var dto = new ResultDto
-                {
-                    error = Error,
-                    error_description = ErrorDescription
-                };
-                httpResponseMessage.Content = new JsonContent(dto);
-            }
-            return Task.CompletedTask;
-        }
+        }    
     }
 }

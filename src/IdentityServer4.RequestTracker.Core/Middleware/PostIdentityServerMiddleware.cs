@@ -64,11 +64,12 @@ namespace IdentityServerRequestTracker.Middleware
             {
                 name = evaluator.Name;
                 var result = await evaluator.PostEvaluateAsync(requestRecord, error);
-                if (result.Directive != RequestTrackerEvaluatorDirective.Skip)
+                directive = RequestTrackerEvaluatorDirective.AllowRequest;
+                if (result != null)
                 {
                     await result.ProcessAsync(requestRecord.HttpContext);
+                    directive = result.Directive;
                 }
-                directive = result.Directive;
             }
             catch (Exception e)
             {

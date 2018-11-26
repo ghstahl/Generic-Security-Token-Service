@@ -60,25 +60,6 @@ namespace IdentityServer4Extras.Endpoints
             public string refresh_token { get; set; }
         }
  
-        public async Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            var headers = httpResponseMessage.Headers;
-            headers.SetNoCache();
-
-            var expando = new ExpandoObject();
-            dynamic expandoDynamic = expando as dynamic;
-            expandoDynamic.id_token = Response.IdentityToken;
-            expandoDynamic.access_token = Response.AccessToken;
-            expandoDynamic.refresh_token = Response.RefreshToken;
-            expandoDynamic.expires_in = Response.AccessTokenLifetime;
-            expandoDynamic.token_type = OidcConstants.TokenResponse.BearerTokenType;
-
-            if (!Response.Custom.IsNullOrEmpty())
-            {
-                IDictionary<string, object> dictionary_object = expando;
-                dictionary_object.AddDictionary(Response.Custom);
-            }
-            httpResponseMessage.Content = new JsonContent(expandoDynamic);
-        }
+        
     }
 }

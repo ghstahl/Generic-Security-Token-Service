@@ -21,10 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="FakeItEasy" Version="4.9.1" />
-    <PackageReference Include="IdentityServer4.Contrib.RedisStore" Version="1.4.5" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.RazorPages" Version="2.1.3" />
-    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="3.0.2" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.0.3" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.1.2" />
  
@@ -33,8 +32,8 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.Literate" Version="3.0.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.0.36" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="4.0.1" />
+    <PackageReference Include="Westwind.AspNetCore.Markdown" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
@@ -46,10 +45,12 @@
     <ProjectReference Include="..\AspNetCore.HealthChecks\AspNetCore.HealthChecks.csproj" />
     <ProjectReference Include="..\GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj" />
     <ProjectReference Include="..\GraphQLCoreController\GraphQLCoreController.csproj" />
+    <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStoreExtra\IdentityServer4.Contrib.RedisStoreExtra.csproj" />
     <ProjectReference Include="..\IdentityServer4.RequestTracker.Core\IdentityServer4.RequestTracker.Core.csproj" />
     <ProjectReference Include="..\IdentityServer4Extras\IdentityServer4Extras.csproj" />
     <ProjectReference Include="..\IdentityServerRequestTracker.RateLimit\IdentityServerRequestTracker.RateLimit.csproj" />
+    <ProjectReference Include="..\IdentityServerRequestTracker.Usage\IdentityServerRequestTracker.Usage.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
     <ProjectReference Include="..\P7.Core\P7.Core.csproj" />

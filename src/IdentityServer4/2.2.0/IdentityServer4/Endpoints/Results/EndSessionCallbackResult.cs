@@ -10,10 +10,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System;
-using System.Net.Http;
 using IdentityServer4.Extensions;
 using IdentityServer4.Configuration;
-using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.Endpoints.Results
 {
@@ -86,16 +84,6 @@ namespace IdentityServer4.Endpoints.Results
             }
 
             return $"<!DOCTYPE html><html><style>iframe{{display:none;width:0;height:0;}}</style><body>{framesHtml}</body></html>";
-        }
-
-        public Task<ActionResult> BuildActionResultAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ExecuteAsync(HttpResponseMessage httpResponseMessage)
-        {
-            throw new NotImplementedException();
         }
     }
 }

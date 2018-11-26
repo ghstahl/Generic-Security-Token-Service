@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IdentityServer4\2.2.0\IdentityServer4\IdentityServer4.csproj" />
+    <ProjectReference Include="..\IdentityServer4Source\2.3.0\IdentityServer4\IdentityServer4.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,6 +6,7 @@ using IdentityServer4Extras;
 using IdentityServer4Extras.Stores;
 using IdentityServerRequestTracker.RateLimit.Options;
 using IdentityServerRequestTracker.RateLimit.Services;
+using IdentityServerRequestTracker.Usage.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityServer4.HostApp.ViewComponents
@@ -20,15 +21,18 @@ namespace IdentityServer4.HostApp.ViewComponents
     {
         public ClientExtra ClientExtra { get; set; }
         public List<RateLimitRuleRecord> RateLimitRuleRecords { get; set; }
+        public List<IAggregatedClientUsageRecordRead> UsageRecords { get; set; }
     }
     public class ClientViewComponent : ViewComponent
     {
         private IClientStoreExtra _clientStore;
         private IClientRateLimitProcessor _processor;
+        private IClientUsageStore _clientUsageStore;
 
-        public ClientViewComponent(IClientStoreExtra clientStore, IClientRateLimitProcessor processor)
+        public ClientViewComponent(IClientStoreExtra clientStore, IClientUsageStore clientUsageStore,IClientRateLimitProcessor processor)
         {
             _clientStore = clientStore;
+            _clientUsageStore = clientUsageStore;
             _processor = processor;
         }
 
@@ -62,10 +66,12 @@ namespace IdentityServer4.HostApp.ViewComponents
                 }
             }
 
+            var usageRecords = await _clientUsageStore.GetClientUsageRecordsAsync(clientId, null, (null, null));
             var model = new ClientViewComponentModel
             {
                 ClientExtra = client as ClientExtra,
-                RateLimitRuleRecords = rateLimitRuleRecords 
+                RateLimitRuleRecords = rateLimitRuleRecords,
+                                UsageRecords = usageRecords == null?null:usageRecords.ToList()
             };
             return View(model);
         }
