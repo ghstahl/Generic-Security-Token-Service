@@ -114,7 +114,8 @@ namespace IdentityServer4.HostApp
             }
             else
             {
-                builder.AddInMemoryPersistedGrantStoreExtra();
+                builder.AddInMemoryPersistedGrants();
+              //  builder.AddInMemoryPersistedGrantStoreExtra();
                 services.AddDistributedMemoryCache();
             }
 

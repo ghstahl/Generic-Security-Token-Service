@@ -109,7 +109,8 @@ namespace GenericSecurityTokenService
             }
             else
             {
-                builder.AddInMemoryPersistedGrantStoreExtra();
+                builder.AddInMemoryPersistedGrants();
+            //    builder.AddInMemoryPersistedGrantStoreExtra();
                 services.AddDistributedMemoryCache();
             }
             if (useKeyVault)

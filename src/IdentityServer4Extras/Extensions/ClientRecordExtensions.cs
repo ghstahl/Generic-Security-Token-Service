@@ -83,7 +83,7 @@ namespace IdentityServer4Extras.Extensions
                 RequireConsent = self.RequireConsent,
                 RequireRefreshClientSecret = self.RequireRefreshClientSecret,
                 SlidingRefreshTokenLifetime = self.SlidingRefreshTokenLifetime,
-                Watermark = self.Watermark
+                Namespace = self.Namespace
          
             };
         }

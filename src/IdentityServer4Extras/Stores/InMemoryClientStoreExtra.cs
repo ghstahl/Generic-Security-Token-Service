@@ -59,6 +59,15 @@ namespace IdentityServer4Extras.Stores
             return Task.FromResult(query.ToList());
         }
 
+        public Task<List<ClientExtra>> GetAllClientsAsync()
+        {
+            var query =
+                from client in _clients
+                let c = client as ClientExtra
+                select c;
+            return Task.FromResult(query.ToList());
+        }
+
         public Task<List<string>> GetAllEnabledClientIdsAsync()
         {
             var query =

@@ -8,6 +8,7 @@ using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Services;
+using IdentityServer4Extras.Stores;
 using Microsoft.Extensions.Logging;
 
 namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
@@ -49,6 +50,9 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
 
         protected readonly ITokenRevocationEventHandler _tokenRevocationEventHandler;
         private ITokenValidator _tokenValidator;
+        private IClientStoreExtra _clientStoreExtra;
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenRevocationResponseGenerator" /> class.
         /// </summary>
@@ -59,12 +63,14 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
             IReferenceTokenStore referenceTokenStore, 
             IRefreshTokenStore refreshTokenStore,
             ITokenValidator tokenValidator,
+            IClientStoreExtra clientStoreExtra,
             ITokenRevocationEventHandler tokenRevocationEventHandler,
             ILogger<TokenRevocationResponseGenerator> logger)
         {
             ReferenceTokenStore = referenceTokenStore;
             RefreshTokenStore = refreshTokenStore;
             _tokenValidator = tokenValidator;
+            _clientStoreExtra = clientStoreExtra;
             _tokenRevocationEventHandler = tokenRevocationEventHandler;
             Logger = logger;
         }
@@ -128,10 +134,19 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                 string subject = validationResult.Token;
                 if (!string.IsNullOrEmpty(subject))
                 {
+                    var clientExtra = validationResult.Client as ClientExtra;
                     // now we need to revoke this subject
                     var rts = RefreshTokenStore as IRefreshTokenStore2;
-                    await rts.RemoveRefreshTokensAsync(subject, validationResult.Client.ClientId);
-                    var clientExtra = validationResult.Client as ClientExtra;
+
+                    var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                    var queryClientIds = from item in clientExtras
+                        where item.Namespace == clientExtra.Namespace
+                        select item.ClientId;
+                    foreach (var clienId in queryClientIds)
+                    {
+                        await rts.RemoveRefreshTokensAsync(subject, clienId);
+                    }
+
                     await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, subject);
                 }
                 return true;
@@ -182,9 +197,17 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                 }
 
                 // now we need to revoke this subject
-                var rts = RefreshTokenStore as IRefreshTokenStore2;
-                await rts.RemoveRefreshTokensAsync(subject, validationResult.Client.ClientId);
                 var clientExtra = validationResult.Client as ClientExtra;
+                var rts = RefreshTokenStore as IRefreshTokenStore2;
+                var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                var queryClientIds = from item in clientExtras
+                    where item.Namespace == clientExtra.Namespace
+                    select item.ClientId;
+                foreach (var clienId in queryClientIds)
+                {
+                    await rts.RemoveRefreshTokensAsync(subject, clienId);
+                }
+
                 await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, subject);
                 return true;
             }
@@ -208,13 +231,23 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
             {
                 if (token.ClientId == validationResult.Client.ClientId)
                 {
-                    Logger.LogDebug("Refresh token revoked");
-                    var rt = await RefreshTokenStore.GetRefreshTokenAsync(validationResult.Token);
-                    var rts = RefreshTokenStore as IRefreshTokenStore2;
-                    await RefreshTokenStore.RemoveRefreshTokenAsync(validationResult.Token);
-                    await rts.RemoveRefreshTokensAsync(token.SubjectId, token.ClientId);
-                    await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, token.ClientId);
                     var clientExtra = validationResult.Client as ClientExtra;
+                    Logger.LogDebug("Refresh token revoked");
+                    var refreshTokenStore2 = RefreshTokenStore as IRefreshTokenStore2;
+                    await RefreshTokenStore.RemoveRefreshTokenAsync(validationResult.Token);
+
+                    var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                    var queryClientIds = from item in clientExtras
+                        where item.Namespace == clientExtra.Namespace
+                        select item.ClientId;
+
+                    foreach (var clientId in queryClientIds)
+                    {
+                        await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, clientId);
+                    }
+                    //  await refreshTokenStore2.RemoveRefreshTokensAsync(token.SubjectId, token.ClientId);
+                    //  await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, token.ClientId);
+                 
                     await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, token.SubjectId);
                 }
                 else

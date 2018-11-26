@@ -67,8 +67,8 @@ namespace IdentityServer4Extras.Models
         [JsonProperty("ClientClaimsPrefix")]
         public string ClientClaimsPrefix { get; set; }
 
-        [JsonProperty("Watermark")]
-        public string Watermark { get; set; }
+        [JsonProperty("Namespace")]
+        public string Namespace { get; set; }
 
         
     }

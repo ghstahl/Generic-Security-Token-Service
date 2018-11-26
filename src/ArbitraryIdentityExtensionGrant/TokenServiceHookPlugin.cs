@@ -71,9 +71,9 @@ namespace ArbitraryIdentityExtensionGrant
 
             }
             var clientExtra = request.ValidatedRequest.Client as ClientExtra;
-            if (!string.IsNullOrEmpty(clientExtra.Watermark))
+            if (!string.IsNullOrEmpty(clientExtra.Namespace))
             {
-                token.Claims.Add(new Claim("nudibranch_watermark", clientExtra.Watermark));
+                token.Claims.Add(new Claim("client_namespace", clientExtra.Namespace));
             }
             return (true, token);
         }

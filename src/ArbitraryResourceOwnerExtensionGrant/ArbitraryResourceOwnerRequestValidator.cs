@@ -56,7 +56,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                  (_notAllowedArbitraryClaims =
                                                                      new List<string>
                                                                      {
-                                                                         "nudibranch_watermark",
+                                                                         "client_namespace",
                                                                          ClaimTypes.NameIdentifier,
                                                                          ClaimTypes.AuthenticationMethod,
                                                                          JwtClaimTypes.AccessTokenHash,

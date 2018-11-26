@@ -16,6 +16,14 @@ namespace IdentityServer4Extras.Stores
 
         //
         // Summary:
+        //     gets all known clients
+        //
+        // Returns:
+        //     The list of all clientIds
+        Task<List<ClientExtra>> GetAllClientsAsync();
+
+        //
+        // Summary:
         //     gets all known clientIds that are enabled
         //
         // Returns:

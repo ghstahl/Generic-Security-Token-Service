@@ -27,7 +27,7 @@ namespace IdentityServer4Extras
 
         //
         // Summary:
-        //     Watermark this automatically put in to give some hint to the end user of the token as who did it.
-        public string Watermark { get; set; }
+        //     Namespace this automatically put in to give some hint to the end user of the token as who did it.
+        public string Namespace { get; set; }
     }
 }

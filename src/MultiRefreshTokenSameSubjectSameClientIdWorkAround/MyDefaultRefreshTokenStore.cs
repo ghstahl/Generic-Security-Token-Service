@@ -30,7 +30,11 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
 
     public class DefaultRefreshTokenStoreEnhancement : DefaultRefreshTokenStore
     {
-        public DefaultRefreshTokenStoreEnhancement(IPersistedGrantStore store, IPersistentGrantSerializer serializer, IHandleGenerationService handleGenerationService, ILogger<DefaultRefreshTokenStore> logger) : base(store, serializer, handleGenerationService, logger)
+        public DefaultRefreshTokenStoreEnhancement(
+            IPersistedGrantStore store, 
+            IPersistentGrantSerializer serializer, 
+            IHandleGenerationService handleGenerationService, 
+            ILogger<DefaultRefreshTokenStore> logger) : base(store, serializer, handleGenerationService, logger)
         {
         }
         public async Task RemoveRefreshTokensAsync(string subjectId, string clientId)

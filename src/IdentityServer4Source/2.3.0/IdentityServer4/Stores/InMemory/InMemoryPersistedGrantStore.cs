@@ -108,10 +108,8 @@ namespace IdentityServer4.Stores
             var query =
                 from item in _repository
                 where item.Value.SubjectId == subjectId &&
-                    item.Value.ClientId == clientId &&
-                    item.Value.Type == type
+                    item.Value.ClientId == clientId 
                 select item.Key;
-
             var keys = query.ToArray();
             foreach (var key in keys)
             {
