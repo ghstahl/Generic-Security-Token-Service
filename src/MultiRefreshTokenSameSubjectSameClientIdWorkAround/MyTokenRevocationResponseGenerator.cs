@@ -9,6 +9,7 @@ using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Services;
 using IdentityServer4Extras.Stores;
+using IdentityServer4Extras.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
@@ -134,17 +135,24 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
                 string subject = validationResult.Token;
                 if (!string.IsNullOrEmpty(subject))
                 {
+                    var validationResultExtra = validationResult as TokenRevocationRequestValidationResultExtra;
                     var clientExtra = validationResult.Client as ClientExtra;
                     // now we need to revoke this subject
                     var rts = RefreshTokenStore as IRefreshTokenStore2;
-
-                    var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
-                    var queryClientIds = from item in clientExtras
-                        where item.Namespace == clientExtra.Namespace
-                        select item.ClientId;
-                    foreach (var clienId in queryClientIds)
+                    if (validationResultExtra.RevokeAllAssociatedSubjects)
                     {
-                        await rts.RemoveRefreshTokensAsync(subject, clienId);
+                        var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                        var queryClientIds = from item in clientExtras
+                            where item.Namespace == clientExtra.Namespace
+                            select item.ClientId;
+                        foreach (var clienId in queryClientIds)
+                        {
+                            await rts.RemoveRefreshTokensAsync(subject, clienId);
+                        }
+                    }
+                    else
+                    {
+                        await rts.RemoveRefreshTokensAsync(subject, clientExtra.ClientId);
                     }
 
                     await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, subject);
@@ -167,7 +175,7 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
             try
             {
                 var token = await ReferenceTokenStore.GetReferenceTokenAsync(validationResult.Token);
-
+                var validationResultExtra = validationResult as TokenRevocationRequestValidationResultExtra;
                 string subject;
                 if (token != null)
                 {
@@ -198,14 +206,17 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
 
                 // now we need to revoke this subject
                 var clientExtra = validationResult.Client as ClientExtra;
-                var rts = RefreshTokenStore as IRefreshTokenStore2;
-                var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
-                var queryClientIds = from item in clientExtras
-                    where item.Namespace == clientExtra.Namespace
-                    select item.ClientId;
-                foreach (var clienId in queryClientIds)
+                if (validationResultExtra.RevokeAllAssociatedSubjects)
                 {
-                    await rts.RemoveRefreshTokensAsync(subject, clienId);
+                    var rts = RefreshTokenStore as IRefreshTokenStore2;
+                    var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                    var queryClientIds = from item in clientExtras
+                        where item.Namespace == clientExtra.Namespace
+                        select item.ClientId;
+                    foreach (var clienId in queryClientIds)
+                    {
+                        await rts.RemoveRefreshTokensAsync(subject, clienId);
+                    }
                 }
 
                 await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, subject);
@@ -231,23 +242,24 @@ namespace MultiRefreshTokenSameSubjectSameClientIdWorkAround
             {
                 if (token.ClientId == validationResult.Client.ClientId)
                 {
+                    var validationResultExtra = validationResult as TokenRevocationRequestValidationResultExtra;
                     var clientExtra = validationResult.Client as ClientExtra;
                     Logger.LogDebug("Refresh token revoked");
                     var refreshTokenStore2 = RefreshTokenStore as IRefreshTokenStore2;
                     await RefreshTokenStore.RemoveRefreshTokenAsync(validationResult.Token);
 
-                    var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
-                    var queryClientIds = from item in clientExtras
-                        where item.Namespace == clientExtra.Namespace
-                        select item.ClientId;
-
-                    foreach (var clientId in queryClientIds)
+                    if (validationResultExtra.RevokeAllAssociatedSubjects)
                     {
-                        await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, clientId);
+                        var clientExtras = await _clientStoreExtra.GetAllClientsAsync();
+                        var queryClientIds = from item in clientExtras
+                            where item.Namespace == clientExtra.Namespace
+                            select item.ClientId;
+
+                        foreach (var clientId in queryClientIds)
+                        {
+                            await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, clientId);
+                        }
                     }
-                    //  await refreshTokenStore2.RemoveRefreshTokensAsync(token.SubjectId, token.ClientId);
-                    //  await ReferenceTokenStore.RemoveReferenceTokensAsync(token.SubjectId, token.ClientId);
-                 
                     await _tokenRevocationEventHandler.TokenRevokedAsync(clientExtra, token.SubjectId);
                 }
                 else

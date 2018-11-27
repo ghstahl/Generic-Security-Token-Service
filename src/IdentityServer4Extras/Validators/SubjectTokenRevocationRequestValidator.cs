@@ -5,6 +5,7 @@ using IdentityModel;
 using IdentityServer4.Models;
 using IdentityServer4.Validation;
 using IdentityServer4Extras.Extensions;
+using IdentityServer4Extras.Validation;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityServer4Extras.Validators
@@ -67,11 +68,12 @@ namespace IdentityServer4Extras.Validators
                 });
             }
 
-            var result = new TokenRevocationRequestValidationResult
+            var result = new TokenRevocationRequestValidationResultExtra
             {
                 IsError = false,
                 Token = token,
-                Client = client
+                Client = client,
+                RevokeAllAssociatedSubjects = false
             };
 
             ////////////////////////////
@@ -93,9 +95,19 @@ namespace IdentityServer4Extras.Validators
                 }
             }
 
+            var revokeAllSubjects = parameters.Get("revoke_all_subjects");
+            if (revokeAllSubjects.IsPresent())
+            {
+                if (String.Compare(revokeAllSubjects, "true", StringComparison.InvariantCultureIgnoreCase) == 0)
+                {
+                    result.RevokeAllAssociatedSubjects = true;
+                }
+            }
+
+
             _logger.LogDebug("ValidateRequestAsync result: {validateRequestResult}", result);
 
-            return Task.FromResult(result);
+            return Task.FromResult(result as TokenRevocationRequestValidationResult);
         }
     }
 }

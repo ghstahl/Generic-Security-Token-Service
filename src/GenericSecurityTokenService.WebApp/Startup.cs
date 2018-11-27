@@ -110,7 +110,6 @@ namespace GenericSecurityTokenService
             else
             {
                 builder.AddInMemoryPersistedGrants();
-            //    builder.AddInMemoryPersistedGrantStoreExtra();
                 services.AddDistributedMemoryCache();
             }
             if (useKeyVault)
