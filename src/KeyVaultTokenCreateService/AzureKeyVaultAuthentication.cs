@@ -18,7 +18,7 @@ namespace P7IdentityServer4
 
         internal async Task<string> KeyVaultClientAuthenticationCallback(string authority, string resource, string scope)
         {
-            var authContext = new AuthenticationContext(authority);
+            var authContext = new AuthenticationContext(authority, TokenCache.DefaultShared);
             var clientCred = new ClientCredential(_clientId, _clientSecret);
             var result = await authContext.AcquireTokenAsync(resource, clientCred);
 

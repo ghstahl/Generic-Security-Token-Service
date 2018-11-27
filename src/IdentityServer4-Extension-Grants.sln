@@ -115,6 +115,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4", "Identity
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.Contrib.RedisStore", "IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj", "{C884A671-CD78-4813-B865-FC9E4C1F5576}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleKeyVault", "ConsoleKeyVault\ConsoleKeyVault.csproj", "{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -269,6 +271,10 @@ Global
 		{C884A671-CD78-4813-B865-FC9E4C1F5576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C884A671-CD78-4813-B865-FC9E4C1F5576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C884A671-CD78-4813-B865-FC9E4C1F5576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -310,6 +316,7 @@ Global
 		{C4DA0C49-A7EC-4F55-B939-408024593A61} = {019B24FC-5A59-45CC-B07E-2399CF53AC53}
 		{4C63ED02-5918-4ABE-8E42-82BE9497C93A} = {C4DA0C49-A7EC-4F55-B939-408024593A61}
 		{C884A671-CD78-4813-B865-FC9E4C1F5576} = {5AFACF15-C355-40AC-BD7D-1D4C82FD501E}
+		{4B09AC54-50E2-4CC0-A9D5-6C1ADE27966C} = {447224EC-BC35-4791-BFA8-0AF2B13409F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}

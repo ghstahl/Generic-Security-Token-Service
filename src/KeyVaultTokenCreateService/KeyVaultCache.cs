@@ -96,6 +96,7 @@ namespace P7IdentityServer4
                                select item;
                 keyBundles = queryKbs.ToList();
 
+                var certificateBundle = await GetSigningCertificateAsync();
                 var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
                 var queryRsaSecurityKeys = from item in keyBundles
                                            let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
@@ -135,7 +136,8 @@ namespace P7IdentityServer4
                     RsaSecurityKeys = queryRsaSecurityKeys.ToList(),
                     SigningCredentials = signingCredentials,
                     JsonWebKeys = jwks,
-                    KeyIdentifier = kid
+                    KeyIdentifier = kid,
+                    CertificateBundle = certificateBundle
                 };
                 await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
 
@@ -192,6 +194,14 @@ namespace P7IdentityServer4
             }
 
             return keyBundles;
+        }
+        private async Task<CertificateBundle> GetSigningCertificateAsync()
+        {
+            var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
+
+            var certificate = await keyVaultClient.GetCertificateAsync(_keyVaultOptions.KeyVaultUrl,_keyVaultOptions.KeyIdentifier);
+             
+            return certificate;
         }
     }
 }

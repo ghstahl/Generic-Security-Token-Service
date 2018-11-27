@@ -14,7 +14,7 @@ namespace P7IdentityServer4.Extensions
             builder.Services.TryAddTransient<ITokenCreationService, MyDefaultTokenCreationService>();
 
             builder.Services.RemoveAll<ISigningCredentialStore>();
-            builder.Services.TryAddSingleton<MySigningCredentialStore>();
+           
             builder.Services.TryAddSingleton<ISigningCredentialStore>(x => x.GetService<MySigningCredentialStore>());
 
             builder.Services.RemoveAll<IKeyMaterialService>();

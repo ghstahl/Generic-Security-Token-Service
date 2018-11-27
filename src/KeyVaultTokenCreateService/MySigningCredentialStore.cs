@@ -11,7 +11,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace P7IdentityServer4
 {
-    public class MySigningCredentialStore : ISigningCredentialStore, IKeyMaterialService
+    public class MySigningCredentialStore : 
+        ITokenSigningCredentialStore,
+        IKeyMaterialService,
+        ISigningCredentialStore
     {
         private readonly IKeyVaultCache _keyVaultCache;
         private ILogger _logger;
@@ -35,7 +38,13 @@ namespace P7IdentityServer4
             var cachedData = await _keyVaultCache.GetKeyVaultCacheDataAsync();
             return cachedData.SigningCredentials;
         }
-      
+
+        public async Task<CertificateBundle> GetCertificateBundleAsync()
+        {
+            var cachedData = await _keyVaultCache.GetKeyVaultCacheDataAsync();
+            return cachedData.CertificateBundle;
+        }
+
         public async Task<IEnumerable<JsonWebKey>> GetAllAsync()
         {
             var cachedData = await _keyVaultCache.GetKeyVaultCacheDataAsync();

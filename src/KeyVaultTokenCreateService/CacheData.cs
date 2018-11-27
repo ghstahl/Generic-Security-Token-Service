@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.KeyVault.Models;
 using Microsoft.IdentityModel.Tokens;
 
 namespace P7IdentityServer4
@@ -10,5 +11,6 @@ namespace P7IdentityServer4
         public SigningCredentials SigningCredentials { get; set; }
         public List<JsonWebKey> JsonWebKeys { get; set; }
         public KeyIdentifier KeyIdentifier { get; set; }
+        public CertificateBundle CertificateBundle { get; set; }
     }
 }
