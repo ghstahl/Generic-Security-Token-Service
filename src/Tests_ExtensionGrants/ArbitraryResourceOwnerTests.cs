@@ -10,6 +10,7 @@ using IdentityModelExtras;
 using IdentityServer4;
 using IdentityServer4.HostApp;
 using IdentityServer4.Hosting;
+using IdentityServer4Extras;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
@@ -95,86 +96,7 @@ namespace Tests_ExtensionGrants
             result.Error.ShouldNotBeNullOrEmpty();
             result.Error.ShouldBe(OidcConstants.TokenErrors.InvalidRequest);
         }
-        [TestMethod]
-        public async Task Mint_arbitrary_resource_owner_remint_with_access_token()
-        {
-            var client = new TokenClient(
-                _server.BaseAddress + "connect/token",
-                ClientId,
-                _server.CreateHandler());
-
-            Dictionary<string, string> paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
-
-                },
-                {
-                    ArbitraryResourceOwnerExtensionGrant.Constants.Subject,
-                    "Ratt"
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            var result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNullOrEmpty();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            var jwtSecurityToken = new JwtSecurityTokenHandler()
-                .ReadToken(result.AccessToken) as JwtSecurityToken;
-            jwtSecurityToken.ShouldNotBeNull();
-
-            var authTimeQueryClaim = (from item in jwtSecurityToken.Claims
-                                      where item.Type == JwtClaimTypes.AuthenticationTime
-                select item).FirstOrDefault();
-            authTimeQueryClaim.ShouldNotBeNull();
-
-
-
-            // remint, but pass in the access_token from above
-            paramaters = new Dictionary<string, string>()
-            {
-                {OidcConstants.TokenRequest.ClientId, ClientId},
-                {OidcConstants.TokenRequest.ClientSecret, ClientSecret},
-                {OidcConstants.TokenRequest.GrantType, ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner},
-                {
-                    OidcConstants.TokenRequest.Scope,
-                    $"{IdentityServerConstants.StandardScopes.OfflineAccess} nitro metal"
-                },
-                {
-                    ArbitraryNoSubjectExtensionGrant.Constants.ArbitraryClaims,
-                    "{'role': ['application', 'limited'],'query': ['dashboard', 'licensing'],'seatId': ['8c59ec41-54f3-460b-a04e-520fc5b9973d'],'piid': ['2368d213-d06c-4c2a-a099-11c34adc3579']}"
-
-                },
-                {
-                    OidcConstants.TokenTypes.AccessToken,
-                    result.AccessToken
-                },
-                {ArbitraryNoSubjectExtensionGrant.Constants.AccessTokenLifetime, "3600"}
-            };
-            result = await client.RequestAsync(paramaters);
-            result.AccessToken.ShouldNotBeNullOrEmpty();
-            result.RefreshToken.ShouldNotBeNullOrEmpty();
-            result.ExpiresIn.ShouldNotBeNull();
-
-            jwtSecurityToken = new JwtSecurityTokenHandler()
-                .ReadToken(result.AccessToken) as JwtSecurityToken;
-            jwtSecurityToken.ShouldNotBeNull();
-
-            var originAuthTimeClaim = (from item in jwtSecurityToken.Claims
-                where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
-                select item).FirstOrDefault();
-            originAuthTimeClaim.ShouldNotBeNull();
-            originAuthTimeClaim.Value.ShouldBe(authTimeQueryClaim.Value);
-        }
+        
 
         [TestMethod]
         public async Task Mint_arbitrary_resource_owner_with_offline_access()
@@ -468,8 +390,9 @@ namespace Tests_ExtensionGrants
                 _server.CreateHandler());
             paramaters = new Dictionary<string, string>()
             {
-                {"token_type_hint", OidcConstants.TokenTypes.RefreshToken},
-                {"token", result.RefreshToken}
+                {Constants.RevocationArguments.TokenTypeHint, OidcConstants.TokenTypes.RefreshToken},
+                {Constants.RevocationArguments.Token, result.RefreshToken},
+                {Constants.RevocationArguments.RevokeAllSubjects,"true" }
             };
             await revocationTokenClient.RequestAsync(paramaters);
 

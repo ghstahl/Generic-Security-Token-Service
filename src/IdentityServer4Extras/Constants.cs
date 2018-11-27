@@ -4,6 +4,12 @@ namespace IdentityServer4Extras
 {
     public static class Constants
     {
+        public static class RevocationArguments
+        {
+            public const string RevokeAllSubjects = "revoke_all_subjects";
+            public const string TokenTypeHint = "token_type_hint";
+            public const string Token = "token";
+        }
         public static class TokenTypeHints
         {
             public const string RefreshToken = "refresh_token";

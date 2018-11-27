@@ -79,23 +79,23 @@ namespace IdentityServer4Extras.Validators
             ////////////////////////////
             // check token type hint
             ///////////////////////////
-            var hint = parameters.Get("token_type_hint");
+            var hint = parameters.Get(Constants.RevocationArguments.TokenTypeHint);
             if (hint.IsPresent())
             {
                 if (IdentityServer4Extras.Constants.SupportedTokenTypeHints.Contains(hint))
                 {
-                    _logger.LogDebug("Token type hint found in request: {tokenTypeHint}", hint);
+                    _logger.LogDebug($"Token type hint found in request: {hint}" );
                     result.TokenTypeHint = hint;
                 }
                 else
                 {
-                    _logger.LogError("Invalid token type hint: {tokenTypeHint}", hint);
+                    _logger.LogError($"Invalid token type hint: {hint}");
                     result.IsError = true;
                     result.Error = IdentityServer4Extras.Constants.RevocationErrors.UnsupportedTokenType;
                 }
             }
 
-            var revokeAllSubjects = parameters.Get("revoke_all_subjects");
+            var revokeAllSubjects = parameters.Get(Constants.RevocationArguments.RevokeAllSubjects);
             if (revokeAllSubjects.IsPresent())
             {
                 if (String.Compare(revokeAllSubjects, "true", StringComparison.InvariantCultureIgnoreCase) == 0)
