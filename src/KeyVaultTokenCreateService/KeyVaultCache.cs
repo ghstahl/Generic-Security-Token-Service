@@ -217,8 +217,12 @@ namespace P7IdentityServer4
           
             var certificateSecret = await keyVaultClient.GetSecretAsync(_keyVaultOptions.KeyVaultUrl,_keyVaultOptions.KeyIdentifier);
             var certificate = System.Convert.FromBase64String(certificateSecret.Value);
-            var x509Certificate2 = new X509Certificate2(certificate);
-            return x509Certificate2;
+            // var x509Certificate2 = new X509Certificate2(certificate);//blows on azure
+            var x509Col = new X509Certificate2Collection();
+            x509Col.Import(certificate);
+            return x509Col[0];
+
+           
         }
     }
 }
