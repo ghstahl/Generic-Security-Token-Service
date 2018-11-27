@@ -85,7 +85,7 @@ The [keyvault-config](src/IdentityServer4.HostApp.Redis/appsettings.keyVault.jso
 #### Extension Grant: [arbitrary_resource_owner](docs/arbitrary_resource_owner.md) and a [GraphQL Variant](docs/arbitrary_resource_owner_graphql.md)    
 #### Extension Grant: [arbitrary_identity](docs/arbitrary_identity.md) and a [GraphQL Variant](docs/arbitrary_identity_graphql.md)    
 
-#### [Revocation](docs/Revocation.md)    
+#### [Revocation](docs/revocation.md)    
 
 ## Workarounds  
 [refresh_token_revocation_workaround](docs/refresh_token_revocation_workaround.md)  
