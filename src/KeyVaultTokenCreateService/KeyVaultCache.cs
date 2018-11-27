@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using IdentityServer4.Services;
@@ -96,7 +97,8 @@ namespace P7IdentityServer4
                                select item;
                 keyBundles = queryKbs.ToList();
 
-                var certificateBundle = await GetSigningCertificateAsync();
+                var x509Certificate2 = await GetX509Certificate2Async();
+
                 var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
                 var queryRsaSecurityKeys = from item in keyBundles
                                            let c = new RsaSecurityKey(keyVaultClient.ToRSA(item))
@@ -129,15 +131,16 @@ namespace P7IdentityServer4
                     KeyId = jwk.Kid,
                 };
 
-                var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
-                var tokenCreateSigningCredentials = await GetTokenCreationSigningCredentialsAsync();
+        
+                var signingCredentials = new MySigningCredentials(x509Certificate2);
+
                 CacheData cacheData = new CacheData()
                 {
                     RsaSecurityKeys = queryRsaSecurityKeys.ToList(),
                     SigningCredentials = signingCredentials,
                     JsonWebKeys = jwks,
                     KeyIdentifier = kid,
-                    CertificateBundle = certificateBundle
+                    X509Certificate2 = x509Certificate2
                 };
                 await _cachedData.SetAsync(CacheValidationKey, cacheData, TimeSpan.FromHours(6));
 
@@ -195,13 +198,14 @@ namespace P7IdentityServer4
 
             return keyBundles;
         }
-        private async Task<CertificateBundle> GetSigningCertificateAsync()
+        private async Task<X509Certificate2> GetX509Certificate2Async()
         {
             var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
-
-            var certificate = await keyVaultClient.GetCertificateAsync(_keyVaultOptions.KeyVaultUrl,_keyVaultOptions.KeyIdentifier);
-             
-            return certificate;
+          
+            var certificateSecret = await keyVaultClient.GetSecretAsync(_keyVaultOptions.KeyVaultUrl,_keyVaultOptions.KeyIdentifier);
+            var certificate = System.Convert.FromBase64String(certificateSecret.Value);
+            var x509Certificate2 = new X509Certificate2(certificate);
+            return x509Certificate2;
         }
     }
 }

@@ -13,8 +13,12 @@ namespace P7IdentityServer4.Extensions
             builder.Services.RemoveAll<ITokenCreationService>();
             builder.Services.TryAddTransient<ITokenCreationService, MyDefaultTokenCreationService>();
 
+            return builder;
+        }
+        public static IIdentityServerBuilder AddKeyVaultCredentialStore(
+            this IIdentityServerBuilder builder)
+        {
             builder.Services.RemoveAll<ISigningCredentialStore>();
-           
             builder.Services.TryAddSingleton<ISigningCredentialStore>(x => x.GetService<MySigningCredentialStore>());
 
             builder.Services.RemoveAll<IKeyMaterialService>();

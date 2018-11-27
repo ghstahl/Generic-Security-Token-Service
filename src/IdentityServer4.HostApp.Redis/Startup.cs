@@ -79,6 +79,9 @@ namespace IdentityServer4.HostApp
 
             bool useRedis = Convert.ToBoolean(Configuration["appOptions:redis:useRedis"]);
             bool useKeyVault = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVault"]);
+            bool useKeyVaultSigning = Convert.ToBoolean(Configuration["appOptions:keyVault:useKeyVaultSigning"]);
+            
+
             var builder = services
                 .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
                 .AddInMemoryIdentityResources(identityResources)
@@ -127,21 +130,18 @@ namespace IdentityServer4.HostApp
 
             if (useKeyVault)
             {
-                builder.AddKeyVaultTokenCreateService();
+                builder.AddKeyVaultCredentialStore();
                 services.AddKeyVaultTokenCreateServiceTypes();
                 services.AddKeyVaultTokenCreateServiceConfiguration(Configuration);
+                if (useKeyVaultSigning)
+                {
+                    // this signs the token using azure keyvault to do the actual signing
+                    builder.AddKeyVaultTokenCreateService();
+                } 
             }
             else
             {
                 builder.AddDeveloperSigningCredential();
-                if (_hostingEnvironment.IsDevelopment())
-                {
-                    builder.AddDeveloperSigningCredential();
-                }
-                else
-                {
-                    //crash
-                }
             }
 
             // my replacement services.

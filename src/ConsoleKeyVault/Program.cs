@@ -48,7 +48,7 @@ namespace ConsoleKeyVault
 
             var signingCredentialStore =
                 ServiceProvider.GetService<ITokenSigningCredentialStore>();
-            var certificateBundle = await signingCredentialStore.GetCertificateBundleAsync();
+            var x509Certificate2 = await signingCredentialStore.GeX509Certificate2Async();
             logger.LogDebug("All done!");
         }
     }

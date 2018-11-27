@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using IdentityServer4.Services;
@@ -11,6 +12,24 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace P7IdentityServer4
 {
+    class MySigningCredentials : SigningCredentials
+    {
+        public MySigningCredentials(X509Certificate2 certificate) : base(certificate)
+        {
+        }
+
+        protected MySigningCredentials(X509Certificate2 certificate, string algorithm) : base(certificate, algorithm)
+        {
+        }
+
+        public MySigningCredentials(SecurityKey key, string algorithm) : base(key, algorithm)
+        {
+        }
+
+        public MySigningCredentials(SecurityKey key, string algorithm, string digest) : base(key, algorithm, digest)
+        {
+        }
+    }
     public class MySigningCredentialStore : 
         ITokenSigningCredentialStore,
         IKeyMaterialService,
@@ -39,10 +58,10 @@ namespace P7IdentityServer4
             return cachedData.SigningCredentials;
         }
 
-        public async Task<CertificateBundle> GetCertificateBundleAsync()
+        public async Task<X509Certificate2> GeX509Certificate2Async()
         {
             var cachedData = await _keyVaultCache.GetKeyVaultCacheDataAsync();
-            return cachedData.CertificateBundle;
+            return cachedData.X509Certificate2;
         }
 
         public async Task<IEnumerable<JsonWebKey>> GetAllAsync()
