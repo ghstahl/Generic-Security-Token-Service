@@ -15,8 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using IdentityServer4.AspNetFederatedHost.Data;
 using IdentityServer4.AspNetFederatedHost.Services;
-using IdentityServer4.AspNetIdentityExtras.Extensions;
-using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
+using IdentityServer4.AspNetIdentityExtras.Extensions; 
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -113,8 +112,7 @@ namespace IdentityServer4.AspNetFederatedHost
                         options.RedisConnectionString = redisConnectionString;
                         options.KeyPrefix = "prefix";
                     });
-                builder.AddRedisOperationalStoreExtra();
-                services.AddRedisOperationalStoreExtraTypes();
+               
 
             }
             if (useKeyVault)

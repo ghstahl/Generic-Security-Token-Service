@@ -7,8 +7,7 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using GraphQLCore.ExtensionGrants.Extensions;
-using IdentityModelExtras.Extensions;
-using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
+using IdentityModelExtras.Extensions; 
 using IdentityServer4.HostApp.Health;
 using IdentityServer4.HostApp.RateLimiting;
 using IdentityServer4.Stores;
@@ -105,8 +104,7 @@ namespace IdentityServer4.HostApp
                         options.RedisConnectionString = redisConnectionString;
                         options.KeyPrefix = "prefix";
                     });
-                builder.AddRedisOperationalStoreExtra();
-                services.AddRedisOperationalStoreExtraTypes();
+              
                 services.AddDistributedRedisCache(options =>
                 {
                     options.Configuration = redisConnectionString;

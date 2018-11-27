@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using IdentityServer4.Contrib.RedisStore;
-using IdentityServer4.Contrib.RedisStore.Cache;
 using IdentityServer4.HostApp.Options;
 using IdentityServer4.Services;
 using Microsoft.Extensions.HealthChecks;

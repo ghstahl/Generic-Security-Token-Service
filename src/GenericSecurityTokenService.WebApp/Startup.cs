@@ -6,8 +6,7 @@ using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using GenericSecurityTokenService.Middleware;
 using GenericSecurityTokenService.Services;
-using IdentityModelExtras.Extensions;
-using IdentityServer4.Contrib.RedisStoreExtra.Extenstions;
+using IdentityModelExtras.Extensions; 
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -100,8 +99,6 @@ namespace GenericSecurityTokenService
                         options.RedisConnectionString = redisConnectionString;
                         options.KeyPrefix = "prefix";
                     });
-                builder.AddRedisOperationalStoreExtra();
-                services.AddRedisOperationalStoreExtraTypes();
                 services.AddDistributedRedisCache(options =>
                 {
                     options.Configuration = redisConnectionString;
