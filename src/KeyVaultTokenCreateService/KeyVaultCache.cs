@@ -97,7 +97,11 @@ namespace P7IdentityServer4
                                select item;
                 keyBundles = queryKbs.ToList();
 
-                var x509Certificate2 = await GetX509Certificate2Async();
+                X509Certificate2 x509Certificate2 = null;
+                if (!_keyVaultOptions.UseKeyVaultSigning)
+                {
+                    x509Certificate2 = await GetX509Certificate2Async();
+                }
 
                 var keyVaultClient = new KeyVaultClient(_azureKeyVaultAuthentication.KeyVaultClientAuthenticationCallback);
                 var queryRsaSecurityKeys = from item in keyBundles
@@ -131,9 +135,18 @@ namespace P7IdentityServer4
                     KeyId = jwk.Kid,
                 };
 
-        
-                var signingCredentials = new MySigningCredentials(x509Certificate2);
-
+                SigningCredentials signingCredentials;
+                if (_keyVaultOptions.UseKeyVaultSigning)
+                {
+                    signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.RsaSha256);
+                    //  var tokenCreateSigningCredentials = await GetTokenCreationSigningCredentialsAsync();
+                }
+                else
+                {
+                    signingCredentials = new MySigningCredentials(x509Certificate2);
+                }
+            
+               
                 CacheData cacheData = new CacheData()
                 {
                     RsaSecurityKeys = queryRsaSecurityKeys.ToList(),
