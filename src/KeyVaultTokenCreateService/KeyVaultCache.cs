@@ -217,15 +217,12 @@ namespace P7IdentityServer4
           
             var certificateSecret = await keyVaultClient.GetSecretAsync(_keyVaultOptions.KeyVaultUrl,_keyVaultOptions.KeyIdentifier);
             var certificate = System.Convert.FromBase64String(certificateSecret.Value);
-            string password = null;
-            var x509Certificate2 = new X509Certificate2(certificate, password, X509KeyStorageFlags.MachineKeySet |
+           
+            // NOTE: creating this cert from an azure keyvault throws exceptions if you don't pass in those storage flags.
+            var x509Certificate2 = new X509Certificate2(certificate, (string) null, X509KeyStorageFlags.MachineKeySet |
                                                                            X509KeyStorageFlags.PersistKeySet |
                                                                            X509KeyStorageFlags.Exportable);
-         //   var x509Col = new X509Certificate2Collection();
-         //   x509Col.Import(certificate);
             return x509Certificate2;
-
-           
         }
     }
 }
