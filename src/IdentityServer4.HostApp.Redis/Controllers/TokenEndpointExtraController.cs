@@ -29,11 +29,12 @@ namespace IdentityServer4.HostApp.Controllers
         [HttpGet]
         public async Task<IEndpointResult> GetAsync()
         {
-            var arbitraryClaims = new Dictionary<string, string>
+            var arbitraryClaims = new Dictionary<string, List<string>>
             {
-                {"some_guid", Guid.NewGuid().ToString()},
-                {"in", "flames"}
+                {"some_guid", new List<string>() {Guid.NewGuid().ToString()}},
+                {"in", new List<string>() {"flames"}}
             };
+          
             var jsonArbitraryClaims = JsonConvert.SerializeObject(arbitraryClaims);
 
             IFormCollection formCollection = new FormCollection(new Dictionary<string, StringValues>()

@@ -15,10 +15,12 @@ using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
+using IdentityServerRequestTracker.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using IdentityServerRequestTracker.Services;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
@@ -26,23 +28,25 @@ namespace ArbitraryResourceOwnerExtensionGrant
     {
         private readonly ILogger<ArbitraryResourceOwnerExtensionGrantValidator> _logger;
         private readonly IEventService _events;
-        private readonly IClientStore _clientStore;
         private readonly IResourceStore _resourceStore;
-        private readonly IRawClientSecretValidator _clientSecretValidator;
         private readonly ITokenResponseGenerator _tokenResponseGenerator;
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
         private ISystemClock _clock;
         private IMemoryCache _cache;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
-        private PrincipalAugmenter _principalAugmenter; 
+        private PrincipalAugmenter _principalAugmenter;
+
+        public IdentityServerRequestRecord IdentityServerRequestRecord { get; }
+
         private ITokenValidator _tokenValidator;
+        private IServiceProvider _serviceProvider;
+
 
         public ArbitraryResourceOwnerExtensionGrantValidator(
             ITokenValidator tokenValidator,
             IdentityServerOptions options,
-            IClientStore clientStore,
-            IRawClientSecretValidator clientSecretValidator,
+            IServiceProvider serviceProvider,
             IResourceStore resourceStore,
             IEventService events,
             ISystemClock clock,
@@ -50,25 +54,28 @@ namespace ArbitraryResourceOwnerExtensionGrant
             ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
-            PrincipalAugmenter principalAugmenter )
+            PrincipalAugmenter principalAugmenter)
         {
             _tokenValidator = tokenValidator;
             _logger = logger;
             _clock = clock;
             _cache = cache;
             _events = events;
-            _clientSecretValidator = clientSecretValidator;
             _options = options;
-            _clientStore = clientStore;
+            _serviceProvider = serviceProvider;
             _resourceStore = resourceStore;
             _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
-            _principalAugmenter = principalAugmenter; 
+            _principalAugmenter = principalAugmenter;
 
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
+
+            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
+            var identityServerRequestRecord =
+                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
             _logger.LogDebug("Start token request validation");
 
             if (context == null) throw new ArgumentNullException(nameof(context));
@@ -89,10 +96,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     customTokenRequestValidationContext.Result.Error);
                 return;
             }
-            var clientValidationResult = await _clientSecretValidator.ValidateAsync(_validatedRequest.Raw);
-            if (clientValidationResult == null) throw new ArgumentNullException(nameof(clientValidationResult));
 
-            _validatedRequest.SetClient(clientValidationResult.Client, clientValidationResult.Secret);
+
+            _validatedRequest.SetClient(identityServerRequestRecord.Client);
 
             /////////////////////////////////////////////
             // check grant type
@@ -104,6 +110,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
                 return;
             }
+
             if (grantType.Length > _options.InputLengthRestrictions.GrantType)
             {
                 LogError("Grant type is too long");
@@ -112,41 +119,12 @@ namespace ArbitraryResourceOwnerExtensionGrant
             }
 
             _validatedRequest.GrantType = grantType;
-            var resource = await _resourceStore.GetAllResourcesAsync();
 
             var subject = "";
-            Claim originAuthTimeClaim = null;
-            // if access_token exists, it wins.
-            var accessToken = context.Request.Raw.Get("access_token");
-            if (!string.IsNullOrWhiteSpace(accessToken))
-            {
-                var validateAccessToken = await _tokenValidator.ValidateAccessTokenAsync(accessToken);
-                var queryClaims = from item in validateAccessToken.Claims
-                    where item.Type == JwtClaimTypes.Subject
-                                  select item.Value;
-                subject = queryClaims.FirstOrDefault();
-
-                originAuthTimeClaim = (from item in validateAccessToken.Claims
-                                      where item.Type == $"origin_{JwtClaimTypes.AuthenticationTime}"
-                    select item).FirstOrDefault();
-                if (originAuthTimeClaim == null)
-                {
-                    var authTimeClaim = (from item in validateAccessToken.Claims
-                        where item.Type == JwtClaimTypes.AuthenticationTime
-                        select item).FirstOrDefault();
-                    originAuthTimeClaim = new
-                        Claim($"origin_{JwtClaimTypes.AuthenticationTime}",
-                            authTimeClaim.Value);
-
-                }
-
-            }
-
             if (string.IsNullOrWhiteSpace(subject))
             {
                 subject = context.Request.Raw.Get("subject");
             }
-           
 
             // get user's identity
             var claims = new List<Claim>
@@ -157,13 +135,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
             _principalAugmenter.AugmentPrincipal(principal);
-            var userClaimsFinal = new List<Claim>()
-            {
-            
-                
-            };
-           
-           
+
             // optional stuff;
             var accessTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
             if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
@@ -183,14 +155,10 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 }
             }
 
-          //  userClaimsFinal.Add(new Claim(ProfileServiceManager.Constants.ClaimKey, Constants.ArbitraryResourceOwnerProfileService));
-            if (originAuthTimeClaim != null)
-            {
-                userClaimsFinal.Add(originAuthTimeClaim);
-            }
-            context.Result = new GrantValidationResult(principal.GetSubjectId(), ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner, userClaimsFinal);
+            context.Result = new GrantValidationResult(principal.GetSubjectId(),
+                ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner);
         }
-        
+
         private void LogError(string message = null, params object[] values)
         {
             if (message.IsPresent())
@@ -208,6 +176,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             //  var details = new global::IdentityServer4.Logging.TokenRequestValidationLog(_validatedRequest);
             //  _logger.LogError("{details}", details);
         }
+
         public string GrantType => Constants.ArbitraryResourceOwner;
     }
 }

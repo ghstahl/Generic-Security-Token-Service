@@ -9,9 +9,10 @@ using IdentityServer4.ResponseHandling;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using IdentityServer4.Validation;
+using IdentityServerRequestTracker.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-
+using IdentityServerRequestTracker.Services;
 namespace IdentityServer4Extras.Endpoints
 {
     /// <summary>
@@ -25,6 +26,9 @@ namespace IdentityServer4Extras.Endpoints
         private readonly IEventService _events;
         private readonly ILogger _logger;
         private readonly IClientStore _clients;
+        private IScopedStorage _scopedStorage;
+        private IHttpContextAccessor _httpContextAccessor;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenEndpointExtra" /> class.
         /// </summary>
@@ -34,13 +38,17 @@ namespace IdentityServer4Extras.Endpoints
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
         public TokenEndpointExtra(
+            IHttpContextAccessor httpContextAccessor,
             IClientStore clients,
+            IScopedStorage scopedStorage,
             ITokenRequestValidator requestValidator,
             ITokenResponseGenerator responseGenerator,
             IEventService events,
             ILogger<TokenEndpointExtra> logger)
         {
+            _httpContextAccessor = httpContextAccessor;
             _clients = clients;
+            _scopedStorage = scopedStorage;
             _requestValidator = requestValidator;
             _responseGenerator = responseGenerator;
             _events = events;
@@ -76,6 +84,13 @@ namespace IdentityServer4Extras.Endpoints
                     $"No client with id '{clientId}' found. aborting");
                 return rawResult;
             }
+            var requestRecord = new IdentityServerRequestRecord
+            {
+                HttpContext = _httpContextAccessor.HttpContext,
+                EndpointKey = "extra",
+                Client = client
+            };
+            _scopedStorage.Storage["IdentityServerRequestRecord"] = requestRecord;
             var clientSecretValidationResult = new ClientSecretValidationResult
             {
                 IsError = false,

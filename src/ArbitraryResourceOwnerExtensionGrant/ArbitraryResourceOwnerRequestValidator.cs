@@ -86,8 +86,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                   (_oneMustExitsArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "subject",
-                                                                          "access_token"
+                                                                          "subject"
                                                                       });
 
         public ArbitraryResourceOwnerRequestValidator(
@@ -121,9 +120,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
             }
 
             // make sure nothing is malformed
-            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryClaims]) || error;
+            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryClaims, raw[Constants.ArbitraryClaims]) || error;
             error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAmrs]) || error;
-            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAudiences]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAudiences, raw[Constants.ArbitraryAudiences]) || error;
 
             if (!error)
             {

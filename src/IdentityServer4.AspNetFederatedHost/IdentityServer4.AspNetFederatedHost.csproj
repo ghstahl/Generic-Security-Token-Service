@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ArbitraryNoSubjectExtensionGrant\ArbitraryNoSubjectExtensionGrant.csproj" />
-    <ProjectReference Include="..\ArbitraryResourceOwnerExtensionGrant\ArbitraryResourceOwnerExtensionGrant.csproj" />
     <ProjectReference Include="..\GraphQLCore.ExtensionGrants\GraphQLCore.ExtensionGrants.csproj" />
     <ProjectReference Include="..\IdentityServer4.AspNetIdentityExtras\IdentityServer4.AspNetIdentityExtras.csproj" />
     <ProjectReference Include="..\IdentityServer4.Contrib.RedisStore\IdentityServer4.Contrib.RedisStore.csproj" />
