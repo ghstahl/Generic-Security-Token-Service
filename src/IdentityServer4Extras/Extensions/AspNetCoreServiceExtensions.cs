@@ -14,7 +14,7 @@ namespace IdentityServer4Extras.Extensions
         {
             services.AddTransient<IRawClientSecretValidator, RawClientSecretValidator>();
             services.AddTransient<PrincipalAugmenter>();
-            services.AddTransient<IEndpointHandlerExtra, TokenEndpointExtra>();
+            services.AddScoped<IEndpointHandlerExtra, TokenEndpointExtra>();
             services.AddTransient<ISecretParserExtra, PostBodySecretParserExtra>();
             services.TryAddSingleton<ITokenRevocationEventHandler, NullTokenRevocationEventHandler>();
         }
