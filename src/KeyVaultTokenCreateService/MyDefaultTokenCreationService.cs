@@ -23,7 +23,7 @@ namespace P7IdentityServer4
         private IPublicKeyProvider _publicKeyProvider;
         private IOptions<AzureKeyVaultTokenSigningServiceOptions> _keyVaultOptions;
         private IMemoryCache _cache;
-        private ObjectCache<AzureKeyVaultSignatureProvider> _signitureProvider;
+        private ExpirableObjectCache<AzureKeyVaultSignatureProvider> _signitureProvider;
 
         public MyDefaultTokenCreationService(
             IKeyVaultCache keyVaultCache,
@@ -38,7 +38,7 @@ namespace P7IdentityServer4
             _cache = cache;
             _publicKeyProvider = publicKeyProvider;
             _keyVaultOptions = keyVaultOptions;
-            _signitureProvider = new ObjectCache<AzureKeyVaultSignatureProvider>(new TimeSpan(0,0,5,0),Refresher );
+            _signitureProvider = new ExpirableObjectCache<AzureKeyVaultSignatureProvider>(new TimeSpan(0,0,5,0),Refresher );
         }
 
         private async Task<AzureKeyVaultSignatureProvider> Refresher()

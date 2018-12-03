@@ -28,6 +28,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using P7.Core;
+using P7.Core.Cache;
 using P7.Core.Scheduler.Scheduling;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
@@ -57,6 +58,7 @@ namespace GenericSecurityTokenService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddObjectCache();  // use this vs a static to cache class data.
             services.AddOptions();
             services.AddCors(options =>
             {

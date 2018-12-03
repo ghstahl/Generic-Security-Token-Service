@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericSecurityTokenService.Controllers;
 using IdentityServer4;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4Extras.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using P7.Core.Cache;
 
 namespace GenericSecurityTokenService.Middleware
 {
@@ -19,6 +21,15 @@ namespace GenericSecurityTokenService.Middleware
     {
         public static string PathRootUrl { get; set; }
         private readonly RequestDelegate _next;
+     
+        private ISingletonObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> _objectCache;
+
+        public PublicFacingUrlMiddleware(RequestDelegate next,
+            ISingletonObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> objectCache )
+        {
+            _next = next;
+            _objectCache = objectCache;
+        }
 
         private static string GetIdentityServerOrigin(HttpContext context)
         {
@@ -31,10 +42,7 @@ namespace GenericSecurityTokenService.Middleware
             return origin;
         }
 
-        public PublicFacingUrlMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+      
 
         public async Task Invoke(HttpContext context)
         {

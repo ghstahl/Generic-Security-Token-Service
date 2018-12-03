@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using P7.Core.Cache;
 
 namespace GenericSecurityTokenService.Controllers
 {
@@ -11,53 +14,58 @@ namespace GenericSecurityTokenService.Controllers
     public class SummaryController : ControllerBase
     {
         private IActionContextAccessor _actionContextAccessor;
+        private IConfiguration _configuration;
         private ILogger _logger;
-        public SummaryController(IActionContextAccessor actionContextAccessor,ILogger<SummaryController> logger)
+        private ISingletonObjectCache<SummaryController, Dictionary<string, object>> _objectCache;
+
+        public SummaryController(
+            IActionContextAccessor actionContextAccessor,
+            ISingletonObjectCache<SummaryController, Dictionary<string, object>> objectCache,
+            IConfiguration configuration,
+            ILogger<SummaryController> logger)
         {
             _actionContextAccessor = actionContextAccessor;
+            _objectCache = objectCache;
+            _configuration = configuration;
             _logger = logger;
-        }
-        private static Dictionary<string, object> _output;
-
-        private static Dictionary<string, object> Output
-        {
-            get
+            if (_objectCache.Value == null)
             {
-                if (_output == null)
-                {
-                    var credits = new Dictionary<string, string>()
-                    {
-                        {"IdentityServer4", "https://github.com/IdentityServer/IdentityServer4"},
-
-                    };
-                    _output = new Dictionary<string, object>
-                    {
-                        {"version", "1.0"},
-                        {"application", "GenericSecurityTokenService"},
-                        {"author", "Herb Stahl"},
-                        {"credits", credits},
-
-                    };
-                }
-                return _output;
+                _objectCache.Value = new Dictionary<string, object>();
             }
+        }
+
+        Dictionary<string, object> GetOutput()
+        {
+            var dictionaryCache = _objectCache.Value;
+            if (dictionaryCache.TryGetValue("summary-output", out var result))
+            {
+                return result as Dictionary<string, object>;
+            }
+
+            var credits = new Dictionary<string, string>()
+            {
+                {"IdentityServer4", "https://github.com/IdentityServer/IdentityServer4"},
+            };
+            var summary = new Dictionary<string, object>
+            {
+                {"TenantName",_configuration["TenantName"] },
+                {"version", "1.0"},
+                {"application", "GenericSecurityTokenService"},
+                {"author", "Herb Stahl"},
+                {"credits", credits},
+                {"authority", _actionContextAccessor.ActionContext.HttpContext.GetIdentityServerOrigin() }
+            };
+            dictionaryCache["summary-output"] = summary;
+            return summary;
         }
 
         // GET api/values
         [HttpGet]
-        public ActionResult<IDictionary<string, object>> Get()
+        public async Task<ActionResult<IDictionary<string, object>>> GetAsync()
         {
             _logger.LogInformation("Summary Executing...");
-            var host = _actionContextAccessor.ActionContext.HttpContext.Request.Host;
-            _logger.LogInformation($"host.value:{host.Value} host.Host:{host.Host} host.HasValue:{host.HasValue} host.Port:{host.Port}");
-            _logger.LogInformation(_actionContextAccessor.ActionContext.HttpContext.Request.Host.ToUriComponent());
-            if (_output == null)
-            {
-                Output.Add("authority", _actionContextAccessor.ActionContext.HttpContext.GetIdentityServerOrigin());
-            }
-            return Output;
+            var output = GetOutput();
+            return output;
         }
     }
-
- 
 }
