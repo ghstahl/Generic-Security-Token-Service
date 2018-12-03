@@ -1,12 +1,12 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace GenericSecurityTokenService.Services
+namespace Tenant.Core
 {
-    public class StartupConfigurationService : IStartupConfigurationService
+    public class NullStartupConfigurationService : IStartupConfigurationService
     {
         public virtual void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory) { }
 
@@ -14,7 +14,7 @@ namespace GenericSecurityTokenService.Services
 
         public virtual void ConfigureService(IServiceCollection services, IConfigurationRoot configuration)
         {
-            
+
         }
     }
 }

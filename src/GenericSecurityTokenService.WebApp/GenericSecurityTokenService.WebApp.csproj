@@ -28,6 +28,7 @@
     <ProjectReference Include="..\IdentityServerRequestTracker.Usage\IdentityServerRequestTracker.Usage.csproj" />
     <ProjectReference Include="..\KeyVaultTokenCreateService\KeyVaultTokenCreateService.csproj" />
     <ProjectReference Include="..\MultiRefreshTokenSameSubjectSameClientIdWorkAround\MultiRefreshTokenSameSubjectSameClientIdWorkAround.csproj" />
+    <ProjectReference Include="..\Tenant.Core\Tenant.Core.csproj" />
   </ItemGroup>
 
 </Project>

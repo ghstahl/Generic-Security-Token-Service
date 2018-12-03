@@ -1,7 +1,8 @@
-﻿using GenericSecurityTokenService.Services;
+﻿
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Tenant.Core;
 
 namespace GenericSecurityTokenService
 {
@@ -10,7 +11,7 @@ namespace GenericSecurityTokenService
         public static void Main(string[] args)
         {
             var webHostBuilder = CreateWebHostBuilder(args);
-            webHostBuilder.ConfigureServices(s => s.AddSingleton<IStartupConfigurationService, StartupConfigurationService>());
+            webHostBuilder.ConfigureServices(s => s.AddSingleton<IStartupConfigurationService, NullStartupConfigurationService>());
             webHostBuilder.Build().Run();
         }
 

@@ -14,6 +14,7 @@ namespace IdentityServerRequestTracker.Middleware
 {
     public class PreIdentityServerMiddleware
     {
+        public static string PathRootUrl { get; set; }
         private readonly IDiscoveryResponseGenerator _responseGenerator;
         private readonly RequestDelegate _next;
         private readonly ILogger<PreIdentityServerMiddleware> _logger;
@@ -21,7 +22,7 @@ namespace IdentityServerRequestTracker.Middleware
         private Dictionary<string, string> _endpointDictionary;
         private IEnumerable<IIdentityServerRequestTrackerEvaluator> _evaluators;
         private IClientSecretValidator _clientValidator;
-
+        List<string> KnownEndpointPaths { get; set; }
         public PreIdentityServerMiddleware(
             IClientSecretValidator clientValidator,
             IDiscoveryResponseGenerator responseGenerator, 
@@ -34,6 +35,29 @@ namespace IdentityServerRequestTracker.Middleware
             _evaluators = evaluators;
             _next = next;
             _logger = logger;
+
+            KnownEndpointPaths = new List<string>()
+            {
+                "/.well-known/openid-configuration",
+                "/.well-known/openid-configuration/jwks",
+                "/connect/authorize",
+                "/connect/token",
+                "/connect/userinfo",
+                "/connect/endsession",
+                "/connect/checksession",
+                "/connect/revocation",
+                "/connect/introspect",
+                "/connect/deviceauthorization"
+            };
+            if (!string.IsNullOrEmpty(PathRootUrl))
+            {
+                if (!PathRootUrl.StartsWith('/'))
+                {
+                    PathRootUrl = $"/{PathRootUrl}";
+                }
+
+                PathRootUrl.TrimEnd('/');
+            }
         }
 
         private async Task<Dictionary<string, string>> FetchDiscoveryData(HttpContext httpContext)
@@ -102,6 +126,11 @@ namespace IdentityServerRequestTracker.Middleware
 
         public async Task Invoke(HttpContext httpContext, IScopedStorage scopedStorage)
         {
+            if (!string.IsNullOrEmpty(PathRootUrl))
+            {
+                FixUpPath(httpContext);
+            }
+
             // start tracking
             await FetchDiscoveryData(httpContext);
             var endpointKey = (from item in _endpointDictionary
@@ -147,6 +176,17 @@ namespace IdentityServerRequestTracker.Middleware
 
             await _next(httpContext);
  
+        }
+
+        private void FixUpPath(HttpContext httpContext)
+        {
+            var query = from item in KnownEndpointPaths
+                where httpContext.Request.Path.Value.StartsWith(item)
+                select item;
+            if (query.Any())
+            {
+                httpContext.Request.Path = $"{PathRootUrl}{httpContext.Request.Path}";
+            }
         }
 
         private async Task<RequestTrackerEvaluatorDirective> ProcessPreEvaluatorAsync(

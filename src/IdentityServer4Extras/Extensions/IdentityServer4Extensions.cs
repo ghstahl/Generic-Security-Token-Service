@@ -81,7 +81,5 @@ namespace IdentityServer4Extras.Extensions
             return builder;
         }
 
-      
     }
 }
- 

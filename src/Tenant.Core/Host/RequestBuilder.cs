@@ -3,7 +3,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.TestHost
+namespace Tenant.Core.Host
 {
     /// <summary>
     /// Used to construct a HttpRequestMessage object.

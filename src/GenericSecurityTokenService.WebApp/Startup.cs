@@ -5,13 +5,13 @@ using ArbitraryIdentityExtensionGrant.Extensions;
 using ArbitraryNoSubjectExtensionGrant.Extensions;
 using ArbitraryResourceOwnerExtensionGrant.Extensions;
 using GenericSecurityTokenService.Middleware;
-using GenericSecurityTokenService.Services;
 using IdentityModelExtras.Extensions; 
 using IdentityServer4.Hosting;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker;
 using IdentityServerRequestTracker.Extensions;
+using IdentityServerRequestTracker.Middleware;
 using IdentityServerRequestTracker.RateLimit.Extensions;
 using IdentityServerRequestTracker.Usage.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -32,6 +32,7 @@ using P7.Core.Cache;
 using P7.Core.Scheduler.Scheduling;
 using P7IdentityServer4.Extensions;
 using ProfileServiceManager.Extensions;
+using Tenant.Core;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace GenericSecurityTokenService
@@ -229,8 +230,10 @@ namespace GenericSecurityTokenService
                 builder.AddUserSecrets<Startup>();
             }
             builder.AddEnvironmentVariables();
+            builder.AddConfiguration(configuration);/*put last, we want it to win*/
             Configuration = builder.Build();
             PublicFacingUrlMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
+            PreIdentityServerMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
         }
         private void StartupLogger()
         { 
