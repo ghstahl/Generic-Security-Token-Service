@@ -1,16 +1,16 @@
 ﻿namespace P7.Core.Cache
 {
-    public class ObjectCache<TContaining, TObject>  : 
-        ISingletonObjectCache<TContaining, TObject>,
-        IScopedObjectCache<TContaining, TObject>
+    public class AutoObjectCache<TContaining, TObject> :
+        ISingletonAutoObjectCache<TContaining, TObject>,
+        IScopedAutoObjectCache<TContaining, TObject>
         where TContaining : class
         where TObject : class
-   
-    {
-        private IObjectCacheAllocator<TContaining, TObject> _allocator;
-        public ObjectCache() { }
 
-        public ObjectCache(IObjectCacheAllocator<TContaining,TObject> allocator)
+    {
+        private IAutoObjectCacheAllocator<TContaining, TObject> _allocator;
+        
+
+        public AutoObjectCache(IAutoObjectCacheAllocator<TContaining, TObject> allocator)
         {
             _allocator = allocator;
         }
@@ -21,7 +21,7 @@
         {
             get
             {
-                if (_value == null && _allocator != null)
+                if (_value == null)
                 {
                     _value = _allocator.Allocate();
                 }

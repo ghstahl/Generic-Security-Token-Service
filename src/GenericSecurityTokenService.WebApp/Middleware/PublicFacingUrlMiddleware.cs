@@ -22,21 +22,17 @@ namespace GenericSecurityTokenService.Middleware
         private string PathRootUrl { get; set; }
         private readonly RequestDelegate _next;
      
-        private ISingletonObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> _objectCache;
+        private ISingletonAutoObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> _objectCache;
         private IConfiguration _configuration;
 
         public PublicFacingUrlMiddleware(RequestDelegate next,
             IConfiguration configuration,
-            ISingletonObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> objectCache )
+            ISingletonAutoObjectCache<PublicFacingUrlMiddleware, Dictionary<string, object>> objectCache )
         {
             _next = next;
             _configuration = configuration;
             _objectCache = objectCache;
-            if (_objectCache.Value == null)
-            {
-                _objectCache.Value = new Dictionary<string, object>();
-            }
-
+ 
             PathRootUrl = _configuration["IdentityServerPublicFacingUri"];
             if (!string.IsNullOrEmpty(PathRootUrl))
             {

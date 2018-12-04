@@ -24,12 +24,12 @@ namespace IdentityServerRequestTracker.Middleware
         private Dictionary<string, string> _endpointDictionary;
         private IEnumerable<IIdentityServerRequestTrackerEvaluator> _evaluators;
         private IClientSecretValidator _clientValidator;
-        private ISingletonObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> _objectCache;
+        private ISingletonAutoObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> _objectCache;
         private IConfiguration _configuration;
         List<string> KnownEndpointPaths { get; set; }
 
         public PreIdentityServerMiddleware(
-            ISingletonObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> objectCache,
+            ISingletonAutoObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> objectCache,
             IConfiguration configuration,
             IClientSecretValidator clientValidator,
             IDiscoveryResponseGenerator responseGenerator,
@@ -39,10 +39,6 @@ namespace IdentityServerRequestTracker.Middleware
         {
             _objectCache = objectCache;
             _configuration = configuration;
-            if (_objectCache.Value == null)
-            {
-                _objectCache.Value = new Dictionary<string, object>();
-            }
 
             _clientValidator = clientValidator;
             _responseGenerator = responseGenerator;

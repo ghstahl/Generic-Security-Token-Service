@@ -16,11 +16,11 @@ namespace GenericSecurityTokenService.Controllers
         private IActionContextAccessor _actionContextAccessor;
         private IConfiguration _configuration;
         private ILogger _logger;
-        private ISingletonObjectCache<SummaryController, Dictionary<string, object>> _objectCache;
+        private ISingletonAutoObjectCache<SummaryController, Dictionary<string, object>> _objectCache;
 
         public SummaryController(
             IActionContextAccessor actionContextAccessor,
-            ISingletonObjectCache<SummaryController, Dictionary<string, object>> objectCache,
+            ISingletonAutoObjectCache<SummaryController, Dictionary<string, object>> objectCache,
             IConfiguration configuration,
             ILogger<SummaryController> logger)
         {
@@ -28,10 +28,6 @@ namespace GenericSecurityTokenService.Controllers
             _objectCache = objectCache;
             _configuration = configuration;
             _logger = logger;
-            if (_objectCache.Value == null)
-            {
-                _objectCache.Value = new Dictionary<string, object>();
-            }
         }
 
         Dictionary<string, object> GetOutput()
