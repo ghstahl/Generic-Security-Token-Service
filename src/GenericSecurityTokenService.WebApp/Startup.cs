@@ -232,8 +232,8 @@ namespace GenericSecurityTokenService
             builder.AddEnvironmentVariables();
             builder.AddConfiguration(configuration);/*put last, we want it to win*/
             Configuration = builder.Build();
-            PublicFacingUrlMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
-            PreIdentityServerMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
+     //       PublicFacingUrlMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
+     //       PreIdentityServerMiddleware.PathRootUrl = Configuration["IdentityServerPublicFacingUri"];
         }
         private void StartupLogger()
         { 

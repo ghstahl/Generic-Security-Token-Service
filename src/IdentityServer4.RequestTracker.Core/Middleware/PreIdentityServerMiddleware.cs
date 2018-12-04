@@ -8,13 +8,15 @@ using IdentityServer4.Validation;
 using IdentityServerRequestTracker.Models;
 using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using P7.Core.Cache;
 
 namespace IdentityServerRequestTracker.Middleware
 {
     public class PreIdentityServerMiddleware
     {
-        public static string PathRootUrl { get; set; }
+        private  string PathRootUrl { get; set; }
         private readonly IDiscoveryResponseGenerator _responseGenerator;
         private readonly RequestDelegate _next;
         private readonly ILogger<PreIdentityServerMiddleware> _logger;
@@ -22,15 +24,27 @@ namespace IdentityServerRequestTracker.Middleware
         private Dictionary<string, string> _endpointDictionary;
         private IEnumerable<IIdentityServerRequestTrackerEvaluator> _evaluators;
         private IClientSecretValidator _clientValidator;
+        private ISingletonObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> _objectCache;
+        private IConfiguration _configuration;
         List<string> KnownEndpointPaths { get; set; }
+
         public PreIdentityServerMiddleware(
+            ISingletonObjectCache<PreIdentityServerMiddleware, Dictionary<string, object>> objectCache,
+            IConfiguration configuration,
             IClientSecretValidator clientValidator,
-            IDiscoveryResponseGenerator responseGenerator, 
+            IDiscoveryResponseGenerator responseGenerator,
             IEnumerable<IIdentityServerRequestTrackerEvaluator> evaluators,
             RequestDelegate next,
             ILogger<PreIdentityServerMiddleware> logger)
         {
-            _clientValidator  = clientValidator;
+            _objectCache = objectCache;
+            _configuration = configuration;
+            if (_objectCache.Value == null)
+            {
+                _objectCache.Value = new Dictionary<string, object>();
+            }
+
+            _clientValidator = clientValidator;
             _responseGenerator = responseGenerator;
             _evaluators = evaluators;
             _next = next;
@@ -49,14 +63,11 @@ namespace IdentityServerRequestTracker.Middleware
                 "/connect/introspect",
                 "/connect/deviceauthorization"
             };
+            PathRootUrl = _configuration["IdentityServerPublicFacingUri"];
             if (!string.IsNullOrEmpty(PathRootUrl))
             {
-                if (!PathRootUrl.StartsWith('/'))
-                {
-                    PathRootUrl = $"/{PathRootUrl}";
-                }
-
-                PathRootUrl.TrimEnd('/');
+                PathRootUrl = PathRootUrl.TrimEnd('/');
+                PathRootUrl = $"/{PathRootUrl}";
             }
         }
 

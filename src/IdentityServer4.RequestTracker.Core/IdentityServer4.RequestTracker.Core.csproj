@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IdentityServer4.All\IdentityServer4.All.csproj" />
+    <ProjectReference Include="..\P7.Core\P7.Core.csproj" />
   </ItemGroup>
 
 </Project>
