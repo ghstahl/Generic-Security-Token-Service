@@ -20,10 +20,10 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
             arbitrary_claims:{ "role": ["application", "limited"],"query": ["dashboard", "licensing"],"seatId": ["8c59ec41-54f3-460b-a04e-520fc5b9973d"],"piid": ["2368d213-d06c-4c2a-a099-11c34adc3579"]}
             access_token_lifetime:3600
          */
-        private IEndpointHandlerExtra _endpointHandlerExtra;
-        public ArbitraryNoSubjectQuery(IEndpointHandlerExtra endpointHandlerExtra)
+        private ITokenEndpointHandlerExtra _tokenEndpointHandlerExtra;
+        public ArbitraryNoSubjectQuery(ITokenEndpointHandlerExtra tokenEndpointHandlerExtra)
         {
-            _endpointHandlerExtra = endpointHandlerExtra;
+            _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
         }
 
         public void AddGraphTypeFields(QueryCore queryCore)
@@ -62,7 +62,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
 
                         IFormCollection formCollection = new FormCollection(formValues);
 
-                        var processsedResult = await _endpointHandlerExtra.ProcessRawAsync(formCollection);
+                        var processsedResult = await _tokenEndpointHandlerExtra.ProcessRawAsync(formCollection);
 
                         if (processsedResult.TokenErrorResult != null)
                         {

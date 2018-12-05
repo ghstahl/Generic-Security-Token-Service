@@ -18,8 +18,8 @@ namespace IdentityServer4Extras.Endpoints
     /// <summary>
     /// The token endpoint
     /// </summary>
-    /// <seealso cref="IEndpointHandlerExtra" />
-    public class TokenEndpointExtra : IEndpointHandlerExtra
+    /// <seealso cref="ITokenEndpointHandlerExtra" />
+    public class TokenTokenEndpointExtra : ITokenEndpointHandlerExtra
     {
         private readonly ITokenRequestValidator _requestValidator;
         private readonly ITokenResponseGenerator _responseGenerator;
@@ -30,21 +30,21 @@ namespace IdentityServer4Extras.Endpoints
         private IHttpContextAccessor _httpContextAccessor;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TokenEndpointExtra" /> class.
+        /// Initializes a new instance of the <see cref="TokenTokenEndpointExtra" /> class.
         /// </summary>
         /// <param name="clients">The clients store.</param>
         /// <param name="requestValidator">The request validator.</param>
         /// <param name="responseGenerator">The response generator.</param>
         /// <param name="events">The events.</param>
         /// <param name="logger">The logger.</param>
-        public TokenEndpointExtra(
+        public TokenTokenEndpointExtra(
             IHttpContextAccessor httpContextAccessor,
             IClientStore clients,
             IScopedStorage scopedStorage,
             ITokenRequestValidator requestValidator,
             ITokenResponseGenerator responseGenerator,
             IEventService events,
-            ILogger<TokenEndpointExtra> logger)
+            ILogger<TokenTokenEndpointExtra> logger)
         {
             _httpContextAccessor = httpContextAccessor;
             _clients = clients;

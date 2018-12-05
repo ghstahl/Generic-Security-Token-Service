@@ -13,10 +13,10 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
     public class ArbitraryResourceOwnerQuery : IQueryFieldRecordRegistration
     {
         private const string GrantType = "arbitrary_resource_owner";
-        private IEndpointHandlerExtra _endpointHandlerExtra;
-        public ArbitraryResourceOwnerQuery(IEndpointHandlerExtra endpointHandlerExtra)
+        private ITokenEndpointHandlerExtra _tokenEndpointHandlerExtra;
+        public ArbitraryResourceOwnerQuery(ITokenEndpointHandlerExtra tokenEndpointHandlerExtra)
         {
-            _endpointHandlerExtra = endpointHandlerExtra;
+            _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
         }
 
         public void AddGraphTypeFields(QueryCore queryCore)
@@ -63,7 +63,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
 
                         IFormCollection formCollection = new FormCollection(formValues);
 
-                        var processsedResult = await _endpointHandlerExtra.ProcessRawAsync(formCollection);
+                        var processsedResult = await _tokenEndpointHandlerExtra.ProcessRawAsync(formCollection);
 
                         if (processsedResult.TokenErrorResult != null)
                         {

@@ -22,7 +22,6 @@ namespace ArbitraryNoSubjectExtensionGrant
                                                                       new List<string>
                                                                       {
                                                                           "client_id",
-                                                                          "client_secret",
                                                                           "arbitrary_claims"
                                                                       });
 

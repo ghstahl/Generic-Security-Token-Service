@@ -12,10 +12,10 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
     public class ArbitraryIdentityQuery : IQueryFieldRecordRegistration
     {
         private const string GrantType = "arbitrary_identity";
-        private IEndpointHandlerExtra _endpointHandlerExtra;
-        public ArbitraryIdentityQuery(IEndpointHandlerExtra endpointHandlerExtra)
+        private ITokenEndpointHandlerExtra _tokenEndpointHandlerExtra;
+        public ArbitraryIdentityQuery(ITokenEndpointHandlerExtra tokenEndpointHandlerExtra)
         {
-            _endpointHandlerExtra = endpointHandlerExtra;
+            _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
         }
 
         public void AddGraphTypeFields(QueryCore queryCore)
@@ -58,7 +58,7 @@ namespace GraphQLCore.ExtensionGrants.GraphQL.Query
 
                         IFormCollection formCollection = new FormCollection(formValues);
 
-                        var processsedResult = await _endpointHandlerExtra.ProcessRawAsync(formCollection);
+                        var processsedResult = await _tokenEndpointHandlerExtra.ProcessRawAsync(formCollection);
 
                         if (processsedResult.TokenErrorResult != null)
                         {

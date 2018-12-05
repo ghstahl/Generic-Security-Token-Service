@@ -48,8 +48,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "client_id",
-                                                                          "client_secret"
+                                                                          "client_id"
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??

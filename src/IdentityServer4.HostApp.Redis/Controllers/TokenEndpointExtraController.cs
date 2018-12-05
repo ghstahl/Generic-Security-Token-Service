@@ -15,14 +15,14 @@ using Newtonsoft.Json;
 namespace IdentityServer4.HostApp.Controllers
 {
     [Produces("application/json")]
-    [Route("api/TokenEndpointExtra")]
+    [Route("api/TokenTokenEndpointExtra")]
     public class TokenEndpointExtraController : Controller
     {
-        private IEndpointHandlerExtra _endpointHandlerExtra;
+        private ITokenEndpointHandlerExtra _tokenEndpointHandlerExtra;
 
-        public TokenEndpointExtraController(IEndpointHandlerExtra endpointHandlerExtra)
+        public TokenEndpointExtraController(ITokenEndpointHandlerExtra tokenEndpointHandlerExtra)
         {
-            _endpointHandlerExtra = endpointHandlerExtra;
+            _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
         }
 
         // GET: api/Default
@@ -48,7 +48,7 @@ namespace IdentityServer4.HostApp.Controllers
                 {"access_token_lifetime", "3600"},
             });
 
-            return await _endpointHandlerExtra.ProcessAsync(formCollection);
+            return await _tokenEndpointHandlerExtra.ProcessAsync(formCollection);
         }
     }
 }

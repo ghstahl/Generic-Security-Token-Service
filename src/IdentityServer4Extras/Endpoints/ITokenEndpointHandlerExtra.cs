@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace IdentityServer4Extras.Endpoints
 {
-    public interface IEndpointHandlerExtra
+    public interface ITokenEndpointHandlerExtra
     {
         //
         // Summary:
