@@ -13,6 +13,9 @@ using IdentityServerRequestTracker.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using IdentityServerRequestTracker.Services;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+
 namespace IdentityServer4Extras.Endpoints
 {
     /// <summary>
@@ -121,6 +124,46 @@ namespace IdentityServer4Extras.Endpoints
             _logger.LogDebug("Token request success.");
             rawResult.TokenResult = new TokenResult(response);
             return rawResult;
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(ExtensionGrantRequest extensionGrantRequest)
+        {
+            Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
+            {
+                {"client_id", extensionGrantRequest.ClientId},
+                {"grant_type", extensionGrantRequest.GrantType},
+                {"subject", extensionGrantRequest.Subject}
+            };
+            string scope = "";
+            if (extensionGrantRequest.Scopes != null)
+            {
+                foreach (var item in extensionGrantRequest.Scopes)
+                {
+                    scope += $"{item} ";
+                }
+                scope.TrimEnd();
+                fields.Add("scope", scope);
+            }
+
+            if (extensionGrantRequest.ArbitraryClaims != null)
+            {
+                fields.Add("arbitrary_claims", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryClaims));
+            }
+            if (extensionGrantRequest.ArbitraryAmrs != null)
+            {
+                fields.Add("arbitrary_amrs", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryAmrs));
+            }
+            if (extensionGrantRequest.ArbitraryAudiences != null)
+            {
+                fields.Add("arbitrary_audiences", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryAudiences));
+            }
+            if (extensionGrantRequest.CustomPayload != null)
+            {
+                fields.Add("custom_payload", JsonConvert.SerializeObject(extensionGrantRequest.CustomPayload));
+            }
+
+            var formCollection = new FormCollection(fields);
+            return await ProcessAsync(formCollection);
         }
 
         private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)
