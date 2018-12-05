@@ -31,6 +31,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using MultiRefreshTokenSameSubjectSameClientIdWorkAround.Extensions;
 using P7.Core;
+using P7.Core.Cache;
 using P7.Core.Scheduler.Scheduling;
 using P7.GraphQLCore;
 using P7.GraphQLCore.Extensions;
@@ -59,6 +60,7 @@ namespace IdentityServer4.HostApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddObjectCache();  // use this vs a static to cache class data.
             services.AddOptions();
 
             services.AddCors(options =>

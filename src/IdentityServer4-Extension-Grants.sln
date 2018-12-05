@@ -123,6 +123,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tenant", "Tenant", "{00787F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tenant.Core", "Tenant.Core\Tenant.Core.csproj", "{3D39717E-9974-42D2-9E3A-B1CACB5A7BB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlorifiedJwt", "GlorifiedJwt\GlorifiedJwt.csproj", "{F93B241E-657B-45FD-A61C-4276901229DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -285,6 +287,10 @@ Global
 		{3D39717E-9974-42D2-9E3A-B1CACB5A7BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D39717E-9974-42D2-9E3A-B1CACB5A7BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D39717E-9974-42D2-9E3A-B1CACB5A7BB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F93B241E-657B-45FD-A61C-4276901229DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F93B241E-657B-45FD-A61C-4276901229DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F93B241E-657B-45FD-A61C-4276901229DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F93B241E-657B-45FD-A61C-4276901229DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -328,6 +334,7 @@ Global
 		{6FE3E779-709D-4922-A58E-D0F3DA6BE8E4} = {F00C6512-E438-4760-8865-AB166450A471}
 		{EC235E7C-C8D2-41CF-BB04-D0D78A6B6E0A} = {E0FEB40D-C11F-4EA3-9769-68D5950B4B97}
 		{3D39717E-9974-42D2-9E3A-B1CACB5A7BB8} = {00787F71-AA53-4021-9FB4-C316D12420DE}
+		{F93B241E-657B-45FD-A61C-4276901229DD} = {2A08CE43-F1C7-4557-BA6A-E72277B9C483}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {31A229D9-6435-4F01-BCA8-031788548038}
