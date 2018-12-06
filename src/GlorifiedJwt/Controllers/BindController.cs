@@ -39,8 +39,31 @@ namespace GlorifiedJwt.Controllers
             _tokenEndpointHandlerExtra = tokenEndpointHandlerExtra;
             _logger = logger;
         }
+        [HttpPost]
+        [Route("revocation")]
+        public async Task<TokenRawResult> PostRevocationAsync()
+        {
+            /*
+             *TokenTypHint: [refresh_token,subject,access_token]
+             */
+            var arbResourceOwnerResult = await PostRefreshAsync();
+            var revocationRequest = new RevocationRequest()
+            {
+                Token = arbResourceOwnerResult.TokenResult.Response.RefreshToken,
+                ClientId = "arbitrary-resource-owner-client",
+                TokenTypHint = "refresh_token", 
+                RevokeAllSubjects = "true"
+            };
+            var revocationResult = await _tokenEndpointHandlerExtra.ProcessRawAsync(revocationRequest);
+            var refreshTokenRequest = new RefreshTokenRequest()
+            {
+                RefreshToken = arbResourceOwnerResult.TokenResult.Response.RefreshToken,
+                ClientId = "arbitrary-resource-owner-client"
+            };
+            arbResourceOwnerResult = await _tokenEndpointHandlerExtra.ProcessRawAsync(refreshTokenRequest);
+            return arbResourceOwnerResult;
+        }
 
-        
         [HttpPost]
         [Route("refresh")]
         public async Task<TokenRawResult> PostRefreshAsync()

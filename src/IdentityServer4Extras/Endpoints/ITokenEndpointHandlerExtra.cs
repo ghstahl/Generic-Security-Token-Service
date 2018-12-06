@@ -70,6 +70,6 @@ namespace IdentityServer4Extras.Endpoints
         Task<TokenRawResult> ProcessRawAsync(ArbitraryNoSubjectRequest request);
         Task<TokenRawResult> ProcessRawAsync(ArbitraryIdentityRequest request);
         Task<TokenRawResult> ProcessRawAsync(RefreshTokenRequest request);
-        Task<TokenRawResult> ProcessRawAsync(RevocationRequest request);
+        Task<RevocationRawResult> ProcessRawAsync(RevocationRequest request);
     }
 }

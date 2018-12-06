@@ -2,6 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4.Endpoints.Results;
 using IdentityServer4.Events;
 using IdentityServer4.Extensions;
 using IdentityServer4.Hosting;
@@ -15,6 +16,9 @@ using Microsoft.Extensions.Logging;
 using IdentityServerRequestTracker.Services;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using System.Net;
+using IdentityServer4.Models;
+using IdentityServer4Extras.Extensions;
 
 namespace IdentityServer4Extras.Endpoints
 {
@@ -31,6 +35,8 @@ namespace IdentityServer4Extras.Endpoints
         private readonly IClientStore _clients;
         private IScopedStorage _scopedStorage;
         private IHttpContextAccessor _httpContextAccessor;
+        private ITokenRevocationRequestValidator _revocationRequestValidator;
+        private ITokenRevocationResponseGenerator _revocationResponseGenerator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TokenTokenEndpointExtra" /> class.
@@ -46,6 +52,8 @@ namespace IdentityServer4Extras.Endpoints
             IScopedStorage scopedStorage,
             ITokenRequestValidator requestValidator,
             ITokenResponseGenerator responseGenerator,
+            ITokenRevocationRequestValidator revocationRequestValidator,
+            ITokenRevocationResponseGenerator revocationResponseGenerator,
             IEventService events,
             ILogger<TokenTokenEndpointExtra> logger)
         {
@@ -54,6 +62,8 @@ namespace IdentityServer4Extras.Endpoints
             _scopedStorage = scopedStorage;
             _requestValidator = requestValidator;
             _responseGenerator = responseGenerator;
+            _revocationRequestValidator = revocationRequestValidator;
+            _revocationResponseGenerator = revocationResponseGenerator;
             _events = events;
             _logger = logger;
         }
@@ -161,9 +171,9 @@ namespace IdentityServer4Extras.Endpoints
         public async Task<IEndpointResult> ProcessAsync(RevocationRequest request)
         {
             var result = await ProcessRawAsync(request);
-            if (result.TokenErrorResult != null)
-                return result.TokenErrorResult;
-            return result.TokenResult;
+            if (result.ErrorResult != null)
+                return result.ErrorResult;
+            return result.StatusCodeResult;
         }
 
         public async Task<TokenRawResult> ProcessRawAsync(ArbitraryResourceOwnerRequest request)
@@ -296,19 +306,95 @@ namespace IdentityServer4Extras.Endpoints
             return await ProcessRawAsync(formCollection);
         }
 
-        public async Task<TokenRawResult> ProcessRawAsync(RevocationRequest request)
+        public async Task<RevocationRawResult> ProcessRawAsync(RevocationRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
                 {"client_id", request.ClientId},
                 {"token_type_hint", request.TokenTypHint},
-                {"token ", request.Token},
+                {"token", request.Token},
                 {"revoke_all_subjects", request.RevokeAllSubjects}
             };
             var formCollection = new FormCollection(fields);
-            return await ProcessRawAsync(formCollection);
+            var result =  await ProcessRawRevocationAsync(formCollection);
+            return result;
+           
         }
+        public async Task<RevocationRawResult> ProcessRawRevocationAsync(IFormCollection formCollection)
+        {
+ 
+            _logger.LogTrace("Processing token request.");
 
+            var rawResult = new RevocationRawResult()
+            {
+                StatusCodeResult = new StatusCodeResult(HttpStatusCode.BadRequest)
+            };
+          
+            // validate HTTP
+            if (formCollection.IsNullOrEmpty())
+            {
+                _logger.LogWarning($"Invalid {nameof(formCollection)} for token endpoint");
+                rawResult.ErrorResult = ErrorRevocation(OidcConstants.TokenErrors.InvalidRequest);
+                return rawResult;
+            }
+
+            var clientId = formCollection[OidcConstants.TokenRequest.ClientId];
+            var client = await _clients.FindEnabledClientByIdAsync(clientId);
+            if (client == null)
+            {
+                _logger.LogError($"No client with id '{clientId}' found. aborting");
+                rawResult.ErrorResult = ErrorRevocation($"{OidcConstants.TokenRequest.ClientId} bad");
+                return rawResult;
+            }
+
+            var requestRecord = new IdentityServerRequestRecord
+            {
+                HttpContext = _httpContextAccessor.HttpContext,
+                EndpointKey = "extra",
+                Client = client
+            };
+            _scopedStorage.Storage["IdentityServerRequestRecord"] = requestRecord;
+            var parsedSecret = new ParsedSecret();
+            var clientValidationResult = new ClientSecretValidationResult
+            {
+                IsError = false,
+                Client = client,
+                Secret = null
+            };
+
+            // validate request
+            var form = formCollection.AsNameValueCollection();
+            _logger.LogTrace("Calling into token revocation request validator: {type}", _requestValidator.GetType().FullName);
+            var requestValidationResult = await _revocationRequestValidator.ValidateRequestAsync(form, clientValidationResult.Client);
+            if (requestValidationResult.IsError)
+            {
+                rawResult.ErrorResult = new TokenRevocationErrorResult(requestValidationResult.Error);
+                return rawResult;
+            }
+
+            _logger.LogTrace("Calling into token revocation response generator: {type}", _responseGenerator.GetType().FullName);
+            var response = await _revocationResponseGenerator.ProcessAsync(requestValidationResult);
+
+            if (response.Success)
+            {
+                _logger.LogInformation("Token successfully revoked");
+                await _events.RaiseAsync(new TokenRevokedSuccessEvent(requestValidationResult, requestValidationResult.Client));
+            }
+            else
+            {
+                _logger.LogInformation("No matching token found");
+            }
+
+            if (response.Error.IsPresent())
+            {
+                rawResult.ErrorResult = new TokenRevocationErrorResult(response.Error);
+                return rawResult;
+            }
+
+            rawResult.StatusCodeResult = new StatusCodeResult(HttpStatusCode.OK);
+            return rawResult;
+
+        }
         private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)
         {
             var response = new TokenErrorResponse
@@ -320,7 +406,10 @@ namespace IdentityServer4Extras.Endpoints
 
             return new TokenErrorResult(response);
         }
-
+        private TokenRevocationErrorResult ErrorRevocation(string error)
+        {
+            return new TokenRevocationErrorResult(error);
+        }
         private void LogTokens(TokenResponse response, TokenRequestValidationResult requestResult)
         {
             var clientId = $"{requestResult.ValidatedRequest.Client.ClientId} ({requestResult.ValidatedRequest.Client?.ClientName ?? "no name set"})";
