@@ -126,18 +126,18 @@ namespace IdentityServer4Extras.Endpoints
             return rawResult;
         }
 
-        public async Task<IEndpointResult> ProcessAsync(ExtensionGrantRequest extensionGrantRequest)
+        public async Task<IEndpointResult> ProcessAsync(ArbitraryResourceOwnerRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
-                {"client_id", extensionGrantRequest.ClientId},
-                {"grant_type", extensionGrantRequest.GrantType},
-                {"subject", extensionGrantRequest.Subject}
+                {"client_id", request.ClientId},
+                {"grant_type", "arbitrary_resource_owner"},
+                {"subject", request.Subject}
             };
             string scope = "";
-            if (extensionGrantRequest.Scopes != null)
+            if (request.Scopes != null)
             {
-                foreach (var item in extensionGrantRequest.Scopes)
+                foreach (var item in request.Scopes)
                 {
                     scope += $"{item} ";
                 }
@@ -145,23 +145,127 @@ namespace IdentityServer4Extras.Endpoints
                 fields.Add("scope", scope);
             }
 
-            if (extensionGrantRequest.ArbitraryClaims != null)
+            if (request.ArbitraryClaims != null)
             {
-                fields.Add("arbitrary_claims", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryClaims));
+                fields.Add("arbitrary_claims", JsonConvert.SerializeObject(request.ArbitraryClaims));
             }
-            if (extensionGrantRequest.ArbitraryAmrs != null)
+            if (request.ArbitraryAmrs != null)
             {
-                fields.Add("arbitrary_amrs", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryAmrs));
+                fields.Add("arbitrary_amrs", JsonConvert.SerializeObject(request.ArbitraryAmrs));
             }
-            if (extensionGrantRequest.ArbitraryAudiences != null)
+            if (request.ArbitraryAudiences != null)
             {
-                fields.Add("arbitrary_audiences", JsonConvert.SerializeObject(extensionGrantRequest.ArbitraryAudiences));
+                fields.Add("arbitrary_audiences", JsonConvert.SerializeObject(request.ArbitraryAudiences));
             }
-            if (extensionGrantRequest.CustomPayload != null)
+            if (request.CustomPayload != null)
             {
-                fields.Add("custom_payload", JsonConvert.SerializeObject(extensionGrantRequest.CustomPayload));
+                fields.Add("custom_payload", JsonConvert.SerializeObject(request.CustomPayload));
             }
 
+            var formCollection = new FormCollection(fields);
+            return await ProcessAsync(formCollection);
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(ArbitraryNoSubjectRequest request)
+        {
+            Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
+            {
+                {"client_id", request.ClientId},
+                {"grant_type", "arbitrary_no_subject"},
+            };
+            string scope = "";
+            if (request.Scopes != null)
+            {
+                foreach (var item in request.Scopes)
+                {
+                    scope += $"{item} ";
+                }
+                scope.TrimEnd();
+                fields.Add("scope", scope);
+            }
+
+            if (request.ArbitraryClaims != null)
+            {
+                fields.Add("arbitrary_claims", JsonConvert.SerializeObject(request.ArbitraryClaims));
+            }
+            if (request.ArbitraryAmrs != null)
+            {
+                fields.Add("arbitrary_amrs", JsonConvert.SerializeObject(request.ArbitraryAmrs));
+            }
+            if (request.ArbitraryAudiences != null)
+            {
+                fields.Add("arbitrary_audiences", JsonConvert.SerializeObject(request.ArbitraryAudiences));
+            }
+            if (request.CustomPayload != null)
+            {
+                fields.Add("custom_payload", JsonConvert.SerializeObject(request.CustomPayload));
+            }
+
+            var formCollection = new FormCollection(fields);
+            return await ProcessAsync(formCollection);
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(ArbitraryIdentityRequest request)
+        {
+            Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
+            {
+                {"client_id", request.ClientId},
+                {"grant_type", "arbitrary_identity"},
+                {"subject", request.Subject}
+            };
+            string scope = "";
+            if (request.Scopes != null)
+            {
+                foreach (var item in request.Scopes)
+                {
+                    scope += $"{item} ";
+                }
+                scope.TrimEnd();
+                fields.Add("scope", scope);
+            }
+
+            if (request.ArbitraryClaims != null)
+            {
+                fields.Add("arbitrary_claims", JsonConvert.SerializeObject(request.ArbitraryClaims));
+            }
+            if (request.ArbitraryAmrs != null)
+            {
+                fields.Add("arbitrary_amrs", JsonConvert.SerializeObject(request.ArbitraryAmrs));
+            }
+            if (request.ArbitraryAudiences != null)
+            {
+                fields.Add("arbitrary_audiences", JsonConvert.SerializeObject(request.ArbitraryAudiences));
+            }
+            if (request.CustomPayload != null)
+            {
+                fields.Add("custom_payload", JsonConvert.SerializeObject(request.CustomPayload));
+            }
+
+            var formCollection = new FormCollection(fields);
+            return await ProcessAsync(formCollection);
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(RefreshTokenRequest request)
+        {
+            Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
+            {
+                {"client_id", request.ClientId},
+                {"grant_type", request.GrantType},
+                {"refresh_token", request.RefreshToken}
+            };
+            var formCollection = new FormCollection(fields);
+            return await ProcessAsync(formCollection);
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(RevocationRequest request)
+        {
+            Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
+            {
+                {"client_id", request.ClientId},
+                {"token_type_hint", request.TokenTypHint},
+                {"token ", request.Token},
+                {"revoke_all_subjects", request.RevokeAllSubjects}
+            };
             var formCollection = new FormCollection(fields);
             return await ProcessAsync(formCollection);
         }

@@ -72,11 +72,11 @@ namespace ArbitraryResourceOwnerExtensionGrant
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
+            _logger.LogDebug("Start token request validation");
 
             IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
             var identityServerRequestRecord =
                 _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
-            _logger.LogDebug("Start token request validation");
 
             if (context == null) throw new ArgumentNullException(nameof(context));
             var raw = context.Request.Raw;

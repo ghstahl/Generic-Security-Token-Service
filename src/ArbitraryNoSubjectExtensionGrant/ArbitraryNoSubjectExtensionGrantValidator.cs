@@ -12,6 +12,8 @@ using IdentityServer4.Stores;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
+using IdentityServerRequestTracker.Models;
+using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -31,7 +33,10 @@ namespace ArbitraryNoSubjectExtensionGrant
         private ISystemClock _clock;
         private ArbitraryNoSubjectRequestValidator _arbitraryNoSubjectRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
+        private IServiceProvider _serviceProvider;
+
         public ArbitraryNoSubjectExtensionGrantValidator(
+            IServiceProvider serviceProvider,
             IdentityServerOptions options,
             IClientStore clientStore,
             IRawClientSecretValidator clientSecretValidator,
@@ -43,6 +48,7 @@ namespace ArbitraryNoSubjectExtensionGrant
             ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator,
             PrincipalAugmenter principalAugmenter)
         {
+            _serviceProvider = serviceProvider;
             _logger = logger;
             _clock = clock;
             _events = events;
@@ -57,6 +63,10 @@ namespace ArbitraryNoSubjectExtensionGrant
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             _logger.LogDebug("Start token request validation");
+
+            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
+            var identityServerRequestRecord =
+                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
 
             if (context == null) throw new ArgumentNullException(nameof(context));
             var raw = context.Request.Raw;
@@ -76,10 +86,8 @@ namespace ArbitraryNoSubjectExtensionGrant
                     customTokenRequestValidationContext.Result.Error);
                 return;
             }
-            var clientValidationResult = await _clientSecretValidator.ValidateAsync(_validatedRequest.Raw);
-            if (clientValidationResult == null) throw new ArgumentNullException(nameof(clientValidationResult));
 
-            _validatedRequest.SetClient(clientValidationResult.Client, clientValidationResult.Secret);
+            _validatedRequest.SetClient(identityServerRequestRecord.Client);
 
             /////////////////////////////////////////////
             // check grant type
