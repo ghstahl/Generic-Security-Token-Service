@@ -128,6 +128,46 @@ namespace IdentityServer4Extras.Endpoints
 
         public async Task<IEndpointResult> ProcessAsync(ArbitraryResourceOwnerRequest request)
         {
+            var result = await ProcessRawAsync(request);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(ArbitraryNoSubjectRequest request)
+        {
+            var result = await ProcessRawAsync(request);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(ArbitraryIdentityRequest request)
+        {
+            var result = await ProcessRawAsync(request);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(RefreshTokenRequest request)
+        {
+            var result = await ProcessRawAsync(request);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<IEndpointResult> ProcessAsync(RevocationRequest request)
+        {
+            var result = await ProcessRawAsync(request);
+            if (result.TokenErrorResult != null)
+                return result.TokenErrorResult;
+            return result.TokenResult;
+        }
+
+        public async Task<TokenRawResult> ProcessRawAsync(ArbitraryResourceOwnerRequest request)
+        {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
                 {"client_id", request.ClientId},
@@ -161,12 +201,11 @@ namespace IdentityServer4Extras.Endpoints
             {
                 fields.Add("custom_payload", JsonConvert.SerializeObject(request.CustomPayload));
             }
-
             var formCollection = new FormCollection(fields);
-            return await ProcessAsync(formCollection);
+            return await ProcessRawAsync(formCollection);
         }
 
-        public async Task<IEndpointResult> ProcessAsync(ArbitraryNoSubjectRequest request)
+        public async Task<TokenRawResult> ProcessRawAsync(ArbitraryNoSubjectRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
@@ -202,10 +241,10 @@ namespace IdentityServer4Extras.Endpoints
             }
 
             var formCollection = new FormCollection(fields);
-            return await ProcessAsync(formCollection);
+            return await ProcessRawAsync(formCollection);
         }
 
-        public async Task<IEndpointResult> ProcessAsync(ArbitraryIdentityRequest request)
+        public async Task<TokenRawResult> ProcessRawAsync(ArbitraryIdentityRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
@@ -242,22 +281,22 @@ namespace IdentityServer4Extras.Endpoints
             }
 
             var formCollection = new FormCollection(fields);
-            return await ProcessAsync(formCollection);
+            return await ProcessRawAsync(formCollection);
         }
 
-        public async Task<IEndpointResult> ProcessAsync(RefreshTokenRequest request)
+        public async Task<TokenRawResult> ProcessRawAsync(RefreshTokenRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
                 {"client_id", request.ClientId},
-                {"grant_type", request.GrantType},
+                {"grant_type", "refresh_token"},
                 {"refresh_token", request.RefreshToken}
             };
             var formCollection = new FormCollection(fields);
-            return await ProcessAsync(formCollection);
+            return await ProcessRawAsync(formCollection);
         }
 
-        public async Task<IEndpointResult> ProcessAsync(RevocationRequest request)
+        public async Task<TokenRawResult> ProcessRawAsync(RevocationRequest request)
         {
             Dictionary<string, StringValues> fields = new Dictionary<string, StringValues>
             {
@@ -267,7 +306,7 @@ namespace IdentityServer4Extras.Endpoints
                 {"revoke_all_subjects", request.RevokeAllSubjects}
             };
             var formCollection = new FormCollection(fields);
-            return await ProcessAsync(formCollection);
+            return await ProcessRawAsync(formCollection);
         }
 
         private TokenErrorResult Error(string error, string errorDescription = null, Dictionary<string, object> custom = null)

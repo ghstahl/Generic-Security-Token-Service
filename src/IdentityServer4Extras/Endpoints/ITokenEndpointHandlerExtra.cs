@@ -47,7 +47,6 @@ namespace IdentityServer4Extras.Endpoints
     public class RefreshTokenRequest
     {
         public string ClientId { get; set; }
-        public string GrantType { get; set; }
         public string RefreshToken { get; set; }
     }
     public interface ITokenEndpointHandlerExtra
@@ -66,5 +65,11 @@ namespace IdentityServer4Extras.Endpoints
         Task<IEndpointResult> ProcessAsync(ArbitraryIdentityRequest request);
         Task<IEndpointResult> ProcessAsync(RefreshTokenRequest request);
         Task<IEndpointResult> ProcessAsync(RevocationRequest request);
+
+        Task<TokenRawResult> ProcessRawAsync(ArbitraryResourceOwnerRequest request);
+        Task<TokenRawResult> ProcessRawAsync(ArbitraryNoSubjectRequest request);
+        Task<TokenRawResult> ProcessRawAsync(ArbitraryIdentityRequest request);
+        Task<TokenRawResult> ProcessRawAsync(RefreshTokenRequest request);
+        Task<TokenRawResult> ProcessRawAsync(RevocationRequest request);
     }
 }

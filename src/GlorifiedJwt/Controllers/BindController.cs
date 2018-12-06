@@ -40,17 +40,24 @@ namespace GlorifiedJwt.Controllers
             _logger = logger;
         }
 
-        // GET api/values
+        
         [HttpPost]
         [Route("refresh")]
-        public async Task<IEndpointResult> PostRefreshAsync()
+        public async Task<TokenRawResult> PostRefreshAsync()
         {
-            return null;
+            var arbResourceOwnerResult = await PostArbitraryResourceOwnerAsync();
+            var refreshTokenRequest = new RefreshTokenRequest()
+            {
+                RefreshToken = arbResourceOwnerResult.TokenResult.Response.RefreshToken,
+                ClientId = "arbitrary-resource-owner-client"
+            };
+            var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(refreshTokenRequest);
+            return result;
         }
-        // GET api/values
+        
         [HttpPost]
         [Route("arbitrary_no_subject")]
-        public async Task<IEndpointResult> PostArbitraryNoSubjectAsync()
+        public async Task<TokenRawResult> PostArbitraryNoSubjectAsync()
         {
             _logger.LogInformation("Summary Executing...");
             var extensionGrantRequest = new ArbitraryNoSubjectRequest()
@@ -78,13 +85,13 @@ namespace GlorifiedJwt.Controllers
                 ArbitraryAudiences = new List<string>() { "cat", "dog" },
                 CustomPayload = new CustomPayload()
             };
-            var result = await _tokenEndpointHandlerExtra.ProcessAsync(extensionGrantRequest);
+            var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(extensionGrantRequest);
             return result;
         }
-        // GET api/values
+      
         [HttpPost]
         [Route("arbitrary_resource_owner")]
-        public async Task<IEndpointResult> PostArbitraryResourceOwnerAsync()
+        public async Task<TokenRawResult> PostArbitraryResourceOwnerAsync()
         {
             _logger.LogInformation("Summary Executing...");
             var extensionGrantRequest = new ArbitraryResourceOwnerRequest()
@@ -113,13 +120,13 @@ namespace GlorifiedJwt.Controllers
                 ArbitraryAudiences = new List<string>() { "cat","dog" },
                 CustomPayload = new CustomPayload()
             };
-            var result = await _tokenEndpointHandlerExtra.ProcessAsync(extensionGrantRequest);
+            var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(extensionGrantRequest);
             return result;
         }
-        // GET api/values
+      
         [HttpPost]
         [Route("arbitrary_identity")]
-        public async Task<IEndpointResult> PostArbitraryIdentityAsync()
+        public async Task<TokenRawResult> PostArbitraryIdentityAsync()
         {
             _logger.LogInformation("Summary Executing...");
             var extensionGrantRequest = new ArbitraryIdentityRequest()
@@ -148,7 +155,7 @@ namespace GlorifiedJwt.Controllers
                 ArbitraryAudiences = new List<string>() { "cat", "dog" },
                 CustomPayload = new CustomPayload()
             };
-            var result = await _tokenEndpointHandlerExtra.ProcessAsync(extensionGrantRequest);
+            var result = await _tokenEndpointHandlerExtra.ProcessRawAsync(extensionGrantRequest);
             return result;
         }
     }
