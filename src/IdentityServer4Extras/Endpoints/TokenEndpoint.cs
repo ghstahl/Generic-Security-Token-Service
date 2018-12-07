@@ -347,14 +347,6 @@ namespace IdentityServer4Extras.Endpoints
                 return rawResult;
             }
 
-            var requestRecord = new IdentityServerRequestRecord
-            {
-                HttpContext = _httpContextAccessor.HttpContext,
-                EndpointKey = "extra",
-                Client = client
-            };
-            _scopedStorage.Storage["IdentityServerRequestRecord"] = requestRecord;
-            var parsedSecret = new ParsedSecret();
             var clientValidationResult = new ClientSecretValidationResult
             {
                 IsError = false,
