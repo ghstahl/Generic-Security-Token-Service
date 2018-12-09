@@ -34,6 +34,7 @@ namespace WizardAppApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IJsonFileLoader, JsonFileLoader>();
+            services.AddScoped<IRemoteJsonFileLoader, RemoteJsonFileLoader>();
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",

@@ -1,8 +1,10 @@
-﻿namespace WizardAppApi.Services
+﻿using System.Threading.Tasks;
+
+namespace WizardAppApi.Services
 {
     public interface IJsonFileLoader
     {
-        object Load(string pathFragment);
+        Task<object> LoadAsync(string pathFragment);
 
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,8 +15,8 @@ namespace WizardAppApi.Services
         {
             _hostingEnvironment = hostingEnvironment;
         }
-
-        public object Load(string pathFragment)
+ 
+        public async Task<object> LoadAsync(string pathFragment)
         {
             var full = Path.Combine(_hostingEnvironment.WebRootPath, pathFragment);
             var stream = new FileStream(full, FileMode.Open);

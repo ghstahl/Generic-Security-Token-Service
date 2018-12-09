@@ -10,23 +10,23 @@ namespace WizardAppApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-  
-    public class JsonFileController : ControllerBase
-    {
-        private IJsonFileLoader _jsonFileLoader;
-        private IHttpContextAccessor _httpContextAccessor;
 
-        public JsonFileController(IJsonFileLoader jsonFileLoader, IHttpContextAccessor httpContextAccessor)
+    public class RemoteJsonFileController : ControllerBase
+    {
+        private IHttpContextAccessor _httpContextAccessor;
+        private IRemoteJsonFileLoader _remoteJsonFileLoader;
+
+        public RemoteJsonFileController(IRemoteJsonFileLoader remoteJsonFileLoader, IHttpContextAccessor httpContextAccessor)
         {
-            _jsonFileLoader = jsonFileLoader;
+            _remoteJsonFileLoader = remoteJsonFileLoader;
             _httpContextAccessor = httpContextAccessor;
         }
         // GET api/values
         [HttpGet]
         [Route("open")]
-        public async Task< ActionResult<object>> GetOpenJsonAsync(string file)
+        public async Task<ActionResult<object>> GetOpenJsonAsync(string file)
         {
-            return await _jsonFileLoader.LoadAsync(file);
+            return await _remoteJsonFileLoader.LoadAsync(file);
         } // GET api/values
         [HttpGet]
         [Authorize("Daffy Duck")]
@@ -38,7 +38,7 @@ namespace WizardAppApi.Controllers
                 select item;
             var nameClaim = query.FirstOrDefault();
 
-            return await _jsonFileLoader.LoadAsync($"{nameClaim.Value}/{file}");
+            return await _remoteJsonFileLoader.LoadAsync($"users/{nameClaim.Value}/{file}");
         }
     }
 }
