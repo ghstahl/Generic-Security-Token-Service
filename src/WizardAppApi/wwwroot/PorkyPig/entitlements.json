@@ -1,0 +1,16 @@
+{
+  "entitlements": [
+    {
+      "name": "SomeProduct",
+      "version": "1.2.3.4",
+      "totalSeats": 5
+
+    },
+    {
+      "name": "SomeOtherProduct",
+      "version": "3.2.3.4",
+      "totalSeats": 10
+
+    }
+  ]
+}

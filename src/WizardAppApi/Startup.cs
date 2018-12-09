@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MultiAuthority.AccessTokenValidation;
+using WizardAppApi.Services;
 
 namespace WizardAppApi
 {
@@ -32,6 +33,16 @@ namespace WizardAppApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IJsonFileLoader, JsonFileLoader>();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
             services.AddMvcCore()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
                 .AddAuthorization(options =>
@@ -84,6 +95,7 @@ namespace WizardAppApi
             };
             services.AddAuthentication("Bearer")
                 .AddMultiAuthorityAuthentication(schemeRecords);
+            services.AddHttpContextAccessor(); services.AddHttpContextAccessor();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -97,7 +109,7 @@ namespace WizardAppApi
             {
                 app.UseHsts();
             }
-
+            app.UseCors("CorsPolicy");
             app.UseAuthentication();
             app.Use(async (HttpContext context, Func<Task> next) =>
             {
