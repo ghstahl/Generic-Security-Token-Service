@@ -35,46 +35,63 @@ namespace WizardAppApi.Controllers
         private IMemoryCache _memoryCache;
         private ProviderValidator _providerValidator;
         private ConfiguredDiscoverCacheContainer _discoveryContainer;
-
-        [Route("closed")]
-        [Authorize("Daffy Duck")]
-        public async Task<IEnumerable<ClaimHandle>> GetClosedAsync()
-        {
-            if (Request.HttpContext.User != null)
-            {
-                var query = from item in Request.HttpContext.User.Claims
-                    let c = new ClaimHandle() {Name = item.Type, Value = item.Value}
-                    select c;
-                return query;
-            }
-
-            return null;
-        }
-
         public IdentityController(ConfiguredDiscoverCacheContainerFactory configuredDiscoverCacheContainerFactory,
             IMemoryCache memoryCache)
         {
             _configuredDiscoverCacheContainerFactory = configuredDiscoverCacheContainerFactory;
-           _discoveryContainer = _configuredDiscoverCacheContainerFactory.Get("p7identityserver4");
+            _discoveryContainer = _configuredDiscoverCacheContainerFactory.Get("p7identityserver4");
             _memoryCache = memoryCache;
             _providerValidator = new ProviderValidator(_discoveryContainer, _memoryCache);
 
         }
 
+        [Route("closed")]
+        [Authorize("Daffy Duck")]
+        public async Task<ActionResult<IEnumerable<ClaimHandle>>> GetClosedAsync()
+        {
+            try
+            {
+                if (Request.HttpContext.User != null)
+                {
+                    var query = from item in Request.HttpContext.User.Claims
+                        let c = new ClaimHandle() { Name = item.Type, Value = item.Value }
+                        select c;
+                    return new ActionResult<IEnumerable<ClaimHandle>>(query);
+                }
+                return NotFound();
+
+            }
+            catch (Exception e)
+            {
+
+            }
+            return NotFound();
+        }
+
+      
+
         // GET api/values
         [HttpGet]
         [Route("open")]
-        public async Task<IEnumerable<ClaimHandle>> GetOpenAsync()
+        public async Task<ActionResult<IEnumerable<ClaimHandle>>> GetOpenAsync()
         {
-            if (Request.HttpContext.User != null)
+            try
             {
-                var query = from item in Request.HttpContext.User.Claims
-                    let c = new ClaimHandle() {Name = item.Type, Value = item.Value}
-                    select c;
-                return query;
-            }
+                if (Request.HttpContext.User != null)
+                {
+                    var query = from item in Request.HttpContext.User.Claims
+                        let c = new ClaimHandle() { Name = item.Type, Value = item.Value }
+                        select c;
+                    return new ActionResult<IEnumerable<ClaimHandle>>(query);
+                }
+                return NotFound();
 
-            return null;
+            }
+            catch (Exception e)
+            {
+              
+            }
+            return NotFound();
         } // GET api/values
 
         [HttpPost]
@@ -104,7 +121,7 @@ namespace WizardAppApi.Controllers
                     {OidcConstants.TokenRequest.ClientSecret, "secret"},
                     {OidcConstants.TokenRequest.GrantType, "arbitrary_resource_owner"},
                     {
-                        OidcConstants.TokenRequest.Scope,"$webappapi"
+                        OidcConstants.TokenRequest.Scope,"offline_access wizard"
                     },
                     {
                        "arbitrary_claims",
@@ -121,9 +138,9 @@ namespace WizardAppApi.Controllers
             }
             catch (Exception e)
             {
-                return e.Message;
+                
             }
-          
+            return NotFound();
         }
     }
 }
