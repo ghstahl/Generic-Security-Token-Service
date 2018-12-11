@@ -78,13 +78,13 @@ namespace ArbitraryIdentityExtensionGrant
                                                                      });
 
         private static List<string> _oneMustExitsArguments;
+
         private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
-                                                                  (_oneMustExitsArguments =
-                                                                      new List<string>
-                                                                      {
-                                                                          "subject",
-                                                                          "access_token"
-                                                                      });
+                                                             (_oneMustExitsArguments =
+                                                                 new List<string>
+                                                                 {
+                                                                     "subject"
+                                                                 });
 
         public ArbitraryIdentityRequestValidator(
             ILogger<ArbitraryIdentityRequestValidator> logger)
@@ -116,9 +116,9 @@ namespace ArbitraryIdentityExtensionGrant
 
             }
             // make sure nothing is malformed
-            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryClaims]) || error;
+            error = los.ValidateFormat<Dictionary<string, List<string>>>(Constants.ArbitraryClaims, raw[Constants.ArbitraryClaims]) || error;
             error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAmrs]) || error;
-            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAmrs, raw[Constants.ArbitraryAudiences]) || error;
+            error = los.ValidateFormat<List<string>>(Constants.ArbitraryAudiences, raw[Constants.ArbitraryAudiences]) || error;
 
             // make sure nothing in here is DISALLOWED
             if (!error)

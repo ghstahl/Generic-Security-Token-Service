@@ -64,7 +64,7 @@ namespace IdentityServer4Extras.Extensions
             return new ClientExtra()
             {
                 ClientId = self.ClientId,
-
+                IdentityTokenLifetime = self.IdentityTokenLifetime,
                 AbsoluteRefreshTokenLifetime = self.AbsoluteRefreshTokenLifetime,
                 AccessTokenLifetime = self.AccessTokenLifetime,
                 AllowedGrantTypes = self.AllowedGrantTypes,

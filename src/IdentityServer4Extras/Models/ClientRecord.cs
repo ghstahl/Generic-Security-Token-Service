@@ -21,6 +21,9 @@ namespace IdentityServer4Extras.Models
 
         [JsonProperty("AllowedGrantTypes")]
         public List<string> AllowedGrantTypes { get; set; }
+        
+        [JsonProperty("IdentityTokenLifetime")]
+        public int IdentityTokenLifetime { get; set; }
 
         [JsonProperty("AccessTokenLifetime")]
         public int AccessTokenLifetime { get; set; }

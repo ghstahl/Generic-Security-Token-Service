@@ -308,6 +308,7 @@ namespace IdentityServer4.HostApp
             }
 
 
+            app.UseCors("CorsPolicy");
             app.UseStaticFiles();
             app.UseIdentityServerRequestTrackerMiddleware();
             app.UseAuthentication();

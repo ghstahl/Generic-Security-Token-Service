@@ -3,6 +3,7 @@
     public static class Constants
     {
         public const string AccessTokenLifetime = "access_token_lifetime";
+        public const string IdTokenLifetime = "id_token_lifetime";
         public const string AbsoluteRefreshTokenLifetime = "absolute_refresh_token_lifetime";
         public const string ArbitraryIdentity = "arbitrary_identity";
         public const string ArbitraryClaims = "arbitrary_claims";

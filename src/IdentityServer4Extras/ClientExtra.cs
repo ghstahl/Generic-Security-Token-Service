@@ -8,6 +8,15 @@ namespace IdentityServer4Extras
     public class ClientExtra : Client
     {
         private bool? _requireRefreshClientSecret;
+        private ClientExtra clientExtra;
+        public ClientExtra( )
+        {
+           
+        }
+        public ClientExtra ShallowCopy()
+        {
+            return (ClientExtra)this.MemberwiseClone();
+        }
 
         //
         // Summary:

@@ -80,6 +80,8 @@ namespace ArbitraryIdentityExtensionGrant
                 _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
 
             if (context == null) throw new ArgumentNullException(nameof(context));
+            var contextClient = (context.Request.Client as ClientExtra).ShallowCopy();
+            context.Request.Client = contextClient;
             var raw = context.Request.Raw;
             _validatedRequest = new ValidatedTokenRequest
             {
@@ -176,6 +178,24 @@ namespace ArbitraryIdentityExtensionGrant
                 {
                     var errorDescription =
                         $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
+                    LogError(errorDescription);
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
+                    return;
+                }
+            }
+            // optional stuff;
+            var idTokenLifetimeOverride = _validatedRequest.Raw.Get(Constants.IdTokenLifetime);
+            if (!string.IsNullOrWhiteSpace(idTokenLifetimeOverride))
+            {
+                var idTokenLifetime = Int32.Parse(idTokenLifetimeOverride);
+                if (idTokenLifetime > 0 && idTokenLifetime <= context.Request.Client.IdentityTokenLifetime)
+                {
+                    context.Request.Client.IdentityTokenLifetime = idTokenLifetime;
+                }
+                else
+                {
+                    var errorDescription =
+                        $"{Constants.IdTokenLifetime} out of range.   Must be > 0 and <= configured IdentityTokenLifetime.";
                     LogError(errorDescription);
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
                     return;
