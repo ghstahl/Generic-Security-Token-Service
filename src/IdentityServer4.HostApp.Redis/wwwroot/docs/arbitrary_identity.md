@@ -44,6 +44,9 @@
 	
   <dt><h2>access_token_lifetime</h2></dt>
   <dd><b>OPTIONAL</b>.  The access token's lifetime in seconds.  Must be > 0 and less than configured AccessTokenLifetime.</dd>
+
+  <dt><h2>id_token_lifetime</h2></dt>
+  <dd><b>OPTIONAL</b>.  The identity token's lifetime in seconds.  Must be > 0 and less than configured IdentityTokenLifetime.</dd>
 </dl>  
 
 ## Example  
