@@ -80,6 +80,14 @@ namespace IdentityServer4Extras.Extensions
             builder.Services.TryAddTransient<ITokenRevocationRequestValidator, SubjectTokenRevocationRequestValidator>();
             return builder;
         }
+        public static IIdentityServerBuilder SwapOutEventSink(
+            this IIdentityServerBuilder builder)
+        {
+            builder.Services.RemoveAll<IEventSink>();
+            builder.Services.TryAddTransient<IEventSink, AggretatedEventSink>();
+            builder.Services.TryAddTransient<IAggregateEventSink, LogInformationEventSink>();
+            return builder;
+        }
 
     }
 }

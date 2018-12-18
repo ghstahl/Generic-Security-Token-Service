@@ -4,8 +4,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
+using IdentityServer4.Events;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
+using IdentityServer4Extras.Events;
 using IdentityServer4Extras.Extensions;
+using IdentityServerRequestTracker.Models;
+using IdentityServerRequestTracker.Services;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -81,6 +86,9 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                      });
 
         private static List<string> _oneMustExitsArguments;
+        private IEventService _events;
+        private IServiceProvider _serviceProvider;
+
         private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
                                                                   (_oneMustExitsArguments =
                                                                       new List<string>
@@ -89,12 +97,17 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                       });
 
         public ArbitraryResourceOwnerRequestValidator(
-            ILogger<ArbitraryResourceOwnerRequestValidator> logger)
+            ILogger<ArbitraryResourceOwnerRequestValidator> logger,
+            IServiceProvider serviceProvider )
         {
             _logger = logger;
+            _serviceProvider = serviceProvider;
         }
         public async Task ValidateAsync(CustomTokenRequestValidationContext context)
         {
+            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
+            var identityServerRequestRecord =
+                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
 
             var raw = context.Result.ValidatedRequest.Raw;
             var rr = raw.AllKeys.ToDictionary(k => k, k => raw[(string)k]);
@@ -163,7 +176,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             if (error)
             {
                 context.Result.IsError = true;
-                context.Result.Error = String.Join<string>(" | ", los); ;
+                context.Result.Error = String.Join<string>(" | ", los);
             }
         }
     }

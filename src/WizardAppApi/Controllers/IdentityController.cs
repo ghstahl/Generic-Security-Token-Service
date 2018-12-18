@@ -24,8 +24,7 @@ namespace WizardAppApi.Controllers
     [DataContract]
     public class BindModel
     {
-        [DataMember(Name = "id_token")]
-        public string IdToken { get; set; }
+        [DataMember(Name = "id_token")] public string IdToken { get; set; }
     }
 
     [Route("api/[controller]")]
@@ -35,6 +34,7 @@ namespace WizardAppApi.Controllers
         private IMemoryCache _memoryCache;
         private ProviderValidator _providerValidator;
         private ConfiguredDiscoverCacheContainer _discoveryContainer;
+
         public IdentityController(ConfiguredDiscoverCacheContainerFactory configuredDiscoverCacheContainerFactory,
             IMemoryCache memoryCache)
         {
@@ -54,10 +54,11 @@ namespace WizardAppApi.Controllers
                 if (Request.HttpContext.User != null)
                 {
                     var query = from item in Request.HttpContext.User.Claims
-                        let c = new ClaimHandle() { Name = item.Type, Value = item.Value }
+                        let c = new ClaimHandle() {Name = item.Type, Value = item.Value}
                         select c;
                     return new ActionResult<IEnumerable<ClaimHandle>>(query);
                 }
+
                 return NotFound();
 
             }
@@ -65,10 +66,11 @@ namespace WizardAppApi.Controllers
             {
 
             }
+
             return NotFound();
         }
 
-      
+
 
         // GET api/values
         [HttpGet]
@@ -80,17 +82,19 @@ namespace WizardAppApi.Controllers
                 if (Request.HttpContext.User != null)
                 {
                     var query = from item in Request.HttpContext.User.Claims
-                        let c = new ClaimHandle() { Name = item.Type, Value = item.Value }
+                        let c = new ClaimHandle() {Name = item.Type, Value = item.Value}
                         select c;
                     return new ActionResult<IEnumerable<ClaimHandle>>(query);
                 }
+
                 return NotFound();
 
             }
             catch (Exception e)
             {
-              
+
             }
+
             return NotFound();
         } // GET api/values
 
@@ -110,7 +114,7 @@ namespace WizardAppApi.Controllers
                     where item.Type == ClaimTypes.NameIdentifier
                     select item;
                 var namedIdentifierClaim = query.FirstOrDefault();
-                  var discoveryResponse = await _discoveryContainer.DiscoveryCache.GetAsync();
+                var discoveryResponse = await _discoveryContainer.DiscoveryCache.GetAsync();
                 var clientId = "arbitrary-resource-owner-client";
                 var client = new TokenClient(
                     discoveryResponse.Issuer + "/connect/token",
@@ -121,25 +125,26 @@ namespace WizardAppApi.Controllers
                     {OidcConstants.TokenRequest.ClientSecret, "secret"},
                     {OidcConstants.TokenRequest.GrantType, "arbitrary_resource_owner"},
                     {
-                        OidcConstants.TokenRequest.Scope,"offline_access wizard"
+                        OidcConstants.TokenRequest.Scope, "offline_access wizard"
                     },
                     {
-                       "arbitrary_claims",
+                        "arbitrary_claims",
                         "{'role': ['application', 'limited']}"
                     },
                     {
-                        "subject",namedIdentifierClaim.Value
+                        "subject", namedIdentifierClaim.Value
                     },
                     {"access_token_lifetime", "3600"}
                 };
                 var result = await client.RequestAsync(paramaters);
-                
+
                 return result.Json;
             }
             catch (Exception e)
             {
-                
+
             }
+
             return NotFound();
         }
     }

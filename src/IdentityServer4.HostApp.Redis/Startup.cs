@@ -85,7 +85,14 @@ namespace IdentityServer4.HostApp
             
 
             var builder = services
-                .AddIdentityServer(options => { options.InputLengthRestrictions.RefreshToken = 256; })
+                .AddIdentityServer(options =>
+                {
+               
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseErrorEvents = true;
+                  
+                    options.InputLengthRestrictions.RefreshToken = 256;
+                })
                 .AddInMemoryIdentityResources(identityResources)
                 .AddInMemoryApiResources(apiResources)
                 .AddInMemoryClientsExtra(clients)
@@ -157,6 +164,8 @@ namespace IdentityServer4.HostApp
             builder.SwapOutDefaultTokenService();
             builder.SwapOutScopeValidator();
             builder.SwapOutTokenRevocationRequestValidator();
+            builder.SwapOutEventSink();
+            
 
             // My Types
             services.AddArbitraryNoSubjectExtentionGrantTypes();

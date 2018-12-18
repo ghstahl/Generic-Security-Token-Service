@@ -6,8 +6,10 @@ using IdentityModel;
 using IdentityServer4.Configuration;
 using IdentityServer4.Extensions;
 using IdentityServer4.Models;
+using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using IdentityServer4Extras;
+using IdentityServer4Extras.Events;
 using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Models;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
         private readonly IdentityServerOptions _options;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
+        private IEventService _events;
 
         public IdentityServerRequestRecord IdentityServerRequestRecord { get; }
 
@@ -30,102 +33,101 @@ namespace ArbitraryResourceOwnerExtensionGrant
             IServiceProvider serviceProvider,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
-            PrincipalAugmenter principalAugmenter)
+            PrincipalAugmenter principalAugmenter,
+            IEventService events)
         {
             _logger = logger;
             _options = options;
             _serviceProvider = serviceProvider;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
             _principalAugmenter = principalAugmenter;
+            _events = events;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             _logger.LogDebug("Start token request validation");
-
             IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
             var identityServerRequestRecord =
                 _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
-
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            var raw = context.Request.Raw;
-            var validatedRequest = new ValidatedTokenRequest
+            string grantType = null;
+            try
             {
-                Raw = raw ?? throw new ArgumentNullException(nameof(raw)),
-                Options = _options
-            };
-            var customTokenRequestValidationContext = new CustomTokenRequestValidationContext()
-            {
-                Result = new TokenRequestValidationResult(validatedRequest)
-            };
-            await _arbitraryResourceOwnerRequestValidator.ValidateAsync(customTokenRequestValidationContext);
-            if (customTokenRequestValidationContext.Result.IsError)
-            {
-                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
-                    customTokenRequestValidationContext.Result.Error);
-                return;
-            }
-
-
-            validatedRequest.SetClient(identityServerRequestRecord.Client);
-
-            /////////////////////////////////////////////
-            // check grant type
-            /////////////////////////////////////////////
-            var grantType = validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
-            if (grantType.IsMissing())
-            {
-                LogError("Grant type is missing");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-
-            if (grantType.Length > _options.InputLengthRestrictions.GrantType)
-            {
-                LogError("Grant type is too long");
-                context.Result = new GrantValidationResult(TokenRequestErrors.UnsupportedGrantType);
-                return;
-            }
-
-            validatedRequest.GrantType = grantType;
-
-            var subject = "";
-            if (string.IsNullOrWhiteSpace(subject))
-            {
-                subject = context.Request.Raw.Get("subject");
-            }
-
-            // get user's identity
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, subject),
-                new Claim("sub", subject)
-            };
-
-            var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
-            _principalAugmenter.AugmentPrincipal(principal);
-
-            // optional stuff;
-            var accessTokenLifetimeOverride = validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
-            if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
-            {
-                var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
-                if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                if (context == null) throw new ArgumentNullException(nameof(context));
+                var raw = context.Request.Raw;
+                var validatedRequest = new ValidatedTokenRequest
                 {
-                    context.Request.AccessTokenLifetime = accessTokenLifetime;
-                }
-                else
+                    Raw = raw ?? throw new ArgumentNullException(nameof(raw)),
+                    Options = _options
+                };
+                validatedRequest.SetClient(identityServerRequestRecord.Client);
+                /////////////////////////////////////////////
+                // get grant type.  This has already been validated by the time it gets here.
+                /////////////////////////////////////////////
+                grantType = validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
+                validatedRequest.GrantType = grantType;
+
+                var customTokenRequestValidationContext = new CustomTokenRequestValidationContext()
                 {
-                    var errorDescription =
-                        $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
-                    LogError(errorDescription);
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
-                    return;
+                    Result = new TokenRequestValidationResult(validatedRequest)
+                };
+                await _arbitraryResourceOwnerRequestValidator.ValidateAsync(customTokenRequestValidationContext);
+                if (customTokenRequestValidationContext.Result.IsError)
+                {
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest,
+                        customTokenRequestValidationContext.Result.Error);
+                    throw new Exception("Invalid Request");
                 }
+
+                var subject = "";
+                if (string.IsNullOrWhiteSpace(subject))
+                {
+                    subject = context.Request.Raw.Get("subject");
+                }
+
+                // get user's identity
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, subject),
+                    new Claim("sub", subject)
+                };
+
+                var principal = new ClaimsPrincipal(new ClaimsIdentity(claims));
+                _principalAugmenter.AugmentPrincipal(principal);
+
+                // optional stuff;
+                var accessTokenLifetimeOverride = validatedRequest.Raw.Get(Constants.AccessTokenLifetime);
+                if (!string.IsNullOrWhiteSpace(accessTokenLifetimeOverride))
+                {
+                    var accessTokenLifetime = Int32.Parse(accessTokenLifetimeOverride);
+                    if (accessTokenLifetime > 0 && accessTokenLifetime <= context.Request.AccessTokenLifetime)
+                    {
+                        context.Request.AccessTokenLifetime = accessTokenLifetime;
+                    }
+                    else
+                    {
+                        var errorDescription =
+                            $"{Constants.AccessTokenLifetime} out of range.   Must be > 0 and <= configured AccessTokenLifetime.";
+                        LogError(errorDescription);
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidRequest, errorDescription);
+                        throw new Exception(errorDescription);
+                    }
+                }
+
+                context.Result = new GrantValidationResult(principal.GetSubjectId(),
+                    ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner);
+            }
+            catch (Exception e)
+            {
             }
 
-            context.Result = new GrantValidationResult(principal.GetSubjectId(),
-                ArbitraryResourceOwnerExtensionGrant.Constants.ArbitraryResourceOwner);
+            if (context.Result.IsError)
+            {
+                await _events.RaiseAsync(new ExtensionGrantValidationFailureEvent(
+                    identityServerRequestRecord.Client.ClientId,
+                    grantType,
+                    context.Result.Error));
+            }
         }
 
         private void LogError(string message = null, params object[] values)
