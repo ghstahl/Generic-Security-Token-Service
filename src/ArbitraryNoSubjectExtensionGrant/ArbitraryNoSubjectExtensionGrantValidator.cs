@@ -23,42 +23,21 @@ namespace ArbitraryNoSubjectExtensionGrant
     public class ArbitraryNoSubjectExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger<ArbitraryNoSubjectExtensionGrantValidator> _logger;
-        private readonly IEventService _events;
-        private readonly IClientStore _clientStore;
-        private readonly IResourceStore _resourceStore;
-        private readonly IRawClientSecretValidator _clientSecretValidator;
-        private readonly ITokenResponseGenerator _tokenResponseGenerator;
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
-        private ISystemClock _clock;
         private ArbitraryNoSubjectRequestValidator _arbitraryNoSubjectRequestValidator;
-        private PrincipalAugmenter _principalAugmenter;
         private IServiceProvider _serviceProvider;
 
         public ArbitraryNoSubjectExtensionGrantValidator(
             IServiceProvider serviceProvider,
             IdentityServerOptions options,
-            IClientStore clientStore,
-            IRawClientSecretValidator clientSecretValidator,
-            IResourceStore resourceStore,
-            IEventService events,
-            ISystemClock clock,
-            ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryNoSubjectExtensionGrantValidator> logger,
-            ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator,
-            PrincipalAugmenter principalAugmenter)
+            ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator )
         {
             _serviceProvider = serviceProvider;
             _logger = logger;
-            _clock = clock;
-            _events = events;
-            _clientSecretValidator = clientSecretValidator;
             _options = options;
-            _clientStore = clientStore;
-            _resourceStore = resourceStore;
-            _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryNoSubjectRequestValidator = arbitraryNoSubjectRequestValidator;
-            _principalAugmenter = principalAugmenter;
         }
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {

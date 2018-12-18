@@ -26,15 +26,9 @@ namespace ArbitraryIdentityExtensionGrant
     public class ArbitraryIdentityExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger _logger;
-        private readonly IEventService _events;
-        private readonly IClientStore _clientStore;
         private readonly IResourceStore _resourceStore;
-        private readonly IRawClientSecretValidator _clientSecretValidator;
-        private readonly ITokenResponseGenerator _tokenResponseGenerator;
         private readonly IdentityServerOptions _options;
         private ValidatedTokenRequest _validatedRequest;
-        private ISystemClock _clock;
-        private IMemoryCache _cache;
         private ArbitraryIdentityRequestValidator _arbitraryIdentityRequestValidator;
         private PrincipalAugmenter _principalAugmenter; 
         private ITokenValidator _tokenValidator;
@@ -44,13 +38,7 @@ namespace ArbitraryIdentityExtensionGrant
             IServiceProvider serviceProvider,
             ITokenValidator tokenValidator,
             IdentityServerOptions options,
-            IClientStore clientStore,
-            IRawClientSecretValidator clientSecretValidator,
             IResourceStore resourceStore,
-            IEventService events,
-            ISystemClock clock,
-            IMemoryCache cache,
-            ITokenResponseGenerator tokenResponseGenerator,
             ILogger<ArbitraryIdentityExtensionGrantValidator> logger,
             ArbitraryIdentityRequestValidator arbitraryIdentityRequestValidator,
             PrincipalAugmenter principalAugmenter )
@@ -58,17 +46,10 @@ namespace ArbitraryIdentityExtensionGrant
             _serviceProvider = serviceProvider;
             _tokenValidator = tokenValidator;
             _logger = logger;
-            _clock = clock;
-            _cache = cache;
-            _events = events;
-            _clientSecretValidator = clientSecretValidator;
             _options = options;
-            _clientStore = clientStore;
             _resourceStore = resourceStore;
-            _tokenResponseGenerator = tokenResponseGenerator;
             _arbitraryIdentityRequestValidator = arbitraryIdentityRequestValidator;
             _principalAugmenter = principalAugmenter; 
-
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
@@ -222,9 +203,6 @@ namespace ArbitraryIdentityExtensionGrant
                     _logger.LogError("Error logging {exception}", ex.Message);
                 }
             }
-
-            //  var details = new global::IdentityServer4.Logging.TokenRequestValidationLog(_validatedRequest);
-            //  _logger.LogError("{details}", details);
         }
         public string GrantType => Constants.ArbitraryIdentity;
     }
