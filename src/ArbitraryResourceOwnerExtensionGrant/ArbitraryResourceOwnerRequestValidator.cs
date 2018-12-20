@@ -53,7 +53,8 @@ namespace ArbitraryResourceOwnerExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "client_id"
+                                                                          "client_id",
+                                                                          "subject"
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
@@ -89,12 +90,14 @@ namespace ArbitraryResourceOwnerExtensionGrant
         private IEventService _events;
         private IServiceProvider _serviceProvider;
 
+        /*
         private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
                                                                   (_oneMustExitsArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "subject"
+                                                                          
                                                                       });
+                                                                      */
 
         public ArbitraryResourceOwnerRequestValidator(
             ILogger<ArbitraryResourceOwnerRequestValidator> logger,
@@ -113,7 +116,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             var rr = raw.AllKeys.ToDictionary(k => k, k => raw[(string)k]);
             var error = false;
             var los = new List<string>();
-
+            /*
             var oneMustExistResult = (from item in OneMustExitsArguments
                 where rr.Keys.Contains(item)
                 select item).ToList();
@@ -123,6 +126,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
                 error = true;
                 los.AddRange(OneMustExitsArguments.Select(item => $"[one or the other] {item} is missing!"));
             }
+            */
             var result = RequiredArbitraryArguments.Except(rr.Keys);
             if (result.Any())
             {

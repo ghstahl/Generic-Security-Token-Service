@@ -14,43 +14,46 @@ using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Models;
 using Microsoft.Extensions.Logging;
 using IdentityServerRequestTracker.Services;
+using Microsoft.AspNetCore.Http;
 
 namespace ArbitraryResourceOwnerExtensionGrant
 {
     public class ArbitraryResourceOwnerExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger<ArbitraryResourceOwnerExtensionGrantValidator> _logger;
-        private IServiceProvider _serviceProvider;
         private readonly IdentityServerOptions _options;
         private ArbitraryResourceOwnerRequestValidator _arbitraryResourceOwnerRequestValidator;
         private PrincipalAugmenter _principalAugmenter;
         private IEventService _events;
+        private IClientSecretValidator _clientValidator;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public IdentityServerRequestRecord IdentityServerRequestRecord { get; }
 
         public ArbitraryResourceOwnerExtensionGrantValidator(
             IdentityServerOptions options,
-            IServiceProvider serviceProvider,
+            IClientSecretValidator clientValidator,
             ILogger<ArbitraryResourceOwnerExtensionGrantValidator> logger,
             ArbitraryResourceOwnerRequestValidator arbitraryResourceOwnerRequestValidator,
             PrincipalAugmenter principalAugmenter,
-            IEventService events)
+            IEventService events,
+            IHttpContextAccessor httpContextAccessor)
         {
             _logger = logger;
             _options = options;
-            _serviceProvider = serviceProvider;
+            _clientValidator = clientValidator;
             _arbitraryResourceOwnerRequestValidator = arbitraryResourceOwnerRequestValidator;
             _principalAugmenter = principalAugmenter;
             _events = events;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             _logger.LogDebug("Start token request validation");
-            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
-            var identityServerRequestRecord =
-                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
+           
             string grantType = null;
+            string clientId = "";
             try
             {
                 if (context == null) throw new ArgumentNullException(nameof(context));
@@ -60,7 +63,17 @@ namespace ArbitraryResourceOwnerExtensionGrant
                     Raw = raw ?? throw new ArgumentNullException(nameof(raw)),
                     Options = _options
                 };
-                validatedRequest.SetClient(identityServerRequestRecord.Client);
+                // validate HTTP for clients
+                if (HttpMethods.IsPost(_httpContextAccessor.HttpContext.Request.Method) && _httpContextAccessor.HttpContext.Request.HasFormContentType)
+                {
+                    // validate client
+                    var clientResult = await _clientValidator.ValidateAsync(_httpContextAccessor.HttpContext);
+                    if (!clientResult.IsError)
+                    {
+                        validatedRequest.SetClient(clientResult.Client);
+                        clientId = clientResult.Client.ClientId;
+                    }
+                }
                 /////////////////////////////////////////////
                 // get grant type.  This has already been validated by the time it gets here.
                 /////////////////////////////////////////////
@@ -124,7 +137,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             if (context.Result.IsError)
             {
                 await _events.RaiseAsync(new ExtensionGrantValidationFailureEvent(
-                    identityServerRequestRecord.Client.ClientId,
+                    clientId,
                     grantType,
                     context.Result.Error));
             }

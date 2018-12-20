@@ -18,6 +18,7 @@ using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Models;
 using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -33,32 +34,34 @@ namespace ArbitraryIdentityExtensionGrant
         private PrincipalAugmenter _principalAugmenter; 
         private ITokenValidator _tokenValidator;
         private IServiceProvider _serviceProvider;
+        private IClientSecretValidator _clientValidator;
+        private IHttpContextAccessor _httpContextAccessor;
 
         public ArbitraryIdentityExtensionGrantValidator(
             IServiceProvider serviceProvider,
+            IClientSecretValidator clientValidator,
             ITokenValidator tokenValidator,
             IdentityServerOptions options,
             IResourceStore resourceStore,
             ILogger<ArbitraryIdentityExtensionGrantValidator> logger,
             ArbitraryIdentityRequestValidator arbitraryIdentityRequestValidator,
-            PrincipalAugmenter principalAugmenter )
+            PrincipalAugmenter principalAugmenter,
+            IHttpContextAccessor httpContextAccessor)
         {
             _serviceProvider = serviceProvider;
+            _clientValidator = clientValidator;
             _tokenValidator = tokenValidator;
             _logger = logger;
             _options = options;
             _resourceStore = resourceStore;
             _arbitraryIdentityRequestValidator = arbitraryIdentityRequestValidator;
-            _principalAugmenter = principalAugmenter; 
+            _principalAugmenter = principalAugmenter;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             _logger.LogDebug("Start token request validation");
-
-            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
-            var identityServerRequestRecord =
-                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
 
             if (context == null) throw new ArgumentNullException(nameof(context));
             var contextClient = (context.Request.Client as ClientExtra).ShallowCopy();
@@ -80,7 +83,16 @@ namespace ArbitraryIdentityExtensionGrant
                     customTokenRequestValidationContext.Result.Error);
                 return;
             }
-            _validatedRequest.SetClient(identityServerRequestRecord.Client);
+            // validate HTTP for clients
+            if (HttpMethods.IsPost(_httpContextAccessor.HttpContext.Request.Method) && _httpContextAccessor.HttpContext.Request.HasFormContentType)
+            {
+                // validate client
+                var clientResult = await _clientValidator.ValidateAsync(_httpContextAccessor.HttpContext);
+                if (!clientResult.IsError)
+                {
+                    _validatedRequest.SetClient(clientResult.Client);
+                }
+            }
 
             /////////////////////////////////////////////
             // check grant type

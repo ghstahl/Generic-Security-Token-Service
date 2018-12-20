@@ -45,7 +45,8 @@ namespace ArbitraryIdentityExtensionGrant
                                                                   (_requiredArbitraryArguments =
                                                                       new List<string>
                                                                       {
-                                                                          "client_id"
+                                                                          "client_id",
+                                                                          "subject"
                                                                       });
         private static List<string> _notAllowedArbitraryClaims;
         private static List<string> NotAllowedArbitraryClaims => _notAllowedArbitraryClaims ??
@@ -79,12 +80,14 @@ namespace ArbitraryIdentityExtensionGrant
 
         private static List<string> _oneMustExitsArguments;
 
+        /*
         private static List<string> OneMustExitsArguments => _oneMustExitsArguments ??
                                                              (_oneMustExitsArguments =
                                                                  new List<string>
                                                                  {
                                                                      "subject"
                                                                  });
+                                                                 */
 
         public ArbitraryIdentityRequestValidator(
             ILogger<ArbitraryIdentityRequestValidator> logger)
@@ -99,6 +102,8 @@ namespace ArbitraryIdentityExtensionGrant
             var error = false;
             var los = new List<string>();
 
+            /*
+
             var oneMustExistResult = (from item in OneMustExitsArguments
                 where rr.Keys.Contains(item)
                 select item).ToList();
@@ -108,6 +113,8 @@ namespace ArbitraryIdentityExtensionGrant
                 error = true;
                 los.AddRange(OneMustExitsArguments.Select(item => $"[one or the other] {item} is missing!"));
             }
+            */
+
             var result = RequiredArbitraryArguments.Except(rr.Keys);
             if (result.Any())
             {

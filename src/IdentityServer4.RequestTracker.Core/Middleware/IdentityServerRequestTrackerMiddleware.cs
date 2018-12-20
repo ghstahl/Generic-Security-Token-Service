@@ -34,7 +34,11 @@ namespace IdentityServerRequestTracker.Middleware
         /// <param name="session">The user session.</param>
         /// <param name="events">The event service.</param>
         /// <returns></returns>
-        public async Task Invoke(HttpContext context, IEndpointRouter router, IUserSession session, IEventService events, 
+        public async Task Invoke(
+            HttpContext context, 
+            IEndpointRouter router, 
+            IUserSession session, 
+            IEventService events, 
             IScopedStorage scopedStorage)
         {
             scopedStorage.Storage["IdentityServer:Handled"] = false;

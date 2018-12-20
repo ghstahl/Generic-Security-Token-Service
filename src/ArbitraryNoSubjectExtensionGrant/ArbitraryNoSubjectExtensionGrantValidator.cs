@@ -15,6 +15,7 @@ using IdentityServer4Extras.Extensions;
 using IdentityServerRequestTracker.Models;
 using IdentityServerRequestTracker.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -23,40 +24,38 @@ namespace ArbitraryNoSubjectExtensionGrant
     public class ArbitraryNoSubjectExtensionGrantValidator : IExtensionGrantValidator
     {
         private readonly ILogger<ArbitraryNoSubjectExtensionGrantValidator> _logger;
-        private readonly IdentityServerOptions _options;
-        private ValidatedTokenRequest _validatedRequest;
-        private ArbitraryNoSubjectRequestValidator _arbitraryNoSubjectRequestValidator;
-        private IServiceProvider _serviceProvider;
+        private readonly IdentityServerOptions _options; 
+        private ArbitraryNoSubjectRequestValidator _arbitraryNoSubjectRequestValidator; 
+        private IClientSecretValidator _clientValidator;
+        private IHttpContextAccessor _httpContextAccessor;
 
-        public ArbitraryNoSubjectExtensionGrantValidator(
-            IServiceProvider serviceProvider,
+        public ArbitraryNoSubjectExtensionGrantValidator( 
+            IClientSecretValidator clientValidator,
             IdentityServerOptions options,
             ILogger<ArbitraryNoSubjectExtensionGrantValidator> logger,
-            ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator )
-        {
-            _serviceProvider = serviceProvider;
+            ArbitraryNoSubjectRequestValidator arbitraryNoSubjectRequestValidator,
+            IHttpContextAccessor httpContextAccessor)
+        { 
+            _clientValidator = clientValidator;
             _logger = logger;
             _options = options;
             _arbitraryNoSubjectRequestValidator = arbitraryNoSubjectRequestValidator;
+            _httpContextAccessor = httpContextAccessor;
         }
         public async Task ValidateAsync(ExtensionGrantValidationContext context)
         {
             _logger.LogDebug("Start token request validation");
 
-            IScopedStorage _scopedStorage = _serviceProvider.GetService(typeof(IScopedStorage)) as IScopedStorage;
-            var identityServerRequestRecord =
-                _scopedStorage.Storage["IdentityServerRequestRecord"] as IdentityServerRequestRecord;
-
             if (context == null) throw new ArgumentNullException(nameof(context));
             var raw = context.Request.Raw;
-            _validatedRequest = new ValidatedTokenRequest
+            var validatedRequest = new ValidatedTokenRequest
             {
                 Raw = raw ?? throw new ArgumentNullException(nameof(raw)),
                 Options = _options
             };
             var customTokenRequestValidationContext = new CustomTokenRequestValidationContext()
             {
-                Result = new TokenRequestValidationResult(_validatedRequest)
+                Result = new TokenRequestValidationResult(validatedRequest)
             };
             await _arbitraryNoSubjectRequestValidator.ValidateAsync(customTokenRequestValidationContext);
             if (customTokenRequestValidationContext.Result.IsError)
@@ -66,12 +65,21 @@ namespace ArbitraryNoSubjectExtensionGrant
                 return;
             }
 
-            _validatedRequest.SetClient(identityServerRequestRecord.Client);
+            // validate HTTP for clients
+            if (HttpMethods.IsPost(_httpContextAccessor.HttpContext.Request.Method) && _httpContextAccessor.HttpContext.Request.HasFormContentType)
+            {
+                // validate client
+                var clientResult = await _clientValidator.ValidateAsync(_httpContextAccessor.HttpContext);
+                if (!clientResult.IsError)
+                {
+                    validatedRequest.SetClient(clientResult.Client);
+                }
+            }
 
             /////////////////////////////////////////////
             // check grant type
             /////////////////////////////////////////////
-            var grantType = _validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
+            var grantType = validatedRequest.Raw.Get(OidcConstants.TokenRequest.GrantType);
             if (grantType.IsMissing())
             {
                 LogError("Grant type is missing");
@@ -85,7 +93,7 @@ namespace ArbitraryNoSubjectExtensionGrant
                 return;
             }
 
-            _validatedRequest.GrantType = grantType;
+            validatedRequest.GrantType = grantType;
             context.Result = new GrantValidationResult();
         }
         private void LogError(string message = null, params object[] values)
@@ -101,9 +109,7 @@ namespace ArbitraryNoSubjectExtensionGrant
                     _logger.LogError("Error logging {exception}", ex.Message);
                 }
             }
-
-            //  var details = new global::IdentityServer4.Logging.TokenRequestValidationLog(_validatedRequest);
-            //  _logger.LogError("{details}", details);
+ 
         }
         public string GrantType => Constants.ArbitraryNoSubject;
     }
