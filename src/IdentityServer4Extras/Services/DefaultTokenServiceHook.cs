@@ -21,26 +21,26 @@ namespace IdentityServer4Extras.Services
 
         public DefaultTokenServiceHook(
             IEnumerable<ITokenServiceHookPlugin> tokenServiceHookPlugins,
-            DefaultTokenService original, 
+            DefaultTokenService original,
             ILogger<DefaultTokenServiceHook> logger)
         {
             _tokenServiceHookPlugins = tokenServiceHookPlugins;
             _delegate = original;
             Logger = logger;
         }
+
         public async Task<Token> CreateIdentityTokenAsync(TokenCreationRequest request)
         {
             var token = await _delegate.CreateIdentityTokenAsync(request);
             foreach (var tokenServiceHookPlugin in _tokenServiceHookPlugins)
             {
-                bool proccessed;
-                Token newToken;
-                (proccessed, newToken) = await tokenServiceHookPlugin.OnPostCreateIdentityTokenAsync(request, token);
-                if (proccessed)
+                var tokenResponse = await tokenServiceHookPlugin.OnPostCreateIdentityTokenAsync(request, token);
+                if (tokenResponse.proccessed)
                 {
-                    token = newToken;
+                    token = tokenResponse.token;
                 }
             }
+
             return token;
         }
 
@@ -49,14 +49,13 @@ namespace IdentityServer4Extras.Services
             var token = await _delegate.CreateAccessTokenAsync(request);
             foreach (var tokenServiceHookPlugin in _tokenServiceHookPlugins)
             {
-                bool proccessed;
-                Token newToken;
-                (proccessed, newToken) = await tokenServiceHookPlugin.OnPostCreateAccessTokenAsync(request, token);
-                if (proccessed)
+                var tokenResonse = await tokenServiceHookPlugin.OnPostCreateAccessTokenAsync(request, token);
+                if (tokenResonse.proccessed)
                 {
-                    token = newToken;
+                    token = tokenResonse.token;
                 }
             }
+
             return token;
         }
 

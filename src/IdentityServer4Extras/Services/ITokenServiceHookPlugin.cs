@@ -5,7 +5,7 @@ namespace IdentityServer4Extras.Services
 {
     public interface ITokenServiceHookPlugin
     {
-        Task<(bool, Token)> OnPostCreateAccessTokenAsync(TokenCreationRequest request, Token token);
-        Task<(bool, Token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token);
+        Task<(bool proccessed, Token token)> OnPostCreateAccessTokenAsync(TokenCreationRequest request, Token token);
+        Task<(bool proccessed, Token token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token);
     }
 }

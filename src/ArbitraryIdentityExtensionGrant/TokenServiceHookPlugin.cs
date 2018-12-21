@@ -13,7 +13,7 @@ namespace ArbitraryIdentityExtensionGrant
 {
     public class TokenServiceHookPlugin : ITokenServiceHookPlugin
     {
-        public async Task<(bool, Token)> OnPostCreateAccessTokenAsync(
+        public async Task<(bool proccessed, Token token)> OnPostCreateAccessTokenAsync(
             TokenCreationRequest request,
             Token token)
         {
@@ -78,7 +78,7 @@ namespace ArbitraryIdentityExtensionGrant
             return (true, token);
         }
 
-        public async Task<(bool, Token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token)
+        public async Task<(bool proccessed, Token token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token)
         {
             return await OnPostCreateAccessTokenAsync(request, token);
         }

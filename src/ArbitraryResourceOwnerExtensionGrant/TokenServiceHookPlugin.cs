@@ -13,7 +13,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
 {
     public class TokenServiceHookPlugin : ITokenServiceHookPlugin
     {
-        public async Task<(bool, Token)> OnPostCreateAccessTokenAsync(
+        public async Task<(bool proccessed, Token token)> OnPostCreateAccessTokenAsync(
             TokenCreationRequest request,
             Token token)
         {
@@ -84,7 +84,7 @@ namespace ArbitraryResourceOwnerExtensionGrant
             return (true, token);
         }
 
-        public async Task<(bool, Token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token)
+        public async Task<(bool proccessed, Token token)> OnPostCreateIdentityTokenAsync(TokenCreationRequest request, Token token)
         {
             return (false, null);
         }
