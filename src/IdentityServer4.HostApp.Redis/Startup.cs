@@ -10,6 +10,7 @@ using GraphQLCore.ExtensionGrants.Extensions;
 using IdentityModelExtras.Extensions; 
 using IdentityServer4.HostApp.Health;
 using IdentityServer4.HostApp.RateLimiting;
+using IdentityServer4.Hosting;
 using IdentityServer4.Stores;
 using IdentityServer4Extras;
 using IdentityServer4Extras.Extensions;
@@ -319,6 +320,8 @@ namespace IdentityServer4.HostApp
 
             app.UseCors("CorsPolicy");
             app.UseStaticFiles();
+            app.ValidateIdentityServer();
+            app.UseMiddleware<BaseUrlMiddleware>();
             app.UseIdentityServerRequestTrackerMiddleware();
             app.UseAuthentication();
 
